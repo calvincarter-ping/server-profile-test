@@ -15,11 +15,11 @@ echo "out dir"
 
 ls ${OUT_DIR}
 
-if ! test -f calvin.txt ; then
-    touch calvin.txt
+if ! test -f "${OUT_DIR}/calvin.txt" ; then
+    touch ${OUT_DIR}/calvin.txt
 fi
 
-echo "hello world" >> calvin.txt
+echo "hello world" >> ${OUT_DIR}/calvin.txt
 
 if ! test -f "${OUT_DIR}/instance/conf/pa.jwk" ; then
     echo "merging ${STAGING_DIR}/instance to ${SERVER_ROOT_DIR}"
