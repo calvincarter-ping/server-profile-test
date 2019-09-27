@@ -6,7 +6,7 @@ host=`hostname`
 echo "host cal ${host}"
 echo ${INITIAL_ADMIN_PASSWORD}
 
-curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" -d '{ "email": null,
+curl -k -X PUT -u Administrator:2Access -H "X-Xsrf-Header: PingAccess" -d '{ "email": null,
     "slaAccepted": true,
     "firstLogin": false,
     "showTutorial": false,
@@ -14,7 +14,7 @@ curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" 
 }' "https://${host}:9000/pa-admin-api/v3/users/1"
 
 # echo "INFO: changing initial password"
-curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" -d '{
+curl -k -X PUT -u Administrator:2Access -H "X-Xsrf-Header: PingAccess" -d '{
   "currentPassword": "2Access",
   "newPassword": "'"${INITIAL_ADMIN_PASSWORD}"'"
 }' "https://${host}:9000/pa-admin-api/v3/users/1/password"
