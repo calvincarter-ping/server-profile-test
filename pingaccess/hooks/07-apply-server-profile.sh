@@ -11,10 +11,7 @@ ${VERBOSE} && set -x
 # shellcheck source=pingcommon.lib.sh
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 
-if test -d "${OUT_DIR}/instance" ; then
-    echo "merging ${OUT_DIR}/instance to ${SERVER_ROOT_DIR}"
-    cp -af "${OUT_DIR}"/instance/* "${SERVER_ROOT_DIR}"
-else
+if ! test -f "${OUT_DIR}/instance/conf/pa.jwk" ; then
     echo "merging ${STAGING_DIR}/instance to ${SERVER_ROOT_DIR}"
     cp -af "${STAGING_DIR}"/instance/* "${SERVER_ROOT_DIR}"
 fi
