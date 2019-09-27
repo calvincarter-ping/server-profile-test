@@ -4,6 +4,7 @@
 host=`hostname`
 
 echo "host cal ${host}"
+echo ${INITIAL_ADMIN_PASSWORD}
 
 curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" -d '{ "email": null,
     "slaAccepted": true,
