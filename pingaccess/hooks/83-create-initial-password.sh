@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 
-curl -k -v -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" -d '{ "email": null,
+curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" -d '{ "email": null,
     "slaAccepted": true,
     "firstLogin": false,
     "showTutorial": false,
@@ -9,7 +9,7 @@ curl -k -v -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAcces
 }' https://localhost:9000/pa-admin-api/v3/users/1 > /dev/null
 
 # echo "INFO: changing initial password"
-curl -k -v -X PUT  -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" -d '{
+curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" -d '{
   "currentPassword": "2Access",
   "newPassword": "'"${INITIAL_ADMIN_PASSWORD}"'"
 }' https://localhost:9000/pa-admin-api/v3/users/1/password > /dev/null
