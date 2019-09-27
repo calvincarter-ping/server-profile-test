@@ -13,6 +13,8 @@ ${VERBOSE} && set -x
 
 echo "out dir"
 
+echo `hostname`
+
 ls ${OUT_DIR}
 
 if ! test -f "${OUT_DIR}/calvin.txt" ; then

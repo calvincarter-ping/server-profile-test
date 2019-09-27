@@ -24,9 +24,13 @@ echo "importing data.."
 # curl -k -v -X GET -u "Administrator:${INITIAL_ADMIN_PASSWORD}" -H "Content-Type: application/json" -H "X-Xsrf-Header: PingAccess" \
 #   https://localhost:9000/pa-admin-api/v3/config/import/workflows/1
 
+host=`hostname`
+
+echo "host cal ${host}"
+
 curl -k --silent -X POST -u "Administrator:${INITIAL_ADMIN_PASSWORD}" -H "Content-Type: application/json" -H "X-Xsrf-Header: PingAccess" \
   -d @${STAGING_DIR}/instance/data/data.json \
-  https://localhost:9000/pa-admin-api/v3/config/import/workflows > /dev/null
+  "https://${host}:9000/pa-admin-api/v3/config/import/workflows" > /dev/null
 
 echo "apps after import"
-curl -k -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" https://localhost:9000/pa-admin-api/v3/applications
+curl -k -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" "https://${host}:9000/pa-admin-api/v3/applications"
