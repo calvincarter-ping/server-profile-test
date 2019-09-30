@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 
+echo "password calvin " ${INITIAL_ADMIN_PASSWORD}
+
 curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" -d '{ "email": null,
     "slaAccepted": true,
     "firstLogin": false,
@@ -16,7 +18,7 @@ curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" 
 
 # {\"name\":\"IPAddress\",\"value\":\"10.0.2.68\"}
 # Generate Cert for PingAccess Host
-curl -v -k -X POST -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess" -d "{
+curl -v -k -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
         \"keySize\": 2048,
         \"subjectAlternativeNames\":[],
         \"keyAlgorithm\":\"RSA\",
@@ -26,25 +28,25 @@ curl -v -k -X POST -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess"
         \"commonName\":\"pingaccess\",
         \"country\":\"US\",
         \"signatureAlgorithm\":\"SHA256withRSA\"
-}" https://localhost:9000/pa-admin-api/v3/keyPairs/generate
+}" https://localhost:9000/pa-admin-api/v3/keyPairs/generate > /dev/null
 
-curl -v -k -X PUT -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess" -d "{
+curl -v -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
     \"name\": \"CONFIG QUERY\",
     \"useServerCipherSuiteOrder\": false,
     \"keyPairId\": 5
-}" https://localhost:9000/pa-admin-api/v3/httpsListeners/2
+}" https://localhost:9000/pa-admin-api/v3/httpsListeners/2 > /dev/null
 
 # Update admin config host
-curl -v -k -X PUT -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess" -d "{
+curl -v -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
         \"hostPort\": \"pingaccess:9090\",
         \"httpProxyId\": 0,
         \"httpsProxyId\": 0
-}" https://localhost:9000/pa-admin-api/v3/adminConfig
+}" https://localhost:9000/pa-admin-api/v3/adminConfig > /dev/null
 
 #echo "importing data"
-#curl -k -v -X POST -u Administrator:2FederateM0re -H "Content-Type: application/json" -H "X-Xsrf-Header: #PingAccess" 
+#curl -k -v -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "Content-Type: application/json" -H "X-Xsrf-Header: #PingAccess" 
 #  -d @${STAGING_DIR}/instance/data/data.json 
 #  https://localhost:9000/pa-admin-api/v3/config/import
 
 #echo "apps after import"
-#curl -k -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess" https://localhost:9000/#pa-admin-api/v3/applications
+#curl -k -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" https://localhost:9000/#pa-admin-api/v3/applications
