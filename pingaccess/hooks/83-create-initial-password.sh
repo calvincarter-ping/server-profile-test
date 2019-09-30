@@ -1,29 +1,5 @@
 #!/usr/bin/env sh
-#
-# Ping Identity DevOps - Docker Build Hooks
-#
-#- This script is started in the background immediately before 
-#- the server within the container is started
-#-
-#- This is useful to implement any logic that needs to occur after the
-#- server is up and running
-#-
-#- For example, enabling replication in PingDirectory, initializing Sync 
-#- Pipes in PingDataSync or issuing admin API calls to PingFederate or PingAccess
-
-# shellcheck source=pingcommon.lib.sh
 . "${HOOKS_DIR}/pingcommon.lib.sh"
-
-while true; do
-  curl -ss --silent -o /dev/null -k https://localhost:9000/pa/heartbeat.ping 
-  if ! test $? -eq 0 ; then
-    echo "Import Config: Server not started, waiting.."
-    sleep 3
-  else
-    echo "PA started, begin import"
-    break
-  fi
-done
 
 curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" -d '{ "email": null,
     "slaAccepted": true,
