@@ -18,30 +18,30 @@ curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" 
 
 # {\"name\":\"IPAddress\",\"value\":\"10.0.2.68\"}
 # Generate Cert for PingAccess Host
-curl -v -k -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
-        \"keySize\": 2048,
-        \"subjectAlternativeNames\":[],
-        \"keyAlgorithm\":\"RSA\",
-        \"alias\":\"PingAccess: CONFIG QUERY\",
-        \"organization\":\"Ping Identity\",
-        \"validDays\":365,
-        \"commonName\":\"pingaccess\",
-        \"country\":\"US\",
-        \"signatureAlgorithm\":\"SHA256withRSA\"
-}" https://localhost:9000/pa-admin-api/v3/keyPairs/generate > /dev/null
+#curl -k -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
+#        \"keySize\": 2048,
+#        \"subjectAlternativeNames\":[],
+#        \"keyAlgorithm\":\"RSA\",
+#        \"alias\":\"PingAccess: CONFIG QUERY\",
+#        \"organization\":\"Ping Identity\",
+#        \"validDays\":365,
+#        \"commonName\":\"pingaccess\",
+#       \"country\":\"US\",
+#        \"signatureAlgorithm\":\"SHA256withRSA\"
+#}" https://localhost:9000/pa-admin-api/v3/keyPairs/generate > /dev/null
 
-curl -v -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
-    \"name\": \"CONFIG QUERY\",
-    \"useServerCipherSuiteOrder\": false,
-    \"keyPairId\": 5
-}" https://localhost:9000/pa-admin-api/v3/httpsListeners/2 > /dev/null
+#curl -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
+#    \"name\": \"CONFIG QUERY\",
+#    \"useServerCipherSuiteOrder\": false,
+#    \"keyPairId\": 5
+#}" https://localhost:9000/pa-admin-api/v3/httpsListeners/2 > /dev/null
 
 # Update admin config host
-curl -v -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
-        \"hostPort\": \"pingaccess:9090\",
-        \"httpProxyId\": 0,
-        \"httpsProxyId\": 0
-}" https://localhost:9000/pa-admin-api/v3/adminConfig > /dev/null
+#curl -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
+#        \"hostPort\": \"pingaccess:443\",
+#        \"httpProxyId\": 0,
+#        \"httpsProxyId\": 0
+#}" https://localhost:9000/pa-admin-api/v3/adminConfig > /dev/null
 
 #echo "importing data"
 #curl -k -v -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "Content-Type: application/json" -H "X-Xsrf-Header: #PingAccess" 
