@@ -10,18 +10,18 @@
 
 if test ${RUN_PLAN} = "START" ; then
   echo "Check for configuration to import.."
-  if ! test -f ${STAGING_DIR}/instance/conf/pa.jwk ; then
-    echo "INFO: No 'pa.jwk' found in /instance/conf"
-    if ! test -f ${STAGING_DIR}/instance/data/data.json ; then
-      echo "INFO: No file named 'data.json' found in /instance/data"
-      echo "INFO: skipping config import"
-    fi
-  else 
+  #if ! test -f ${STAGING_DIR}/instance/conf/pa.jwk ; then
+  #  echo "INFO: No 'pa.jwk' found in /instance/conf"
+  #  if ! test -f ${STAGING_DIR}/instance/data/data.json ; then
+  #    echo "INFO: No file named 'data.json' found in /instance/data"
+  #    echo "INFO: skipping config import"
+  #  fi
+  #else 
     if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE" ]]; then
       echo "executing hook 81"
       run_hook "81-import-initial-configuration.sh"
     fi   
-  fi
+  #fi
 fi
 
 if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE" ]]; then

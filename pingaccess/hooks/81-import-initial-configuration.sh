@@ -25,16 +25,17 @@ while true; do
   fi
 done
 
-curl -k -v -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" -d '{ "email": null,
-    "slaAccepted": false,
+curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" -d '{ "email": null,
+    "slaAccepted": true,
     "firstLogin": false,
     "showTutorial": false,
     "username": "Administrator"
 }' https://localhost:9000/pa-admin-api/v3/users/1 > /dev/null
 
-curl -k -v -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" -d '{
+# echo "INFO: changing initial password"
+curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" -d '{
   "currentPassword": "2Access",
-  "newPassword": "2FederateM0re"
+  "newPassword": "'"${INITIAL_ADMIN_PASSWORD}"'"
 }' https://localhost:9000/pa-admin-api/v3/users/1/password > /dev/null
 
 # {\"name\":\"IPAddress\",\"value\":\"10.0.2.68\"}
@@ -46,7 +47,7 @@ curl -v -k -X POST -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess"
         \"alias\":\"PingAccess: CONFIG QUERY\",
         \"organization\":\"Ping Identity\",
         \"validDays\":365,
-        \"commonName\":\"${PA_CONSOLE_HOST}\",
+        \"commonName\":\"pingaccess\",
         \"country\":\"US\",
         \"signatureAlgorithm\":\"SHA256withRSA\"
 }" https://localhost:9000/pa-admin-api/v3/keyPairs/generate
@@ -59,7 +60,7 @@ curl -v -k -X PUT -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess" 
 
 # Update admin config host
 curl -v -k -X PUT -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess" -d "{
-        \"hostPort\": \"${PA_CONSOLE_HOST}:9090\",
+        \"hostPort\": \"pingaccess:9090\",
         \"httpProxyId\": 0,
         \"httpsProxyId\": 0
 }" https://localhost:9000/pa-admin-api/v3/adminConfig
