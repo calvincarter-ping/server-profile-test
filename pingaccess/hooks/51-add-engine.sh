@@ -75,7 +75,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     #echo ${OUT}
     #engineid=$( jq -n "$OUT" | jq '.id' )
 
-    engineid=$( curl -v -k -X POST -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess" -d "{
+    engineid=$( make_api_request -d "{
             \"name\":\"${host}\",
             \"selectedCertificateId\": ${certid}
         }" https://${pahost}:9000/pa-admin-api/v3/engines | jq '.id' )
