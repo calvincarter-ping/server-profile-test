@@ -14,7 +14,7 @@
 # shellcheck source=pingcommon.lib.sh
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 
-pahost=${PA_ADMIN_PUBLIC_HOSTNAME}
+pahost=${PA_CONSOLE_HOST}
 host=`hostname`
 
 function make_api_request
