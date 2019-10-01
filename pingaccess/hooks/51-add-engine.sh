@@ -56,7 +56,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         \"alias\":\"PingAccess: CONFIG QUERY\",
         \"organization\":\"Ping Identity\",
         \"validDays\":365,
-        \"commonName\":\"${PINGACCESS_PORT_9000_TCP_ADDR}\",
+        \"commonName\":\"pingaccess.ping-cloud-calvincarter.svc.cluster.local\",
         \"country\":\"US\",
         \"signatureAlgorithm\":\"SHA256withRSA\"
         }" https://${pahost}:9000/pa-admin-api/v3/keyPairs/generate
