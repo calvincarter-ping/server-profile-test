@@ -85,7 +85,7 @@ pa.default.availability.ondemand.readTimeout=-1
 # port may be disabled by setting clusterconfig.enabled to false
 clusterconfig.enabled=true
 clusterconfig.port=9090
-clusterconfig.bindAddress=${PINGACCESS_PORT_9090_TCP_ADDR}
+clusterconfig.bindAddress=0.0.0.0
 clusterconfig.acceptors=1
 clusterconfig.backlog=512
 clusterconfig.reuseAddress=true
@@ -314,7 +314,7 @@ admin.header.X-XSS-Protection=1; mode=block
 admin.header.X-Content-Type-Options=nosniff
 admin.header.Content-Security-Policy=default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self' data:;
 #Enable only if the admin and engine use different host names
-#admin.header.Strict-Transport-Security=max-age=31536000; includeSubDomains
+admin.header.Strict-Transport-Security=max-age=31536000; includeSubDomains
 
 agent.assets.headers=X-Frame-Options
 agent.assets.header.X-Frame-Options=DENY
@@ -389,7 +389,7 @@ pa.cluster.mcast.group.port=7611
 #
 # e.g. 10.0.1.4[7610],server2.mydomain.com[7610]
 #
-pa.cluster.tcp.discovery.initial.hosts=
+pa.cluster.tcp.discovery.initial.hosts=pingaccess
 
 # Server State Management
 pa.cluster.serverstate.timeToIdleSeconds=86400
