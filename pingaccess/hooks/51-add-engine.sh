@@ -20,7 +20,7 @@ function make_api_request
 {
     local retryAttempts=10
     while true; do
-    curl -s -k -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess " "$@"
+    curl -s -k -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess " "$@"
     if [[ ! $? -eq 0 && $retryAttempts -gt 0 ]]; then
         retryAttempts=$((retryAttempts-1))
         #echo "Timeout occured retry "
@@ -54,12 +54,14 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     keypairid=$( jq -n "$OUT" | jq '.items[] | select(.name=="CONFIG QUERY") | .keyPairId' )
     echo "KeyPairId:"${keypairid}
 
+    # Get Key Pair Alias
     echo "Retrieving the Key Pair alias..."
     OUT=$( make_api_request https://${pahost}:9000/pa-admin-api/v3/keyPairs )
     echo ${OUT}
     kpalias=$( jq -n "$OUT" | jq -r '.items[] | select(.id=='${keypairid}') | .alias' )
     echo "Key Pair Alias:"${kpalias}
 
+    # Retrieve Engine Cert ID
     echo "Retrieving Engine Certificate ID..."
     OUT=$( make_api_request https://${pahost}:9000/pa-admin-api/v3/engines/certificates )
     echo ${OUT}
@@ -75,11 +77,15 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     #echo ${OUT}
     #engineid=$( jq -n "$OUT" | jq '.id' )
 
-    engineid=$( make_api_request -d "{
+    # Retrieve Engine ID
+    OUT=$( make_api_request -d "{
             \"name\":\"${host}\",
             \"selectedCertificateId\": ${certid}
-        }" https://${pahost}:9000/pa-admin-api/v3/engines | jq '.id' )
+        }" https://${pahost}:9000/pa-admin-api/v3/engines )
+    echo ${OUT}
+    engineid=$( jq -n "$OUT" | jq '.id' )
 
+    # Download Engine Configuration
     echo "EngineId:"${engineid}
     set PA_ENGINE_ID=${engineid}
     echo "Retrieving the engine config..."
