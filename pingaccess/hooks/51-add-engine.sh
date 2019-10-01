@@ -92,7 +92,8 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     # Retrieve Engine ID
     OUT=$( make_api_request -X POST -d "{
             \"name\":\"${host}\",
-            \"selectedCertificateId\": ${certid}
+            \"selectedCertificateId\": ${certid},
+            \"configReplicationEnabled\": false
         }" https://${pahost}:9000/pa-admin-api/v3/engines )
     echo ${OUT}
     engineid=$( jq -n "$OUT" | jq '.id' )
