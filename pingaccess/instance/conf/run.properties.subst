@@ -130,8 +130,7 @@ engine.httptransport.ioThreads=0
 engine.websocket.maxConnections=-1
 
 # Including TLS 1.0 for end-user browser compatibility with IE 9 and IE 10
-# engine.ssl.protocols=TLSv1, TLSv1.1, TLSv1.2
-engine.ssl.protocols=${tls.default.protocols}
+engine.ssl.protocols=TLSv1, TLSv1.1, TLSv1.2
 engine.ssl.ciphers=${tls.default.cipherSuites}
 
 # Client connections
@@ -205,8 +204,8 @@ tls.default.protocols = TLSv1.1, TLSv1.2
 
 tls.default.cipherSuites = TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_RSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,TLS_EMPTY_RENEGOTIATION_INFO_SCSV
 
-clusterconfig.ssl.protocols=${tls.default.protocols}
-clusterconfig.ssl.ciphers=${tls.default.cipherSuites}
+clusterconfig.ssl.protocols=
+clusterconfig.ssl.ciphers=
 
 site.ssl.protocols=
 site.ssl.ciphers=
@@ -314,7 +313,7 @@ admin.header.X-XSS-Protection=1; mode=block
 admin.header.X-Content-Type-Options=nosniff
 admin.header.Content-Security-Policy=default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self' data:;
 #Enable only if the admin and engine use different host names
-admin.header.Strict-Transport-Security=max-age=31536000; includeSubDomains
+#admin.header.Strict-Transport-Security=max-age=31536000; includeSubDomains
 
 agent.assets.headers=X-Frame-Options
 agent.assets.header.X-Frame-Options=DENY
@@ -389,7 +388,7 @@ pa.cluster.mcast.group.port=7611
 #
 # e.g. 10.0.1.4[7610],server2.mydomain.com[7610]
 #
-pa.cluster.tcp.discovery.initial.hosts=pingaccess
+pa.cluster.tcp.discovery.initial.hosts=
 
 # Server State Management
 pa.cluster.serverstate.timeToIdleSeconds=86400
