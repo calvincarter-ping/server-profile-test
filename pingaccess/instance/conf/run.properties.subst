@@ -83,7 +83,7 @@ pa.default.availability.ondemand.readTimeout=-1
 # This functionality is supported only for the operating modes CLUSTERED_CONSOLE
 # and CLUSTERED_CONSOLE_REPLICA. While in either of those modes, the cluster configuration
 # port may be disabled by setting clusterconfig.enabled to false
-clusterconfig.enabled=false
+clusterconfig.enabled=true
 clusterconfig.port=9090
 clusterconfig.bindAddress=0.0.0.0
 clusterconfig.acceptors=1
