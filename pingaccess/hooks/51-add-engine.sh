@@ -83,7 +83,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     echo "EngineId:"${engineid}
     set PA_ENGINE_ID=${engineid}
     echo "Retrieving the engine config..."
-    make_api_request "-X POST https://${pahost}:9000/pa-admin-api/v3/engines/${engineid}/config -o engine-config.zip"
+    make_api_request -X POST https://${pahost}:9000/pa-admin-api/v3/engines/${engineid}/config -o engine-config.zip
 
     echo "Extracting config files to conf folder..."
     unzip -o engine-config.zip -d ${OUT_DIR}/instance
