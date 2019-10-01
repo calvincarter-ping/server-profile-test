@@ -15,6 +15,7 @@
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 
 pahost=${PA_CONSOLE_HOST}
+host=`hostname`
 
 function make_api_request
 {
@@ -37,15 +38,34 @@ function make_api_request
 if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]]; then
     echo "This node is an engine..."
     while true; do
-    curl -s -o /dev/null -k https://${pahost}:9000/pa/heartbeat.ping 
-    if ! test $? -eq 0 ; then
-        echo "Adding Engine: Server not started, waiting.."
-        sleep 3
-    else
-        echo "PA started, begin adding engine"
-        break
-    fi
+        curl -s -o /dev/null -k https://${pahost}:9000/pa/heartbeat.ping 
+        if ! test $? -eq 0 ; then
+            echo "Adding Engine: Server not started, waiting.."
+            sleep 3
+        else
+            echo "PA started, begin adding engine"
+            break
+        fi
     done
+
+    # Generate Cert for PingAccess Host
+    make_api_request -X POST -d "{
+        \"keySize\": 2048,
+        \"subjectAlternativeNames\":[],
+        \"keyAlgorithm\":\"RSA\",
+        \"alias\":\"PingAccess: CONFIG QUERY\",
+        \"organization\":\"Ping Identity\",
+        \"validDays\":365,
+        \"commonName\":\"${host}\",
+        \"country\":\"US\",
+        \"signatureAlgorithm\":\"SHA256withRSA\"
+        }" https://${pahost}:9000/pa-admin-api/v3/keyPairs/generate
+
+    make_api_request -X PUT -d "{
+        \"name\": \"CONFIG QUERY\",
+        \"useServerCipherSuiteOrder\": false,
+        \"keyPairId\": 5
+    }" https://${pahost}:9000/pa-admin-api/v3/httpsListeners/2
 
     # Get Engine Certificate ID
     echo "Retrieving Key Pair ID from administration API..."
@@ -69,8 +89,6 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     echo "Engine Cert ID:"${certid}
 
     echo "Adding new engine"
-    host=`hostname`
-
     #JSON="{\"name\":\"${host}\",\"selectedCertificateId\": ${certid},\"configReplicationEnabled\": false}"
     #echo $JSON
     #OUT=$( make_api_request -X POST -d "'${JSON}'" https://${pahost}:9000/pa-admin-api/v3/engines )
@@ -78,7 +96,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     #engineid=$( jq -n "$OUT" | jq '.id' )
 
     # Retrieve Engine ID
-    OUT=$( make_api_request -d "{
+    OUT=$( make_api_request -X POST -d "{
             \"name\":\"${host}\",
             \"selectedCertificateId\": ${certid}
         }" https://${pahost}:9000/pa-admin-api/v3/engines )
