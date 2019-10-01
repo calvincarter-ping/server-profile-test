@@ -54,6 +54,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         \"subjectAlternativeNames\":[{\"name\":\"iPAddress\",\"value\":\"${PINGACCESS_PORT_9090_TCP_ADDR}\"}],
         \"keyAlgorithm\":\"RSA\",
         \"alias\":\"PingAccess: CONFIG QUERY\",
+        \"organization\":\"pingaccess\",
         \"validDays\":365,
         \"commonName\":\"pingaccess\",
         \"country\":\"US\",
