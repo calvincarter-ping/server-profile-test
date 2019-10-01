@@ -69,11 +69,17 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     echo "Adding new engine"
     host=`hostname`
 
-    JSON="{\"name\":\"${host}\",\"selectedCertificateId\": ${certid},\"configReplicationEnabled\": false}"
-    echo $JSON
-    OUT=$( make_api_request -X POST -d "'${JSON}'" https://${pahost}:9000/pa-admin-api/v3/engines )
-    echo ${OUT}
-    engineid=$( jq -n "$OUT" | jq '.id' )
+    #JSON="{\"name\":\"${host}\",\"selectedCertificateId\": ${certid},\"configReplicationEnabled\": false}"
+    #echo $JSON
+    #OUT=$( make_api_request -X POST -d "'${JSON}'" https://${pahost}:9000/pa-admin-api/v3/engines )
+    #echo ${OUT}
+    #engineid=$( jq -n "$OUT" | jq '.id' )
+
+    engineid=$( curl -v -k -X POST -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess" -d "{
+            \"name\":\"${host}\",
+            \"selectedCertificateId\": ${certid}
+        }" https://${pahost}:9000/pa-admin-api/v3/engines | jq '.id' )
+
     echo "EngineId:"${engineid}
     set PA_ENGINE_ID=${engineid}
     echo "Retrieving the engine config..."
