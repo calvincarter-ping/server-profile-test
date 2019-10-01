@@ -54,9 +54,8 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         \"subjectAlternativeNames\":[{\"name\":\"iPAddress\",\"value\":\"${PINGACCESS_PORT_9090_TCP_ADDR}\"}],
         \"keyAlgorithm\":\"RSA\",
         \"alias\":\"PingAccess: CONFIG QUERY\",
-        \"organization\":\"Ping Identity\",
         \"validDays\":365,
-        \"commonName\":\"${host}\",
+        \"commonName\":\"pingaccess\",
         \"country\":\"US\",
         \"signatureAlgorithm\":\"SHA256withRSA\"
         }" https://${pahost}:9000/pa-admin-api/v3/keyPairs/generate
@@ -106,7 +105,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     unzip -o engine-config.zip -d ${OUT_DIR}/instance
 
     cat ${OUT_DIR}/instance/conf/bootstrap.properties
-    chmod 400 ${OUT_DIR}/instance/conf/pa.jwk
+    chmod 777 ${OUT_DIR}/instance/conf/pa.jwk
 
     ls -la ${OUT_DIR}/instance/conf
 
