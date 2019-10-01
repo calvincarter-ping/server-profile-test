@@ -23,6 +23,23 @@ curl -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: Pin
         \"httpsProxyId\": 0
 }" https://localhost:9000/pa-admin-api/v3/adminConfig > /dev/null
 
+curl -k -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
+        \"hostPort\": \"${PA_CONSOLE_HOST}:9090\",
+        \"httpProxyId\": 0,
+        \"httpsProxyId\": 0,
+        \"configReplicationEnabled\": true,
+        \"id\": 0,
+        \"keys\": [],
+        \"name\": \"replica1\",
+        \"selectedCertificateId\": 5
+}" https://localhost:9000/pa-admin-api/v3/adminConfig/replicaAdmins > /dev/null
+
+configReplicationEnabled: true
+id: 0
+keys: []
+name: "replica1"
+selectedCertificateId: 5
+
 #echo "importing data"
 #curl -k -v -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "Content-Type: application/json" -H "X-Xsrf-Header: #PingAccess" 
 #  -d @${STAGING_DIR}/instance/data/data.json 

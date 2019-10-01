@@ -55,8 +55,8 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         \"keyAlgorithm\":\"RSA\",
         \"alias\":\"PingAccess\",
         \"organization\":\"Ping Identity\",
-        \"validDays\":365,
-        \"commonName\":\"localhost\",
+        \"validDays\":366,
+        \"commonName\":\"${PA_CONSOLE_HOST}\",
         \"country\":\"US\",
         \"signatureAlgorithm\":\"SHA256withRSA\"
         }" https://${pahost}:9000/pa-admin-api/v3/keyPairs/generate
