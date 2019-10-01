@@ -69,8 +69,9 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     echo "Adding new engine"
     host=`hostname`
 
-    JSON="'{\"name\":\"${host}\",\"selectedCertificateId\": ${certid},\"configReplicationEnabled\": false}'"
-    OUT=$( make_api_request -X POST -d "${JSON}" https://${pahost}:9000/pa-admin-api/v3/engines )
+    JSON="{\"name\":\"${host}\",\"selectedCertificateId\": ${certid},\"configReplicationEnabled\": false}"
+    echo $JSON
+    OUT=$( make_api_request -X POST -d ${JSON} https://${pahost}:9000/pa-admin-api/v3/engines )
     echo ${OUT}
     engineid=$( jq -n "$OUT" | jq '.id' )
     echo "EngineId:"${engineid}
