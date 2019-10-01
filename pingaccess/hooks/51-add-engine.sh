@@ -56,7 +56,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         \"alias\":\"PingAccess: CONFIG QUERY\",
         \"organization\":\"Ping Identity\",
         \"validDays\":365,
-        \"commonName\":\"${host}\",
+        \"commonName\":\"${PINGACCESS_PORT_9000_TCP_ADDR}\",
         \"country\":\"US\",
         \"signatureAlgorithm\":\"SHA256withRSA\"
         }" https://${pahost}:9000/pa-admin-api/v3/keyPairs/generate
@@ -89,12 +89,6 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     echo "Engine Cert ID:"${certid}
 
     echo "Adding new engine"
-    #JSON="{\"name\":\"${host}\",\"selectedCertificateId\": ${certid},\"configReplicationEnabled\": false}"
-    #echo $JSON
-    #OUT=$( make_api_request -X POST -d "'${JSON}'" https://${pahost}:9000/pa-admin-api/v3/engines )
-    #echo ${OUT}
-    #engineid=$( jq -n "$OUT" | jq '.id' )
-
     # Retrieve Engine ID
     OUT=$( make_api_request -X POST -d "{
             \"name\":\"${host}\",
@@ -105,7 +99,6 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
 
     # Download Engine Configuration
     echo "EngineId:"${engineid}
-    set PA_ENGINE_ID=${engineid}
     echo "Retrieving the engine config..."
     make_api_request -X POST https://${pahost}:9000/pa-admin-api/v3/engines/${engineid}/config -o engine-config.zip
 
