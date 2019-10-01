@@ -14,7 +14,7 @@
 # shellcheck source=pingcommon.lib.sh
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 
-pahost=${PA_CONSOLE_HOST}
+pahost=${PA_ADMIN_PUBLIC_HOSTNAME}
 host=`hostname`
 
 function make_api_request
@@ -51,12 +51,12 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     # Generate Cert for PingAccess Host
     make_api_request -X POST -d "{
         \"keySize\": 2048,
-        \"subjectAlternativeNames\":[],
+        \"subjectAlternativeNames\":[{\"name\":\"iPAddress\",\"value\":\"${PINGACCESS_PORT_9090_TCP_ADDR}\"}],
         \"keyAlgorithm\":\"RSA\",
         \"alias\":\"PingAccess: CONFIG QUERY\",
         \"organization\":\"Ping Identity\",
         \"validDays\":365,
-        \"commonName\":\"pingaccess-engine\",
+        \"commonName\":\"${PA_ENGINE_PUBLIC_HOSTNAME}\",
         \"country\":\"US\",
         \"signatureAlgorithm\":\"SHA256withRSA\"
         }" https://${pahost}:9000/pa-admin-api/v3/keyPairs/generate
