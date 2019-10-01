@@ -51,10 +51,10 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     # Generate Cert for PingAccess Host
     make_api_request -X POST -d "{
         \"keySize\": 2048,
-        \"subjectAlternativeNames\":[{\"name\":\"iPAddress\",\"value\":\"${PINGACCESS_PORT_9090_TCP_ADDR}\"}],
+        \"subjectAlternativeNames\":[{\"name\":\"iPAddress\",\"value\":\"${PINGACCESS_PORT_9090_TCP_ADDR}\"},{\"name\":\"dNSName\",\"value\":\"pingaccess-engine\"}],
         \"keyAlgorithm\":\"RSA\",
-        \"alias\":\"PingAccess: CONFIG QUERY\",
-        \"organization\":\"pingaccess\",
+        \"alias\":\"pingaccess\",
+        \"organization\":\"Ping Identity\",
         \"validDays\":365,
         \"commonName\":\"pingaccess\",
         \"country\":\"US\",
