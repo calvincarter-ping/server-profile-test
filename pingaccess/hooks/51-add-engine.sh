@@ -53,10 +53,10 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         \"keySize\": 2048,
         \"subjectAlternativeNames\":[{\"name\":\"iPAddress\",\"value\":\"${PINGACCESS_PORT_9090_TCP_ADDR}\"},{\"name\":\"dNSName\",\"value\":\"pingaccess-engine\"}],
         \"keyAlgorithm\":\"RSA\",
-        \"alias\":\"pingaccess\",
+        \"alias\":\"PingAccess\",
         \"organization\":\"Ping Identity\",
         \"validDays\":365,
-        \"commonName\":\"pingaccess\",
+        \"commonName\":\"localhost\",
         \"country\":\"US\",
         \"signatureAlgorithm\":\"SHA256withRSA\"
         }" https://${pahost}:9000/pa-admin-api/v3/keyPairs/generate
