@@ -18,7 +18,7 @@ curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" 
 
 # Update admin config host
 curl -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
-        \"hostPort\": \"${PINGACCESS_PORT_9090_TCP_ADDR}:9090\",
+        \"hostPort\": \"pingaccess\",
         \"httpProxyId\": 0,
         \"httpsProxyId\": 0
 }" https://localhost:9000/pa-admin-api/v3/adminConfig > /dev/null
