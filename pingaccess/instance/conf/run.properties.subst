@@ -83,7 +83,7 @@ pa.default.availability.ondemand.readTimeout=-1
 # This functionality is supported only for the operating modes CLUSTERED_CONSOLE
 # and CLUSTERED_CONSOLE_REPLICA. While in either of those modes, the cluster configuration
 # port may be disabled by setting clusterconfig.enabled to false
-clusterconfig.enabled=true
+clusterconfig.enabled=false
 clusterconfig.port=9090
 clusterconfig.bindAddress=0.0.0.0
 clusterconfig.acceptors=1
@@ -204,8 +204,8 @@ tls.default.protocols = TLSv1.1, TLSv1.2
 
 tls.default.cipherSuites = TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_RSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,TLS_EMPTY_RENEGOTIATION_INFO_SCSV
 
-clusterconfig.ssl.protocols=
-clusterconfig.ssl.ciphers=
+clusterconfig.ssl.protocols=${tls.default.protocols}
+clusterconfig.ssl.ciphers=${tls.default.cipherSuites}
 
 site.ssl.protocols=
 site.ssl.ciphers=
