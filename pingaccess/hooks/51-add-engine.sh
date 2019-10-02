@@ -48,7 +48,24 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         fi
     done
 
+    # Generate Cert for PingAccess Host
+    make_api_request -X POST -d "{
+        \"keySize\": 2048,
+        \"subjectAlternativeNames\":[{\"name\":\"iPAddress\",\"value\":\"${PINGACCESS_PORT_9090_TCP_ADDR}\"},{\"name\":\"dNSName\",\"value\":\"pingaccess-engine\"}],
+        \"keyAlgorithm\":\"RSA\",
+        \"alias\":\"PingAccess\",
+        \"organization\":\"Ping Identity\",
+        \"validDays\":366,
+        \"commonName\":\"${PA_CONSOLE_HOST}\",
+        \"country\":\"US\",
+        \"signatureAlgorithm\":\"SHA256withRSA\"
+        }" https://${pahost}:9000/pa-admin-api/v3/keyPairs/generate
 
+    make_api_request -X PUT -d "{
+        \"name\": \"CONFIG QUERY\",
+        \"useServerCipherSuiteOrder\": false,
+        \"keyPairId\": 5
+    }" https://${pahost}:9000/pa-admin-api/v3/httpsListeners/2
 
     # Get Engine Certificate ID
     echo "Retrieving Key Pair ID from administration API..."
