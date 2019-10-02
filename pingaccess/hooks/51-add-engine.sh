@@ -56,7 +56,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         \"keyAlgorithm\":\"RSA\",
         \"alias\":\"PingAccess\",
         \"organization\":\"Ping Identity\",
-        \"validDays\":366,
+        \"validDays\":1000,
         \"commonName\":\"${pahost}\",
         \"country\":\"US\",
         \"signatureAlgorithm\":\"SHA256withRSA\"
@@ -67,6 +67,12 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         \"useServerCipherSuiteOrder\": true,
         \"keyPairId\": 5
     }" https://${pahost}:9000/pa-admin-api/v3/httpsListeners/2
+
+    make_api_request -X PUT -d "{
+        \"name\": \"Engine\",
+        \"useServerCipherSuiteOrder\": true,
+        \"keyPairId\": 5
+    }" https://${pahost}:9000/pa-admin-api/v3/httpsListeners/4
 
     #echo "Virtual Host"
     #OUT=$( make_api_request -X PUT -d "{
@@ -82,21 +88,21 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     # Get Engine Certificate ID
     echo "Retrieving Key Pair ID from administration API..."
     OUT=$( make_api_request https://${pahost}:9000/pa-admin-api/v3/httpsListeners )
-    echo ${OUT}
+    #echo ${OUT}
     keypairid=$( jq -n "$OUT" | jq '.items[] | select(.name=="CONFIG QUERY") | .keyPairId' )
     echo "KeyPairId:"${keypairid}
 
     # Get Key Pair Alias
     echo "Retrieving the Key Pair alias..."
     OUT=$( make_api_request https://${pahost}:9000/pa-admin-api/v3/keyPairs )
-    echo ${OUT}
+    #echo ${OUT}
     kpalias=$( jq -n "$OUT" | jq -r '.items[] | select(.id=='${keypairid}') | .alias' )
     echo "Key Pair Alias:"${kpalias}
 
     # Retrieve Engine Cert ID
     echo "Retrieving Engine Certificate ID..."
     OUT=$( make_api_request https://${pahost}:9000/pa-admin-api/v3/engines/certificates )
-    echo ${OUT}
+    #echo ${OUT}
     certid=$( echo ${OUT} | jq --arg kpalias "${kpalias}" '.items[] | select(.alias==$kpalias and .keyPair==true) | .id' )
     echo "Engine Cert ID:"${certid}
 
@@ -109,7 +115,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
             \"selectedCertificateId\": ${certid},
             \"configReplicationEnabled\": true
         }" https://${pahost}:9000/pa-admin-api/v3/engines )
-    echo ${OUT}
+    #echo ${OUT}
     engineid=$( jq -n "$OUT" | jq '.id' )
 
     # Download Engine Configuration
@@ -120,15 +126,15 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     echo "Extracting config files to conf folder..."
     unzip -o engine-config.zip -d ${OUT_DIR}/instance
 
-    chmod 444 ${OUT_DIR}/instance/conf/pa.jwk
+    chmod 400 ${OUT_DIR}/instance/conf/pa.jwk
     cat ${OUT_DIR}/instance/conf/pa.jwk
     cat ${OUT_DIR}/instance/conf/bootstrap.properties
     cat ${OUT_DIR}/instance/conf/run.properties
 
-    ls -la ${OUT_DIR}/instance/conf
+    #ls -la ${OUT_DIR}/instance/conf
 
-    echo "Cleanup zip.."
-    rm engine-config.zip
+    #echo "Cleanup zip.."
+    #rm engine-config.zip
 fi
 
 
