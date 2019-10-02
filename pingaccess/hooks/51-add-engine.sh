@@ -95,7 +95,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
             \"selectedCertificateId\": ${certid},
             \"configReplicationEnabled\": false,
             \"httpProxyId\": 1,
-            \"httpsProxyId\": 0,
+            \"httpsProxyId\": 1,
         }" https://${pahost}:9000/pa-admin-api/v3/engines )
     echo ${OUT}
     engineid=$( jq -n "$OUT" | jq '.id' )
