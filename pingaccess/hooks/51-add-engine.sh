@@ -39,7 +39,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     # Generate New Key Pair Id for PingAccess Engine: ${host}"
     OUT=$( make_api_request -X POST -d "{
         \"keySize\": 2048,
-        \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"${host}\"}],
+        \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"${PA_CONSOLE_HOST}\"}],
         \"keyAlgorithm\":\"RSA\",
         \"alias\":\"PingAccess\",
         \"organization\":\"Ping Identity\",
@@ -78,7 +78,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
 
     # Create Engine
     OUT=$( make_api_request -X POST -d "{
-        \"name\":\"${host}\",
+        \"name\":\"${PA_CONSOLE_HOST}\",
         \"selectedCertificateId\": ${paEngineCertId},
         \"configReplicationEnabled\": true
     }" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/engines )
