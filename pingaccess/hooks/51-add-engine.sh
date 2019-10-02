@@ -17,8 +17,6 @@
 pahost=${PA_CONSOLE_HOST}
 host=`hostname`
 
-echo ""
-
 function make_api_request
 {
     local retryAttempts=10
@@ -26,10 +24,8 @@ function make_api_request
     curl -s -k -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess " "$@"
     if [[ ! $? -eq 0 && $retryAttempts -gt 0 ]]; then
         retryAttempts=$((retryAttempts-1))
-        #echo "Timeout occured retry "
         sleep 3
     elif [ $retryAttempts -eq 0 ]; then
-        #echo "API Attempts failed"
         exit 1
     else
         break
@@ -50,27 +46,34 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         fi
     done
 
-    # Generate Cert for PingAccess Host
-    # 
-    make_api_request -X POST -d "{
+    # {\"name\":\"iPAddress\",\"value\":\"182.50.30.59\"},{\"name\":\"dNSName\",\"value\":\"${host}\"},{\"name\":\"dNSName\",\"value\":\"${pahost}\"},{\"name\":\"dNSName\",\"value\":\"ping-cloud-calvincarter\"}
+    echo "Generate New Key Pair Id for PingAccess Engine: ${host}"
+    OUT=$( make_api_request -X POST -d "{
         \"keySize\": 2048,
-        \"subjectAlternativeNames\":[{\"name\":\"iPAddress\",\"value\":\"182.50.30.59\"},{\"name\":\"dNSName\",\"value\":\"${host}\"},{\"name\":\"dNSName\",\"value\":\"${pahost}\"},{\"name\":\"dNSName\",\"value\":\"ping-cloud-calvincarter\"}],
+        \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"${host}\"}],
         \"keyAlgorithm\":\"RSA\",
         \"alias\":\"PingAccess\",
         \"organization\":\"Ping Identity\",
         \"validDays\":1000,
-        \"commonName\":\"pa-engine\",
+        \"commonName\":\"${pahost}\",
         \"country\":\"US\",
         \"signatureAlgorithm\":\"SHA256withRSA\"
-        }" https://${pahost}:9000/pa-admin-api/v3/keyPairs/generate
+        }" https://${pahost}:9000/pa-admin-api/v3/keyPairs/generate )
+    paEngineKeyPairId=$( jq -n "$OUT" | jq '.id' )
+    paEngineKeyPairAlias=$( jq -n "$OUT" | jq -r '.id | .alias' )
+    echo "EngineKeyPairId:"${paEngineKeyPairId}
+    echo "EngineKeyPairAlias:"${paEngineKeyPairAlias}
 
-    sleep 10
+    echo "Retrieving Config Query Key Pair ID"
+    OUT=$( make_api_request https://${pahost}:9000/pa-admin-api/v3/httpsListeners )
+    configQueryListenerKeyPairId=$( jq -n "$OUT" | jq '.items[] | select(.name=="CONFIG QUERY") | .keyPairId' )
+    echo "ConfigQueryKeyPairId:"${configQueryListenerKeyPairId}
 
     make_api_request -X PUT -d "{
         \"name\": \"CONFIG QUERY\",
         \"useServerCipherSuiteOrder\": true,
-        \"keyPairId\": 5
-    }" https://${pahost}:9000/pa-admin-api/v3/httpsListeners/2
+        \"keyPairId\": ${paEngineKeyPairId}
+    }" https://${pahost}:9000/pa-admin-api/v3/httpsListeners/${configQueryListenerKeyPairId}
 
     #echo "Virtual Host"
     #OUT=$( make_api_request -X PUT -d "{
@@ -83,18 +86,10 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     #    }" https://${pahost}:9000/pa-admin-api/v3/virtualhosts/3 )
     #echo ${OUT}
 
-    # Get Engine Certificate ID
-    echo "Retrieving Key Pair ID from administration API..."
-    OUT=$( make_api_request https://${pahost}:9000/pa-admin-api/v3/httpsListeners )
-    #echo ${OUT}
-    keypairid=$( jq -n "$OUT" | jq '.items[] | select(.name=="CONFIG QUERY") | .keyPairId' )
-    echo "KeyPairId:"${keypairid}
-
     # Get Key Pair Alias
     echo "Retrieving the Key Pair alias..."
     OUT=$( make_api_request https://${pahost}:9000/pa-admin-api/v3/keyPairs )
-    #echo ${OUT}
-    kpalias=$( jq -n "$OUT" | jq -r '.items[] | select(.id=='${keypairid}') | .alias' )
+    newKeyPairAlias=$( jq -n "$OUT" | jq -r '.items[] | select(.id=='${newKeyPairId}') | .alias' )
     echo "Key Pair Alias:"${kpalias}
 
     # Retrieve Engine Cert ID
