@@ -18,27 +18,16 @@ curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" 
 
 # Update admin config host
 curl -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
-        \"hostPort\": \"${PA_CONSOLE_HOST}:9090\",
+        \"hostPort\": \"localhost:9090\",
         \"httpProxyId\": 0,
         \"httpsProxyId\": 0
 }" https://localhost:9000/pa-admin-api/v3/adminConfig > /dev/null
 
 curl -k -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
-        \"hostPort\": \"${PA_CONSOLE_HOST}:9090\",
-        \"httpProxyId\": 0,
-        \"httpsProxyId\": 0,
-        \"configReplicationEnabled\": true,
-        \"id\": 0,
-        \"keys\": [],
-        \"name\": \"replica1\",
-        \"selectedCertificateId\": 5
-}" https://localhost:9000/pa-admin-api/v3/adminConfig/replicaAdmins > /dev/null
-
-configReplicationEnabled: true
-id: 0
-keys: []
-name: "replica1"
-selectedCertificateId: 5
+        \"name\": \"${PA_CONSOLE_HOST}\",
+        \"host\": \"${PA_CONSOLE_HOST}\",
+        \"port\": \"9090\"
+}" https://localhost:9000/pa-admin-api/v3/proxies > /dev/null
 
 #echo "importing data"
 #curl -k -v -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "Content-Type: application/json" -H "X-Xsrf-Header: #PingAccess" 
