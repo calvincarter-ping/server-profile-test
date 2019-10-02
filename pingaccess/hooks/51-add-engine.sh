@@ -67,6 +67,20 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         \"keyPairId\": 5
     }" https://${pahost}:9000/pa-admin-api/v3/httpsListeners/2
 
+    {"id":3,"host":"pingaccess","port":9090,"agentResourceCacheTTL":900,"keyPairId":5,"trustedCertificateGroupId":0}
+    https://pingaccess-admin-calvincarter.ping-aws.com/pa-admin-api/v3/virtualhosts/3
+
+    echo "Virtual Host"
+    OUT=$( make_api_request -X PUT -d "{
+            \"id\":3,
+            \"host\":\"pingaccess\",
+            \"port\":9090,
+            \"agentResourceCacheTTL\":900,
+            \"keyPairId\":5,
+            \"trustedCertificateGroupId\":0
+        }" https://${pahost}:9000/pa-admin-api/v3/virtualhosts/3 )
+    echo ${OUT}
+
     # Get Engine Certificate ID
     echo "Retrieving Key Pair ID from administration API..."
     OUT=$( make_api_request https://${pahost}:9000/pa-admin-api/v3/httpsListeners )
