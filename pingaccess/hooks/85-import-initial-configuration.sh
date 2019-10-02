@@ -16,9 +16,14 @@
 
 echo "importing data.."
 # # to Test an import call from the container you can use: 
- curl -k -v -X POST -u "Administrator:${INITIAL_ADMIN_PASSWORD}" -H "Content-Type: application/json" -H "X-Xsrf-Header: PingAccess" \
-   -d @${STAGING_DIR}/instance/data/data.json \
-   https://localhost:9000/pa-admin-api/v3/config/import
+# curl -k -v -X POST -u "Administrator:${INITIAL_ADMIN_PASSWORD}" -H "Content-Type: application/json" -H "X-Xsrf-Header: PingAccess" \
+#   -d @${STAGING_DIR}/instance/data/data.json \
+#   https://localhost:9000/pa-admin-api/v3/config/import
+
+echo "importing data"
+curl -k -v -X POST -u Administrator:2FederateM0re -H "Content-Type: application/json" -H "X-Xsrf-Header: #PingAccess" 
+  -d @${STAGING_DIR}/instance/data/data.json 
+  https://localhost:9000/pa-admin-api/v3/config/import
 
 # to check on the status of an import use: 
 # curl -k -v -X GET -u "Administrator:${INITIAL_ADMIN_PASSWORD}" -H "Content-Type: application/json" -H "X-Xsrf-Header: PingAccess" \
