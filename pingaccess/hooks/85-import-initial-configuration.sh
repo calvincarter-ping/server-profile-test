@@ -20,16 +20,11 @@ echo "importing data.."
 #   -d @${STAGING_DIR}/instance/data/data.json \
 #   https://localhost:9000/pa-admin-api/v3/config/import
 
-echo "importing data"
-curl -k -v -X POST -u Administrator:2FederateM0re -H "Content-Type: application/json" -H "X-Xsrf-Header: #PingAccess" 
-  -d @${STAGING_DIR}/instance/data/data.json 
-  https://localhost:9000/pa-admin-api/v3/config/import
-
 # to check on the status of an import use: 
 # curl -k -v -X GET -u "Administrator:${INITIAL_ADMIN_PASSWORD}" -H "Content-Type: application/json" -H "X-Xsrf-Header: PingAccess" \
 #   https://localhost:9000/pa-admin-api/v3/config/import/workflows/1
 
 
-#curl -k --silent -X POST -u "Administrator:${INITIAL_ADMIN_PASSWORD}" -H "Content-Type: application/json" -H "X-Xsrf-Header: PingAccess" \
-#  -d @${STAGING_DIR}/instance/data/data.json \
-#  https://localhost:9000/pa-admin-api/v3/config/import/workflows > /dev/null
+curl -k --silent -X POST -u "Administrator:${INITIAL_ADMIN_PASSWORD}" -H "Content-Type: application/json" -H "X-Xsrf-Header: PingAccess" \
+  -d @${STAGING_DIR}/instance/data/data.json \
+  https://localhost:9000/pa-admin-api/v3/config/import/workflows > /dev/null
