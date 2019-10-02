@@ -67,11 +67,6 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         \"keyPairId\": 5
     }" https://${pahost}:9000/pa-admin-api/v3/httpsListeners/2
 
-    # Update admin config host
-    curl -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
-            \"hostPort\": \"${PA_CONSOLE_HOST}:9000\"
-    }" https://${pahost}:9000/pa-admin-api/v3/adminConfig > /dev/null
-
     # Get Engine Certificate ID
     echo "Retrieving Key Pair ID from administration API..."
     OUT=$( make_api_request https://${pahost}:9000/pa-admin-api/v3/httpsListeners )
@@ -104,6 +99,11 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         }" https://${pahost}:9000/pa-admin-api/v3/engines )
     echo ${OUT}
     engineid=$( jq -n "$OUT" | jq '.id' )
+
+    # Update admin config host
+    curl -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
+            \"hostPort\": \"${PA_CONSOLE_HOST}:9000\"
+    }" https://${pahost}:9000/pa-admin-api/v3/adminConfig > /dev/null
 
     # Download Engine Configuration
     echo "EngineId:"${engineid}
