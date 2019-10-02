@@ -120,8 +120,10 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     echo "Extracting config files to conf folder..."
     unzip -o engine-config.zip -d ${OUT_DIR}/instance
 
+    chmod 444 ${OUT_DIR}/instance/conf/pa.jwk
+    cat ${OUT_DIR}/instance/conf/pa.jwk
     cat ${OUT_DIR}/instance/conf/bootstrap.properties
-    chmod 777 ${OUT_DIR}/instance/conf/pa.jwk
+    cat ${OUT_DIR}/instance/conf/run.properties
 
     ls -la ${OUT_DIR}/instance/conf
 
