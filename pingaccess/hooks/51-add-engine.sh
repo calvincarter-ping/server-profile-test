@@ -69,7 +69,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     }" https://${pahost}:9000/pa-admin-api/v3/httpsListeners/2
 
     make_api_request -X PUT -d "{
-        \"name\": \"Engine\",
+        \"name\": \"ENGINE\",
         \"useServerCipherSuiteOrder\": true,
         \"keyPairId\": 5
     }" https://${pahost}:9000/pa-admin-api/v3/httpsListeners/4
