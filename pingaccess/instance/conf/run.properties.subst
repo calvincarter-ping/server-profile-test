@@ -90,9 +90,9 @@ clusterconfig.acceptors=1
 clusterconfig.backlog=512
 clusterconfig.reuseAddress=true
 clusterconfig.httptransport.socketTimeout=60000
-clusterconfig.httptransport.ioThreads=2
+clusterconfig.httptransport.ioThreads=0
 clusterconfig.httptransport.coreThreadPoolSize=5
-clusterconfig.httptransport.maxThreadPoolSize=1
+clusterconfig.httptransport.maxThreadPoolSize=-1
 
 # Engine
 engine.admin.configuration.audience=PingAccessAdminServer
