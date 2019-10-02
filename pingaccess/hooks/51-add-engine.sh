@@ -52,7 +52,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     # {\"name\":\"iPAddress\",\"value\":\"${PINGACCESS_PORT_9090_TCP_ADDR}\"},{\"name\":\"dNSName\",\"value\":\"pingaccess-engine\"},{\"name\":\"dNSName\",\"value\":\"${pahost}\"}
     make_api_request -X POST -d "{
         \"keySize\": 2048,
-        \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"${pahost}\"}],
+        \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"${pahost}\"},{\"name\":\"otherName\",\"value\":\"${pahost}\"},{\"name\":\"directoryName\",\"value\":\"${pahost}\"},{\"name\":\"uniformResourceIdentifier\",\"value\":\"${pahost}\"}],
         \"keyAlgorithm\":\"RSA\",
         \"alias\":\"PingAccess\",
         \"organization\":\"Ping Identity\",
@@ -67,12 +67,6 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         \"useServerCipherSuiteOrder\": true,
         \"keyPairId\": 5
     }" https://${pahost}:9000/pa-admin-api/v3/httpsListeners/2
-
-    make_api_request -X PUT -d "{
-        \"name\": \"ENGINE\",
-        \"useServerCipherSuiteOrder\": true,
-        \"keyPairId\": 5
-    }" https://${pahost}:9000/pa-admin-api/v3/httpsListeners/4
 
     #echo "Virtual Host"
     #OUT=$( make_api_request -X PUT -d "{
@@ -130,12 +124,6 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     cat ${OUT_DIR}/instance/conf/pa.jwk
     cat ${OUT_DIR}/instance/conf/bootstrap.properties
     cat ${OUT_DIR}/instance/conf/run.properties
-
-    make_api_request -X PUT -d "{
-        \"name\": \"ADMIN\",
-        \"useServerCipherSuiteOrder\": true,
-        \"keyPairId\": 5
-    }" https://${pahost}:9000/pa-admin-api/v3/httpsListeners/1
 
     #ls -la ${OUT_DIR}/instance/conf
 
