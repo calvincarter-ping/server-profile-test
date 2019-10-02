@@ -23,12 +23,12 @@ curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" 
 curl -k -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
         \"agentResourceCacheTTL\":900,
         \"host\": \"${PA_CONSOLE_HOST}\",
-        \"port\": \"9090\"
+        \"port\": \"443\"
 }" https://localhost:9000/pa-admin-api/v3/virtualhosts > /dev/null
 
 # Update admin config host
 curl -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
-        \"hostPort\": \"${PA_CONSOLE_HOST}:9090\"
+        \"hostPort\": \"pa-admin:9090\"
 }" https://localhost:9000/pa-admin-api/v3/adminConfig > /dev/null
 
 #echo "importing data"
