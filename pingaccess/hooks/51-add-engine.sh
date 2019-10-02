@@ -100,15 +100,15 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     echo ${OUT}
     engineid=$( jq -n "$OUT" | jq '.id' )
 
-    # Update admin config host
-    curl -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
-            \"hostPort\": \"${PA_CONSOLE_HOST}:9000\"
-    }" https://${pahost}:9000/pa-admin-api/v3/adminConfig > /dev/null
-
     # Download Engine Configuration
     echo "EngineId:"${engineid}
     echo "Retrieving the engine config..."
     make_api_request -X POST https://${pahost}:9000/pa-admin-api/v3/engines/${engineid}/config -o engine-config.zip
+
+    # Update admin config host
+    curl -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
+            \"hostPort\": \"${PA_CONSOLE_HOST}:9000\"
+    }" https://${pahost}:9000/pa-admin-api/v3/adminConfig > /dev/null
 
     echo "Extracting config files to conf folder..."
     unzip -o engine-config.zip -d ${OUT_DIR}/instance
