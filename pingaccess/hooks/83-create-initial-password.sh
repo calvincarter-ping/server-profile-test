@@ -8,7 +8,7 @@ curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" 
     "username": "Administrator"
 }' https://localhost:9000/pa-admin-api/v3/users/1 > /dev/null
 
-# echo "INFO: changing initial password"
+echo "INFO: changing initial password"
 curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" -d '{
   "currentPassword": "2Access",
   "newPassword": "'"${INITIAL_ADMIN_PASSWORD}"'"
