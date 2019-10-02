@@ -2,9 +2,6 @@
 
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 
-APIATTEMPTS=10
-pahost=${PA_CONSOLE_HOST}
-
 function make_api_request
 {
     local retryAttempts=${APIATTEMPTS}
