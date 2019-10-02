@@ -131,6 +131,12 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     cat ${OUT_DIR}/instance/conf/bootstrap.properties
     cat ${OUT_DIR}/instance/conf/run.properties
 
+    make_api_request -X PUT -d "{
+        \"name\": \"ADMIN\",
+        \"useServerCipherSuiteOrder\": true,
+        \"keyPairId\": 5
+    }" https://${pahost}:9000/pa-admin-api/v3/httpsListeners/1
+
     #ls -la ${OUT_DIR}/instance/conf
 
     #echo "Cleanup zip.."
