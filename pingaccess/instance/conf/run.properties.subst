@@ -89,10 +89,10 @@ clusterconfig.bindAddress=0.0.0.0
 clusterconfig.acceptors=1
 clusterconfig.backlog=512
 clusterconfig.reuseAddress=true
-clusterconfig.httptransport.socketTimeout=30000
-clusterconfig.httptransport.ioThreads=0
+clusterconfig.httptransport.socketTimeout=60000
+clusterconfig.httptransport.ioThreads=2
 clusterconfig.httptransport.coreThreadPoolSize=5
-clusterconfig.httptransport.maxThreadPoolSize=-1
+clusterconfig.httptransport.maxThreadPoolSize=1
 
 # Engine
 engine.admin.configuration.audience=PingAccessAdminServer
@@ -204,8 +204,8 @@ tls.default.protocols = TLSv1.1, TLSv1.2
 
 tls.default.cipherSuites = TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_RSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,TLS_EMPTY_RENEGOTIATION_INFO_SCSV
 
-clusterconfig.ssl.protocols=TLSv1.1, TLSv1.2
-clusterconfig.ssl.ciphers=TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_RSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,TLS_EMPTY_RENEGOTIATION_INFO_SCSV
+clusterconfig.ssl.protocols=
+clusterconfig.ssl.ciphers=
 
 site.ssl.protocols=
 site.ssl.ciphers=
