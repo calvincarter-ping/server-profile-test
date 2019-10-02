@@ -30,7 +30,7 @@ curl -k -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: Pi
 
 # Update admin config host
 curl -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
-        \"hostPort\": \"${PA_CONSOLE_HOST}:9000\"
+        \"hostPort\": \"${PA_CONSOLE_HOST}:9090\"
 }" https://localhost:9000/pa-admin-api/v3/adminConfig > /dev/null
 
 #echo "importing data"
