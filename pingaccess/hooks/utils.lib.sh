@@ -2,6 +2,8 @@
 
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 
+APIATTEMPTS=10
+
 function make_api_request
 {
     local retryAttempts=${APIATTEMPTS}
