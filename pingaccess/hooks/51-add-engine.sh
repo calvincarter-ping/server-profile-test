@@ -52,7 +52,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     # 
     make_api_request -X POST -d "{
         \"keySize\": 2048,
-        \"subjectAlternativeNames\":[{\"name\":\"iPAddress\",\"value\":\"182.50.51.84:636\"},{\"name\":\"dNSName\",\"value\":\"${host}\"},{\"name\":\"dNSName\",\"value\":\"${pahost}\"}],
+        \"subjectAlternativeNames\":[{\"name\":\"iPAddress\",\"value\":\"182.50.51.84\"},{\"name\":\"dNSName\",\"value\":\"${host}\"},{\"name\":\"dNSName\",\"value\":\"${pahost}\"}],
         \"keyAlgorithm\":\"RSA\",
         \"alias\":\"PingAccess\",
         \"organization\":\"Ping Identity\",
@@ -121,14 +121,14 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     unzip -o engine-config.zip -d ${OUT_DIR}/instance
 
     chmod 400 ${OUT_DIR}/instance/conf/pa.jwk
-    cat ${OUT_DIR}/instance/conf/pa.jwk
-    cat ${OUT_DIR}/instance/conf/bootstrap.properties
-    cat ${OUT_DIR}/instance/conf/run.properties
+    #cat ${OUT_DIR}/instance/conf/pa.jwk
+    #cat ${OUT_DIR}/instance/conf/bootstrap.properties
+    #cat ${OUT_DIR}/instance/conf/run.properties
 
     #ls -la ${OUT_DIR}/instance/conf
 
-    #echo "Cleanup zip.."
-    #rm engine-config.zip
+    echo "Cleanup zip.."
+    rm engine-config.zip
 fi
 
 
