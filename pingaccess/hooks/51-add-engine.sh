@@ -89,13 +89,13 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     echo "Engine Cert ID:"${certid}
 
     echo "Adding new engine"
+    #\"httpProxyId\":1,
+    #\"httpsProxyId\":1
     # Retrieve Engine ID
     OUT=$( make_api_request -X POST -d "{
             \"name\":\"${host}\",
             \"selectedCertificateId\": ${certid},
-            \"configReplicationEnabled\": false,
-            \"httpProxyId\":1,
-            \"httpsProxyId\":1
+            \"configReplicationEnabled\": true
         }" https://${pahost}:9000/pa-admin-api/v3/engines )
     echo ${OUT}
     engineid=$( jq -n "$OUT" | jq '.id' )
