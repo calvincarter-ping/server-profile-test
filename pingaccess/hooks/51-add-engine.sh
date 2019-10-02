@@ -14,12 +14,13 @@
 # shellcheck source=pingcommon.lib.sh
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 
+APIATTEMPTS=10
 pahost=${PA_CONSOLE_HOST}
 host=`hostname`
 
 function make_api_request
 {
-    local retryAttempts=10
+    local retryAttempts=${APIATTEMPTS}
     while true; do
     curl -s -k -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess " "$@"
     if [[ ! $? -eq 0 && $retryAttempts -gt 0 ]]; then
@@ -58,10 +59,11 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         \"commonName\":\"${pahost}\",
         \"country\":\"US\",
         \"signatureAlgorithm\":\"SHA256withRSA\"
-        }" https://${pahost}:9000/pa-admin-api/v3/keyPairs/generate )
+    }" https://${pahost}:9000/pa-admin-api/v3/keyPairs/generate )
+    echo ${OUT}
     paEngineKeyPairId=$( jq -n "$OUT" | jq '.id' )
-    paEngineKeyPairAlias=$( jq -n "$OUT" | jq -r '.id | .alias' )
     echo "EngineKeyPairId:"${paEngineKeyPairId}
+    paEngineKeyPairAlias=$( jq -n "$OUT" | jq -r '.id | .alias' )
     echo "EngineKeyPairAlias:"${paEngineKeyPairAlias}
 
     echo "Retrieving Config Query Key Pair ID"
