@@ -63,20 +63,20 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
 
     make_api_request -X PUT -d "{
         \"name\": \"CONFIG QUERY\",
-        \"useServerCipherSuiteOrder\": false,
+        \"useServerCipherSuiteOrder\": true,
         \"keyPairId\": 5
     }" https://${pahost}:9000/pa-admin-api/v3/httpsListeners/2
 
-    echo "Virtual Host"
-    OUT=$( make_api_request -X PUT -d "{
-            \"id\":3,
-            \"host\":\"pingaccess\",
-            \"port\":9090,
-            \"agentResourceCacheTTL\":900,
-            \"keyPairId\":5,
-            \"trustedCertificateGroupId\":0
-        }" https://${pahost}:9000/pa-admin-api/v3/virtualhosts/3 )
-    echo ${OUT}
+    #echo "Virtual Host"
+    #OUT=$( make_api_request -X PUT -d "{
+    #        \"id\":3,
+    #        \"host\":\"pingaccess\",
+    #        \"port\":9090,
+    #        \"agentResourceCacheTTL\":900,
+    #        \"keyPairId\":5,
+    #        \"trustedCertificateGroupId\":0
+    #    }" https://${pahost}:9000/pa-admin-api/v3/virtualhosts/3 )
+    #echo ${OUT}
 
     # Get Engine Certificate ID
     echo "Retrieving Key Pair ID from administration API..."
@@ -126,6 +126,8 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
 
     echo "Cleanup zip.."
     rm engine-config.zip
+
+    sleep 30
 fi
 
 
