@@ -60,10 +60,9 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         \"country\":\"US\",
         \"signatureAlgorithm\":\"SHA256withRSA\"
     }" https://${pahost}:9000/pa-admin-api/v3/keyPairs/generate )
-    echo ${OUT}
     paEngineKeyPairId=$( jq -n "$OUT" | jq '.id' )
     echo "EngineKeyPairId:"${paEngineKeyPairId}
-    paEngineKeyPairAlias=$( jq -n "$OUT" | jq -r '.id | .alias' )
+    paEngineKeyPairAlias=$( jq -n "$OUT" | jq -r '.alias' )
     echo "EngineKeyPairAlias:"${paEngineKeyPairAlias}
 
     echo "Retrieving Config Query Key Pair ID"
@@ -89,44 +88,37 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     #echo ${OUT}
 
     # Get Key Pair Alias
-    echo "Retrieving the Key Pair alias..."
-    OUT=$( make_api_request https://${pahost}:9000/pa-admin-api/v3/keyPairs )
-    newKeyPairAlias=$( jq -n "$OUT" | jq -r '.items[] | select(.id=='${newKeyPairId}') | .alias' )
-    echo "Key Pair Alias:"${kpalias}
+    #echo "Retrieving the Key Pair alias..."
+    #OUT=$( make_api_request https://${pahost}:9000/pa-admin-api/v3/keyPairs )
+    #newKeyPairAlias=$( jq -n "$OUT" | jq -r '.items[] | select(.id=='${newKeyPairId}') | .alias' )
+    #echo "Key Pair Alias:"${kpalias}
 
     # Retrieve Engine Cert ID
     echo "Retrieving Engine Certificate ID..."
     OUT=$( make_api_request https://${pahost}:9000/pa-admin-api/v3/engines/certificates )
-    #echo ${OUT}
-    certid=$( echo ${OUT} | jq --arg kpalias "${kpalias}" '.items[] | select(.alias==$kpalias and .keyPair==true) | .id' )
-    echo "Engine Cert ID:"${certid}
+    paEngineCertId=$( echo ${OUT} | jq --arg paEngineKeyPairAlias "${paEngineKeyPairAlias}" '.items[] | select(.alias==$paEngineKeyPairAlias and .keyPair==true) | .id' )
+    echo "Engine Cert ID:"${paEngineCertId}
 
     echo "Adding new engine"
-    #\"httpProxyId\":1,
-    #\"httpsProxyId\":1
     # Retrieve Engine ID
     OUT=$( make_api_request -X POST -d "{
             \"name\":\"${host}\",
-            \"selectedCertificateId\": ${certid},
+            \"selectedCertificateId\": ${paEngineCertId},
             \"configReplicationEnabled\": true
         }" https://${pahost}:9000/pa-admin-api/v3/engines )
-    #echo ${OUT}
-    engineid=$( jq -n "$OUT" | jq '.id' )
+    engineId=$( jq -n "$OUT" | jq '.id' )
 
     # Download Engine Configuration
-    echo "EngineId:"${engineid}
+    echo "EngineId:"${engineId}
     echo "Retrieving the engine config..."
-    make_api_request -X POST https://${pahost}:9000/pa-admin-api/v3/engines/${engineid}/config -o engine-config.zip
+    make_api_request -X POST https://${pahost}:9000/pa-admin-api/v3/engines/${engineId}/config -o engine-config.zip
 
     echo "Extracting config files to conf folder..."
     unzip -o engine-config.zip -d ${OUT_DIR}/instance
 
     chmod 400 ${OUT_DIR}/instance/conf/pa.jwk
-    #cat ${OUT_DIR}/instance/conf/pa.jwk
-    #cat ${OUT_DIR}/instance/conf/bootstrap.properties
-    #cat ${OUT_DIR}/instance/conf/run.properties
-
-    #ls -la ${OUT_DIR}/instance/conf
+    cat ${OUT_DIR}/instance/conf/bootstrap.properties
+    ls -la ${OUT_DIR}/instance/conf
 
     echo "Cleanup zip.."
     rm engine-config.zip
