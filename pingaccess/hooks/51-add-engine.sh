@@ -49,14 +49,15 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     done
 
     # Generate Cert for PingAccess Host
+    # {\"name\":\"iPAddress\",\"value\":\"${PINGACCESS_PORT_9090_TCP_ADDR}\"},{\"name\":\"dNSName\",\"value\":\"pingaccess-engine\"},{\"name\":\"dNSName\",\"value\":\"${pahost}\"}
     make_api_request -X POST -d "{
         \"keySize\": 2048,
-        \"subjectAlternativeNames\":[{\"name\":\"iPAddress\",\"value\":\"${PINGACCESS_PORT_9090_TCP_ADDR}\"},{\"name\":\"dNSName\",\"value\":\"pingaccess-engine\"},{\"name\":\"dNSName\",\"value\":\"${pahost}\"}],
+        \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"${pahost}\"}],
         \"keyAlgorithm\":\"RSA\",
         \"alias\":\"PingAccess\",
         \"organization\":\"Ping Identity\",
         \"validDays\":366,
-        \"commonName\":\"${host}\",
+        \"commonName\":\"${pahost}\",
         \"country\":\"US\",
         \"signatureAlgorithm\":\"SHA256withRSA\"
         }" https://${pahost}:9000/pa-admin-api/v3/keyPairs/generate
