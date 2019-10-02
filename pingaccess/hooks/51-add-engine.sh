@@ -15,8 +15,6 @@
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 . "${HOOKS_DIR}/utils.lib.sh"
 
-APIATTEMPTS=10
-pahost=${PA_CONSOLE}
 host=`hostname`
 
 if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]]; then
