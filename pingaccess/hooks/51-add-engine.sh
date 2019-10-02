@@ -52,15 +52,17 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     # 
     make_api_request -X POST -d "{
         \"keySize\": 2048,
-        \"subjectAlternativeNames\":[{\"name\":\"iPAddress\",\"value\":\"182.50.51.84\"},{\"name\":\"dNSName\",\"value\":\"${host}\"},{\"name\":\"dNSName\",\"value\":\"${pahost}\"}],
+        \"subjectAlternativeNames\":[{\"name\":\"iPAddress\",\"value\":\"182.50.51.84\"},{\"name\":\"iPAddress\",\"value\":\"182.50.34.175\"},{\"name\":\"dNSName\",\"value\":\"${host}\"},{\"name\":\"dNSName\",\"value\":\"${pahost}\"},{\"name\":\"dNSName\",\"value\":\"ping-cloud-calvincarter\"}],
         \"keyAlgorithm\":\"RSA\",
         \"alias\":\"PingAccess\",
         \"organization\":\"Ping Identity\",
         \"validDays\":1000,
-        \"commonName\":\"${pahost}\",
+        \"commonName\":\"${host}\",
         \"country\":\"US\",
         \"signatureAlgorithm\":\"SHA256withRSA\"
         }" https://${pahost}:9000/pa-admin-api/v3/keyPairs/generate
+
+    sleep 10
 
     make_api_request -X PUT -d "{
         \"name\": \"CONFIG QUERY\",
