@@ -44,7 +44,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         \"alias\":\"PingAccess\",
         \"organization\":\"Ping Identity\",
         \"validDays\":1000,
-        \"commonName\":\"${PA_CONSOLE_HOST}.ping-cloud-calvincarter\",
+        \"commonName\":\"${PA_CONSOLE_HOST}\",
         \"country\":\"US\",
         \"signatureAlgorithm\":\"SHA256withRSA\"
     }" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/keyPairs/generate )
