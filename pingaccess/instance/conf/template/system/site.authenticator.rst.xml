@@ -1,0 +1,38 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+	<soap:Header>
+		<wsa:Action xmlns:wsa="http://www.w3.org/2005/08/addressing"
+			xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+			wsu:Id="${actionId}">http://docs.oasis-open.org/ws-sx/ws-trust/200512/RST/Issue
+		</wsa:Action>
+		<wsse:Security
+			xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+			soap:mustUnderstand="1">
+			<wsu:Timestamp
+				xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+				wsu:Id="${timestampId}">
+				<wsu:Created>${created}</wsu:Created>
+				<wsu:Expires>${expires}</wsu:Expires>
+			</wsu:Timestamp>
+			<wsse:BinarySecurityToken
+				xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+				EncodingType="${tokenEncodingType}" ValueType="${tokenValueType}"
+				wsu:Id="${tokenId}">${tokenValue}</wsse:BinarySecurityToken>
+		</wsse:Security>
+	</soap:Header>
+	<soap:Body
+		xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+		wsu:Id="${soapId}">
+		<wst:RequestSecurityToken
+			xmlns:wst="http://docs.oasis-open.org/ws-sx/ws-trust/200512/">
+			<wst:RequestType>http://docs.oasis-open.org/ws-sx/ws-trust/200512/Issue
+			</wst:RequestType>
+			<wst:OnBehalfOf>
+				<wsse:SecurityTokenReference
+					xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+					<wsse:Reference URI="#${tokenId}"
+						ValueType="${tokenValueType}" />
+				</wsse:SecurityTokenReference>
+			</wst:OnBehalfOf>
+		</wst:RequestSecurityToken>
+	</soap:Body>
+</soap:Envelope>

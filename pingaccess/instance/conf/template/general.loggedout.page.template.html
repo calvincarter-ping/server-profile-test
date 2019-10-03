@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+#*
+The server renders this HTML page in an end-user's browser navigates to the PingAccess logout endpoint.
+
+Velocity variables (identified by the $ character) are generated
+at runtime by the server.
+
+Change text or formatting as needed. Modifying Velocity statements
+is not recommended as it may interfere with expected server behavior.
+
+The following variables are available for use in this template:
+    $loggedOut      - a localized logged out message defined by the 'pa.info.logged.out' property in pa-messages.properties
+    $copyright      - a localized copyright message defined by the 'pa.info.global.footerMessage' property in pa-messages.properties
+    $exchangeId     - a unique identifier for the request/response pair processed by PingAccess
+    $Encode         - an org.owasp.encoder.Encode class suitable for html encoding strings
+    $locale         - a java.util.Locale representing the resolved localization 
+    $localizedMessageResolver - a com.pingidentity.pa.sdk.localization.LocalizedMessageResolver
+    $orientation    - either 'ltr' or 'rtl' based on $locale
+    $featureMode    - the feature mode based on the PingAccess license
+    $reservedApplicationContextRoot - the context root of the reserved application used to serve static assets
+
+Custom localized messages defined in pa-messages.properties can be added to this template by using the      
+$localizedMessageResolver.  For example, if a custom property named 'my.custom.message' was added to pa-messages.properties
+and any other locale specific properties files, the localized value can be added to this template with the following:
+
+    $Encode.forHtml($localizedMessageResolver.resolveMessage($locale, "my.custom.message"))
+
+*#
+
+<!-- template name: general.loggedout.page.template.html -->
+
+#set( $messageKeyPrefix = "general.loggedout.page.template." )
+#set( $lang = $locale.toLanguageTag() )
+
+<html lang="#if($lang != "und")$Encode.forHtmlAttribute($lang)#end" dir="$Encode.forHtmlAttribute($orientation)">
+<head>
+    <title>#if($loggedOut)$Encode.forHtml($loggedOut)#end</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="$Encode.forHtmlAttribute($reservedApplicationContextRoot)/assets/css/main.css"/>
+</head>
+
+<body>
+    
+<div class="ping-container">
+    
+    <!-- 
+    if there is a logo present in the 'company-logo' container,
+    then 'has-logo' class should be added to 'ping-header' container.
+    -->
+    <div class="ping-header">
+        <span class="company-logo"><!-- client company logo here --></span>
+        #if($loggedOut)$Encode.forHtml($loggedOut)#end
+    </div><!-- .ping-header -->
+    
+    <div class="ping-body-container">
+
+        <div class="section-title">
+            #if($loggedOut)$Encode.forHtml($loggedOut)#end
+        </div>
+
+    </div> <!-- .ping-body-container -->
+    
+    <div class="ping-footer-container">
+        <div class="ping-footer">
+            #if("FULL" == $featureMode)
+            <div class="ping-credits"></div>
+            #else
+            <div class="ping-support">$Encode.forHtml($localizedMessageResolver.resolveMessage($locale, "pa.info.global.contact.support"))</div>
+            #end
+            <div class="ping-copyright">$Encode.forHtml($copyright)</div>
+        </div> <!-- .ping-footer -->
+    </div> <!-- .ping-footer-container -->
+    
+</div> <!-- .ping-container -->
+
+</body>
+</html>

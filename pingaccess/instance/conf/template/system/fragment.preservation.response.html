@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>$Encode.forHtml($localizedMessageResolver.resolveMessage($locale, "redirect.response.template.title"))</title>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="$Encode.forHtmlAttribute($reservedApplicationContextRoot)/favicon.ico"/>
+    <script type="text/javascript">
+    function storeAndNavigate() {
+
+      // using var here for backward-compatibility
+      var encodedLocation = '$Encode.forJavaScript($location)';
+
+      var encodedWebStorage = $Encode.forJavaScript($webStorage);
+      var encodedNonce = '$Encode.forJavaScript($nonce)';
+      var hash = encodedWebStorage.getItem('fp-' + encodedNonce);
+
+      if(hash) {
+        encodedWebStorage.removeItem('fp-' + encodedNonce);
+        window.location = encodedLocation + hash;
+      } else {
+        window.location = encodedLocation;
+      }
+    }
+  </script>
+</head>
+<body onLoad="storeAndNavigate()">
+  <noscript>
+    <p>
+        <strong>$Encode.forHtml($localizedMessageResolver.resolveMessage($locale, "redirect.response.template.noteLabel")): </strong>$Encode.forHtml($localizedMessageResolver.resolveMessage($locale, "fragment.preservation.javascript.required"))
+    </p>
+    <a href="$Encode.forHtmlAttribute($location)">$Encode.forHtml($localizedMessageResolver.resolveMessage($locale, "redirect.response.template.provider"))</a>
+  </noscript>
+</body>
+</html>

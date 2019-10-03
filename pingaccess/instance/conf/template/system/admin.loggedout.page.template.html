@@ -1,0 +1,47 @@
+#*
+The server renders this HTML page in an end-user's browser after the SLO flow.
+
+Velocity variables (identified by the $ character) are generated at runtime by the server.
+
+The following variables are available for use in this template:
+    $signOn         - a localized logged out message defined by the 'pa.admin.info.message.sign.on' property in pa-messages.properties
+    $closeOrSignOn  - a localized logged out message defined by the 'pa.admin.info.message.close.or.sign.on' property in pa-messages.properties
+    $signedOff      - a localized logged out message defined by the 'pa.admin.info.message.signed.off' property in pa-messages.properties
+    $Encode         - an org.owasp.encoder.Encode class suitable for html encoding strings
+    $locale         - a java.util.Locale representing the resolved localization 
+    $orientation    - either 'ltr' or 'rtl' based on $locale
+    $reservedApplicationContextRoot - the context root of the reserved application used to serve static assets
+*#
+#set( $lang = $locale.toLanguageTag() )
+<!DOCTYPE html>
+<html lang="#if($lang != "und")$Encode.forHtmlAttribute($lang)#end" dir="$Encode.forHtmlAttribute($orientation)">
+    <head>
+        <title>$Encode.forHtml($signedOff)</title>
+        <meta name="robots" content="noindex, nofollow" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <link rel="stylesheet" type="text/css" href="$Encode.forHtmlAttribute($reservedApplicationContextRoot)/assets/admin/main.css"/>
+    </head>
+    <body class="pa-admin-template">
+        <div id="root">
+            <div id="header">
+                <div class="logo"></div>
+                <img class="site-logo" src="/images/logo-ping-access-wh.png">
+            </div>
+            <div class="login-form">
+                <div id="login-form" class="session-expired">
+                    <h1><span>$Encode.forHtml($signedOff)</span></h1>
+                    <div>
+                        <div class="input-row"><span>$Encode.forHtml($closeOrSignOn)</span></div>
+                        <div class="buttons"><button class="primary alone" onclick="reload()"><span>$Encode.forHtml($signOn)</span></button></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            function reload() {
+                window.location.replace('/');
+            }
+        </script>
+    </body>
+</html>
