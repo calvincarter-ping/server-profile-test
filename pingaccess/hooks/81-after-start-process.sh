@@ -14,7 +14,7 @@ fi
 #  echo "INFO: File named /instance/data/PingAccess.mv.db found"
 #fi
 #if test -f "${STAGING_DIR}/instance/conf/pa.jwk" && test -f "${STAGING_DIR}/instance/data/data.json" && test ! -f "${STAGING_DIR}/instance/data/PingAccess.mv.db"; then
-if test -f "${STAGING_DIR}/instance/data/data.json" && -f "${STAGING_DIR}/instance/conf/pa.jwk"; then
+if test -f "${STAGING_DIR}/instance/data/data.json" && -f "${STAGING_DIR}/instance/conf/pa.jwk" ; then
   run_hook "85-import-initial-configuration.sh"
 else
   echo "INFO: skipping config import"

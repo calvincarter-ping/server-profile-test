@@ -49,3 +49,8 @@ make_api_request -X PUT -d "{
 make_api_request -X PUT -d "{
     \"hostPort\": \"${PA_CONSOLE_HOST}:9090\"
 }" https://localhost:9000/pa-admin-api/v3/adminConfig > /dev/null
+
+if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE" ]]; then
+  echo "Shutting down the eth01 interface..."
+  ip link set eth0 down
+fi
