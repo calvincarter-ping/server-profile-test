@@ -39,7 +39,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     make_api_request -X PUT -d "{
         \"name\": \"CONFIG QUERY\",
         \"useServerCipherSuiteOrder\": true,
-        \"keyPairId\": ${paEngineKeyPairId}
+        \"keyPairId\": 5
     }" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners/${configQueryListenerKeyPairId} > /dev/null
 
     # Get Key Pair Alias
