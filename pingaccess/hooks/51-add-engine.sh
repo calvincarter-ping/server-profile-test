@@ -39,12 +39,12 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     # Generate New Key Pair Id for PingAccess Engine: ${host}"
     OUT=$( make_api_request -X POST -d "{
         \"keySize\": 2048,
-        \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"pingaccess\"}],
+        \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"localhost\"}],
         \"keyAlgorithm\":\"RSA\",
-        \"alias\":\"pingaccess\",
+        \"alias\":\"localhost\",
         \"organization\":\"Ping Identity\",
         \"validDays\":1000,
-        \"commonName\":\"pingaccess\",
+        \"commonName\":\"localhost\",
         \"country\":\"US\",
         \"signatureAlgorithm\":\"SHA256withRSA\"
     }" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/keyPairs/generate )
@@ -64,12 +64,6 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         \"useServerCipherSuiteOrder\": true,
         \"keyPairId\": ${paEngineKeyPairId}
     }" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners/${configQueryListenerKeyPairId} > /dev/null
-
-    # Get Key Pair Alias
-    #echo "Retrieving the Key Pair alias..."
-    #OUT=$( make_api_request https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/keyPairs )
-    #newKeyPairAlias=$( jq -n "$OUT" | jq -r '.items[] | select(.id=='${newKeyPairId}') | .alias' )
-    #echo "Key Pair Alias:"${kpalias}
 
     # Retrieve Engine Cert ID
     OUT=$( make_api_request https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/engines/certificates )
@@ -97,7 +91,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     ls -la ${OUT_DIR}/instance/conf
 
     echo "Cleanup zip.."
-    rm engine-config.zip
+    #rm engine-config.zip
 fi
 
 
