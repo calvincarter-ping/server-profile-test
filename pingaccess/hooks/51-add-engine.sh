@@ -44,7 +44,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
 
     # Get Key Pair Alias
     echo "Retrieving the Key Pair alias..."
-    OUT=$( make_api_request https://${pahost}:9000/pa-admin-api/v3/keyPairs )
+    OUT=$( make_api_request https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/keyPairs )
     echo ${OUT}
     paEngineKeyPairAlias=$( jq -n "$OUT" | jq -r '.items[] | select(.id=='${configQueryListenerKeyPairId}') | .alias' )
     echo "Key Pair Alias:"${paEngineKeyPairAlias}
