@@ -39,7 +39,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     # Generate New Key Pair Id for PingAccess Engine: ${host}"
     OUT=$( make_api_request -X POST -d "{
         \"keySize\": 2048,
-        \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"${PA_CONSOLE_HOST}.ping-cloud-calvincarter\"}],
+        \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"${PA_CONSOLE_HOST}.ping-cloud-calvincarter\"},{\"name\":\"dNSName\",\"value\":\"ping-cloud-calvincarter\"}],
         \"keyAlgorithm\":\"RSA\",
         \"alias\":\"PingAccess\",
         \"organization\":\"Ping Identity\",
