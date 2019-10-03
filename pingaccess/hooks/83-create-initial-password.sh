@@ -38,11 +38,11 @@ configQueryListenerKeyPairId=$( jq -n "$OUT" | jq '.items[] | select(.name=="CON
 echo "ConfigQueryListenerKeyPairId:"${configQueryListenerKeyPairId}
 
 # Update CONFIG QUERY to use PingAccess Engine Key Pair
-make_api_request -X PUT -d "{
-    \"name\": \"CONFIG QUERY\",
-    \"useServerCipherSuiteOrder\": true,
-    \"keyPairId\": ${paEngineKeyPairId}
-}" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners/${configQueryListenerKeyPairId} > /dev/null
+#make_api_request -X PUT -d "{
+#    \"name\": \"CONFIG QUERY\",
+#    \"useServerCipherSuiteOrder\": true,
+#    \"keyPairId\": ${paEngineKeyPairId}
+#}" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners/${configQueryListenerKeyPairId} > /dev/null
 
 # Update admin config host
 make_api_request -X PUT -d "{

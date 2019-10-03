@@ -37,7 +37,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     host=`hostname`
     OUT=$( make_api_request -X POST -d "{
         \"name\":\"${host}\",
-        \"selectedCertificateId\": ${paEngineCertId}
+        \"selectedCertificateId\": 2
     }" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/engines )
     engineId=$( jq -n "$OUT" | jq '.id' )
 
