@@ -75,7 +75,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     ls -la ${OUT_DIR}/instance/conf
 
     echo "Cleanup zip.."
-    #rm engine-config.zip
+    rm engine-config.zip
 fi
 
 
