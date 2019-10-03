@@ -2,8 +2,6 @@
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 . "${HOOKS_DIR}/utils.lib.sh"
 
-host=`hostname`
-
 curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" -d '{ "email": null,
     "slaAccepted": true,
     "firstLogin": false,
@@ -19,6 +17,7 @@ curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" 
 
 # {\"name\":\"iPAddress\",\"value\":\"182.50.30.59\"},{\"name\":\"dNSName\",\"value\":\"${host}\"},{\"name\":\"dNSName\",\"value\":\"${PA_CONSOLE_HOST}\"},{\"name\":\"dNSName\",\"value\":\"ping-cloud-calvincarter\"}
 # Generate New Key Pair Id for PingAccess Engine: ${host}"
+host=`hostname`
 OUT=$( make_api_request -X POST -d "{
     \"keySize\": 2048,
     \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"${host}\"}],
@@ -26,7 +25,7 @@ OUT=$( make_api_request -X POST -d "{
     \"alias\":\"${PA_CONSOLE_HOST}\",
     \"organization\":\"Ping Identity\",
     \"validDays\":1000,
-    \"commonName\":\"${PA_CONSOLE_HOST}\",
+    \"commonName\":\"${PA_CONSOLE_HOST}.*\",
     \"country\":\"US\",
     \"signatureAlgorithm\":\"SHA256withRSA\"
 }" https://localhost:9000/pa-admin-api/v3/keyPairs/generate )
@@ -49,8 +48,3 @@ make_api_request -X PUT -d "{
 make_api_request -X PUT -d "{
     \"hostPort\": \"${PA_CONSOLE_HOST}:9090\"
 }" https://localhost:9000/pa-admin-api/v3/adminConfig > /dev/null
-
-if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE" ]]; then
-  echo "Shutting down the eth01 interface..."
-  ip link set eth0 down
-fi

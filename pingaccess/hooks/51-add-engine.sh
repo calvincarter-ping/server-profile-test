@@ -15,8 +15,6 @@
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 . "${HOOKS_DIR}/utils.lib.sh"
 
-host=`hostname`
-
 if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]]; then
     echo "This node is an engine..."
     while true; do
@@ -36,10 +34,10 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     echo "Engine Cert ID:"${paEngineCertId}
 
     # Create Engine
+    host=`hostname`
     OUT=$( make_api_request -X POST -d "{
         \"name\":\"${host}\",
-        \"selectedCertificateId\": ${paEngineCertId},
-        \"configReplicationEnabled\": true
+        \"selectedCertificateId\": ${paEngineCertId}
     }" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/engines )
     engineId=$( jq -n "$OUT" | jq '.id' )
 
@@ -52,8 +50,8 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     unzip -o engine-config.zip -d ${OUT_DIR}/instance
 
     chmod 400 ${OUT_DIR}/instance/conf/pa.jwk
-    cat ${OUT_DIR}/instance/conf/bootstrap.properties
-    ls -la ${OUT_DIR}/instance/conf
+    #cat ${OUT_DIR}/instance/conf/bootstrap.properties
+    #ls -la ${OUT_DIR}/instance/conf
 
     echo "Cleanup zip.."
     rm engine-config.zip
