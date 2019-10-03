@@ -17,17 +17,11 @@ curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" 
   "newPassword": "'"${INITIAL_ADMIN_PASSWORD}"'"
 }' https://localhost:9000/pa-admin-api/v3/users/1/password > /dev/null
 
-
-# Update admin config host
-make_api_request -X PUT -d "{
-    \"hostPort\": \"${PA_CONSOLE_HOST}:9090\"
-}" https://localhost:9000/pa-admin-api/v3/adminConfig > /dev/null
-
 # {\"name\":\"iPAddress\",\"value\":\"182.50.30.59\"},{\"name\":\"dNSName\",\"value\":\"${host}\"},{\"name\":\"dNSName\",\"value\":\"${PA_CONSOLE_HOST}\"},{\"name\":\"dNSName\",\"value\":\"ping-cloud-calvincarter\"}
 # Generate New Key Pair Id for PingAccess Engine: ${host}"
 OUT=$( make_api_request -X POST -d "{
     \"keySize\": 2048,
-    \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"${host}\"}],
+    \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"${PA_CONSOLE_HOST}\"}],
     \"keyAlgorithm\":\"RSA\",
     \"alias\":\"${PA_CONSOLE_HOST}\",
     \"organization\":\"Ping Identity\",
@@ -50,3 +44,8 @@ make_api_request -X PUT -d "{
     \"useServerCipherSuiteOrder\": true,
     \"keyPairId\": ${paEngineKeyPairId}
 }" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners/${configQueryListenerKeyPairId} > /dev/null
+
+# Update admin config host
+make_api_request -X PUT -d "{
+    \"hostPort\": \"${PA_CONSOLE_HOST}:9090\"
+}" https://localhost:9000/pa-admin-api/v3/adminConfig > /dev/null
