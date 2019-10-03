@@ -37,7 +37,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
 
     # Create Engine
     OUT=$( make_api_request -X POST -d "{
-        \"name\":\"${PA_CONSOLE_HOST}\",
+        \"name\":\"${host}\",
         \"selectedCertificateId\": ${paEngineCertId},
         \"configReplicationEnabled\": true
     }" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/engines )
@@ -51,7 +51,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     echo "Extracting config files to conf folder..."
     unzip -o engine-config.zip -d ${OUT_DIR}/instance
 
-    chmod 444 ${OUT_DIR}/instance/conf/pa.jwk
+    chmod 400 ${OUT_DIR}/instance/conf/pa.jwk
     cat ${OUT_DIR}/instance/conf/bootstrap.properties
     ls -la ${OUT_DIR}/instance/conf
 

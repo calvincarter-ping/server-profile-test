@@ -19,3 +19,8 @@ if test -f "${STAGING_DIR}/instance/data/data.json" && -f "${STAGING_DIR}/instan
 else
   echo "INFO: skipping config import"
 fi
+
+if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE" ]]; then
+  echo "Bringing eth0 back up..."
+  ip link set eth0 up
+fi 
