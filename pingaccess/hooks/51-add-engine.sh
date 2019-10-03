@@ -30,28 +30,9 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         fi
     done
 
-    # Retrieving Config Query Key Pair ID
-    OUT=$( make_api_request https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners )
-    configQueryListenerKeyPairId=$( jq -n "$OUT" | jq '.items[] | select(.name=="CONFIG QUERY") | .keyPairId' )
-    echo "ConfigQueryListenerKeyPairId:"${configQueryListenerKeyPairId}
-
-    # Update CONFIG QUERY to use PingAccess Engine Key Pair
-    make_api_request -X PUT -d "{
-        \"name\": \"CONFIG QUERY\",
-        \"useServerCipherSuiteOrder\": true,
-        \"keyPairId\": 5
-    }" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners/${configQueryListenerKeyPairId} > /dev/null
-
-    # Get Key Pair Alias
-    echo "Retrieving the Key Pair alias..."
-    OUT=$( make_api_request https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/keyPairs )
-    echo ${OUT}
-    paEngineKeyPairAlias=$( jq -n "$OUT" | jq -r '.items[] | select(.id=='5') | .alias' )
-    echo "Key Pair Alias:"${paEngineKeyPairAlias}
-
     # Retrieve Engine Cert ID
     OUT=$( make_api_request https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/engines/certificates )
-    paEngineCertId=$( echo ${OUT} | jq --arg paEngineKeyPairAlias "${paEngineKeyPairAlias}" '.items[] | select(.alias==$paEngineKeyPairAlias and .keyPair==true) | .id' )
+    paEngineCertId=$( echo ${OUT} | jq --arg PA_CONSOLE_HOST "${PA_CONSOLE_HOST}" '.items[] | select(.alias==$PA_CONSOLE_HOST and .keyPair==true) | .id' )
     echo "Engine Cert ID:"${paEngineCertId}
 
     # Create Engine
