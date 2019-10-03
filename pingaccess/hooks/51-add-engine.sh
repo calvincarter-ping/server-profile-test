@@ -30,29 +30,6 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         fi
     done
 
-    # Update admin config host
-    make_api_request -X PUT -d "{
-        \"hostPort\": \"${PA_CONSOLE_HOST}:9090\"
-    }" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/adminConfig > /dev/null
-
-    # {\"name\":\"iPAddress\",\"value\":\"182.50.30.59\"},{\"name\":\"dNSName\",\"value\":\"${host}\"},{\"name\":\"dNSName\",\"value\":\"${PA_CONSOLE_HOST}\"},{\"name\":\"dNSName\",\"value\":\"ping-cloud-calvincarter\"}
-    # Generate New Key Pair Id for PingAccess Engine: ${host}"
-    OUT=$( make_api_request -X POST -d "{
-        \"keySize\": 2048,
-        \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"localhost\"}],
-        \"keyAlgorithm\":\"RSA\",
-        \"alias\":\"localhost\",
-        \"organization\":\"Ping Identity\",
-        \"validDays\":1000,
-        \"commonName\":\"localhost\",
-        \"country\":\"US\",
-        \"signatureAlgorithm\":\"SHA256withRSA\"
-    }" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/keyPairs/generate )
-    paEngineKeyPairId=$( jq -n "$OUT" | jq '.id' )
-    echo "EngineKeyPairId:"${paEngineKeyPairId}
-    paEngineKeyPairAlias=$( jq -n "$OUT" | jq -r '.alias' )
-    echo "EngineKeyPairAlias:"${paEngineKeyPairAlias}
-
     # Retrieving Config Query Key Pair ID
     OUT=$( make_api_request https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners )
     configQueryListenerKeyPairId=$( jq -n "$OUT" | jq '.items[] | select(.name=="CONFIG QUERY") | .keyPairId' )
@@ -64,6 +41,13 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         \"useServerCipherSuiteOrder\": true,
         \"keyPairId\": ${paEngineKeyPairId}
     }" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners/${configQueryListenerKeyPairId} > /dev/null
+
+    # Get Key Pair Alias
+    echo "Retrieving the Key Pair alias..."
+    OUT=$( make_api_request https://${pahost}:9000/pa-admin-api/v3/keyPairs )
+    echo ${OUT}
+    paEngineKeyPairAlias=$( jq -n "$OUT" | jq -r '.items[] | select(.id=='${configQueryListenerKeyPairId}') | .alias' )
+    echo "Key Pair Alias:"${paEngineKeyPairAlias}
 
     # Retrieve Engine Cert ID
     OUT=$( make_api_request https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/engines/certificates )
