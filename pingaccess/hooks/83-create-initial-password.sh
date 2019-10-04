@@ -22,14 +22,14 @@ curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" 
 host=`hostname`
 OUT=$( make_api_request -X POST -d "{
     \"keySize\": 2048,
-    \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"localhost\"}],
-    \"keyAlgorithm\":\"RSA\",
-    \"alias\":\"localhost\",
+    \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"${PA_CONSOLE_HOST}\"}],
+    \"keyAlgorithm\":\"EC\",
+    \"alias\":\"${PA_CONSOLE_HOST}\",
     \"organization\":\"Ping Identity\",
     \"validDays\":1000,
-    \"commonName\":\"localhost\",
+    \"commonName\":\"${PA_CONSOLE_HOST}\",
     \"country\":\"US\",
-    \"signatureAlgorithm\":\"SHA256withRSA\"
+    \"signatureAlgorithm\":\"SHA256withECDSA\"
 }" https://localhost:9000/pa-admin-api/v3/keyPairs/generate )
 paEngineKeyPairId=$( jq -n "$OUT" | jq '.id' )
 echo "EngineKeyPairId:"${paEngineKeyPairId}
