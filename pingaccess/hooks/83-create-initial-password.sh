@@ -37,27 +37,3 @@ OUT=$( make_api_request -X POST -d "{
 paEngineKeyPairId=$( jq -n "$OUT" | jq '.id' )
 echo "EngineKeyPairId:"${paEngineKeyPairId}
 
-# Retrieving CONFIG QUERY id
-OUT=$( make_api_request https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners )
-configQueryListenerId=$( jq -n "$OUT" | jq '.items[] | select(.name=="CONFIG QUERY") | .id' )
-echo "ConfigQueryListenerId:"${configQueryListenerId}
-
-# Update default CONFIG QUERY from localhost to PingAccess Engine Key Pair
-make_api_request -X PUT -d "{
-    \"name\": \"CONFIG QUERY\",
-    \"useServerCipherSuiteOrder\": true,
-    \"keyPairId\": ${paEngineKeyPairId}
-}" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners/${configQueryListenerId} > /dev/null
-
-OUT=$( make_api_request https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners )
-engineListenerId=$( jq -n "$OUT" | jq '.items[] | select(.name=="ENGINE") | .id' )
-echo "engineListenerId:"${engineListenerId}
-
-make_api_request -X PUT -d "{
-    \"name\": \"ENGINE\",
-    \"useServerCipherSuiteOrder\": true,
-    \"keyPairId\": ${paEngineKeyPairId}
-}" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners/${engineListenerId} > /dev/null
-
-make_api_request -X DELETE https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/keyPairs/2
-make_api_request -X DELETE https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/keyPairs/4
