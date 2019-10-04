@@ -24,7 +24,7 @@ OUT=$( make_api_request -X POST -d "{
     \"keySize\": 2048,
     \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"${PA_CONSOLE_HOST}\"}],
     \"keyAlgorithm\":\"RSA\",
-    \"alias\":\"${PA_CONSOLE_HOST},
+    \"alias\":\"${PA_CONSOLE_HOST}\",
     \"organization\":\"Ping Identity\",
     \"validDays\":1000,
     \"commonName\":\"${PA_CONSOLE_HOST}\",
