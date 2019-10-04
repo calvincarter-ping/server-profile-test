@@ -50,7 +50,7 @@ make_api_request -X PUT -d "{
 }" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners/${configQueryListenerId} > /dev/null
 
 OUT=$( make_api_request https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners )
-engineListenerId=$( jq -n "$OUT" | jq '.items[] | select(.name=="CONFIG QUERY") | .id' )
+engineListenerId=$( jq -n "$OUT" | jq '.items[] | select(.name=="ENGINE") | .id' )
 echo "engineListenerId:"${engineListenerId}
 
 make_api_request -X PUT -d "{
