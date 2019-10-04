@@ -21,7 +21,7 @@ curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" 
 # Generate New Key Pair for PingAccess Engine"
 host=`hostname`
 OUT=$( make_api_request -X POST -d "{
-    \"keySize\": 2048,
+    \"keySize\": 256,
     \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"${PA_CONSOLE_HOST}\"}],
     \"keyAlgorithm\":\"EC\",
     \"alias\":\"${PA_CONSOLE_HOST}\",
