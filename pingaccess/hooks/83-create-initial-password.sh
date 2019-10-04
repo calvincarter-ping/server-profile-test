@@ -31,6 +31,7 @@ OUT=$( make_api_request -X POST -d "{
     \"country\":\"US\",
     \"signatureAlgorithm\":\"SHA256withECDSA\"
 }" https://localhost:9000/pa-admin-api/v3/keyPairs/generate )
+echo ${OUT}
 paEngineKeyPairId=$( jq -n "$OUT" | jq '.id' )
 echo "EngineKeyPairId:"${paEngineKeyPairId}
 
