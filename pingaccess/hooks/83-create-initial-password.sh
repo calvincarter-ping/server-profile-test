@@ -49,4 +49,15 @@ make_api_request -X PUT -d "{
     \"keyPairId\": ${paEngineKeyPairId}
 }" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners/${configQueryListenerId} > /dev/null
 
+OUT=$( make_api_request https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners )
+engineListenerId=$( jq -n "$OUT" | jq '.items[] | select(.name=="CONFIG QUERY") | .id' )
+echo "engineListenerId:"${engineListenerId}
+
+make_api_request -X PUT -d "{
+    \"name\": \"ENGINE\",
+    \"useServerCipherSuiteOrder\": true,
+    \"keyPairId\": ${paEngineKeyPairId}
+}" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners/${engineListenerId} > /dev/null
+
 make_api_request -X DELETE https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/keyPairs/2
+make_api_request -X DELETE https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/keyPairs/4
