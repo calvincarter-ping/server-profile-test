@@ -22,12 +22,12 @@ curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" 
 host=`hostname`
 OUT=$( make_api_request -X POST -d "{
     \"keySize\": 2048,
-    \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"${PA_CONSOLE_HOST}\"}],
+    \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"localhost\"}],
     \"keyAlgorithm\":\"RSA\",
-    \"alias\":\"${PA_CONSOLE_HOST}\",
+    \"alias\":\"localhost\",
     \"organization\":\"Ping Identity\",
     \"validDays\":1000,
-    \"commonName\":\"${PA_CONSOLE_HOST}\",
+    \"commonName\":\"localhost\",
     \"country\":\"US\",
     \"signatureAlgorithm\":\"SHA256withRSA\"
 }" https://localhost:9000/pa-admin-api/v3/keyPairs/generate )
