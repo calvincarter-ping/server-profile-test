@@ -27,4 +27,4 @@ echo "importing data.."
 
 curl -v -k -X POST -u "Administrator:${INITIAL_ADMIN_PASSWORD}" -H "Content-Type: application/json" -H "X-Xsrf-Header: PingAccess" \
   -d @${STAGING_DIR}/instance/data/data.json \
-  https://pingaceess:9000/pa-admin-api/v3/config/import/workflows
+  https://localhost:9000/pa-admin-api/v3/config/import/workflows
