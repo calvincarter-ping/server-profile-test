@@ -14,7 +14,7 @@ echo `set`
 echo_green 'Checking if OPERATIONAL_MODE is set...'
 echo "OPERATIONAL_MODE:"${OPERATIONAL_MODE}
 
-if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]]; then
+if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "STANDALONE" ]]; then
   echo "Adding engine..."
   run_hook "51-add-engine.sh"
 fi
