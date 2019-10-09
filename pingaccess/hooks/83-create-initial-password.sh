@@ -48,3 +48,5 @@ make_api_request -X PUT -d "{
     \"useServerCipherSuiteOrder\": true,
     \"keyPairId\": ${paEngineKeyPairId}
 }" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners/${configQueryListenerId} > /dev/null
+
+run_hook "85-import-initial-configuration.sh"
