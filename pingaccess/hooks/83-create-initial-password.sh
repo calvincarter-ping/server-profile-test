@@ -34,6 +34,7 @@ OUT=$( make_api_request -X POST -d "{
     \"country\":\"US\",
     \"signatureAlgorithm\":\"SHA256withRSA\"
 }" https://localhost:9000/pa-admin-api/v3/keyPairs/generate )
+echo $OUT
 paEngineKeyPairId=$( jq -n "$OUT" | jq '.id' )
 echo "EngineKeyPairId:"${paEngineKeyPairId}
 
@@ -47,4 +48,4 @@ make_api_request -X PUT -d "{
     \"name\": \"CONFIG QUERY\",
     \"useServerCipherSuiteOrder\": true,
     \"keyPairId\": ${paEngineKeyPairId}
-}" https://localhost:9000/pa-admin-api/v3/httpsListeners/${configQueryListenerId} > /dev/null
+}" https://localhost:9000/pa-admin-api/v3/httpsListeners/${configQueryListenerId}
