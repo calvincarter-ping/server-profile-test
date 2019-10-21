@@ -26,4 +26,7 @@ fi
 if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE" ]]; then
   echo "Bringing eth0 back up..."
   ip link set eth0 up
+
+  echo "INFO: waiting for PingAccess to start before importing configuration"
+  wait-for localhost:9000 -t 200 --  "${HOOKS_DIR}/81-after-start-process.sh"
 fi
