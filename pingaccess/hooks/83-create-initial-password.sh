@@ -35,7 +35,7 @@ OUT=$( make_api_request -X POST -d "{
     \"signatureAlgorithm\":\"SHA256withRSA\"
 }" https://localhost:9000/pa-admin-api/v3/keyPairs/generate )
 echo $OUT
-paEngineKeyPairId=$( jq -n "$OUT" | jq -r '.id' )
+paEngineKeyPairId=$( jq -n $OUT | jq -r '.id' )
 echo "EngineKeyPairId:"${paEngineKeyPairId}
 
 # Retrieving CONFIG QUERY id
