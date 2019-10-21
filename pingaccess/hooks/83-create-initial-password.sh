@@ -25,12 +25,12 @@ make_api_request -X PUT -d "{
 host=`hostname`
 OUT=$( make_api_request -X POST -d "{
     \"keySize\": 2048,
-    \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"${PA_CONSOLE_HOST}\"}],
+    \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"pingaccess-engine\"}],
     \"keyAlgorithm\":\"RSA\",
     \"alias\":\"${PA_CONSOLE_HOST}\",
     \"organization\":\"Ping Identity\",
     \"validDays\":1000,
-    \"commonName\":\"${PA_CONSOLE_HOST}\",
+    \"commonName\":\"pingaccess-engine\",
     \"country\":\"US\",
     \"signatureAlgorithm\":\"SHA256withRSA\"
 }" https://localhost:9000/pa-admin-api/v3/keyPairs/generate )
@@ -38,13 +38,13 @@ paEngineKeyPairId=$( jq -n "$OUT" | jq '.id' )
 echo "EngineKeyPairId:"${paEngineKeyPairId}
 
 # Retrieving CONFIG QUERY id
-OUT=$( make_api_request https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners )
-configQueryListenerId=$( jq -n "$OUT" | jq '.items[] | select(.name=="ADMIN") | .id' )
+OUT=$( make_api_request https://localhost:9000/pa-admin-api/v3/httpsListeners )
+configQueryListenerId=$( jq -n "$OUT" | jq '.items[] | select(.name=="CONFIG QUERY") | .id' )
 echo "ConfigQueryListenerId:"${configQueryListenerId}
 
 # Update default CONFIG QUERY from localhost to PingAccess Engine Key Pair
 make_api_request -X PUT -d "{
-    \"name\": \"ADMIN\",
+    \"name\": \"CONFIG QUERY\",
     \"useServerCipherSuiteOrder\": true,
     \"keyPairId\": ${paEngineKeyPairId}
-}" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners/${configQueryListenerId} > /dev/null
+}" https://localhost:9000/pa-admin-api/v3/httpsListeners/${configQueryListenerId} > /dev/null
