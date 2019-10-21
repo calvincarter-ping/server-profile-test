@@ -35,12 +35,12 @@ OUT=$( make_api_request -X POST -d "{
     \"signatureAlgorithm\":\"SHA256withRSA\"
 }" https://localhost:9000/pa-admin-api/v3/keyPairs/generate )
 echo $OUT
-paEngineKeyPairId=$( jq -n "$OUT" | jq '.id' )
+paEngineKeyPairId=$( jq -n "$OUT" | jq -r '.id' )
 echo "EngineKeyPairId:"${paEngineKeyPairId}
 
 # Retrieving CONFIG QUERY id
 OUT=$( make_api_request https://localhost:9000/pa-admin-api/v3/httpsListeners )
-configQueryListenerId=$( jq -n "$OUT" | jq '.items[] | select(.name=="CONFIG QUERY") | .id' )
+configQueryListenerId=$( jq -n "$OUT" | jq -r '.items[] | select(.name=="CONFIG QUERY") | .id' )
 echo "ConfigQueryListenerId:"${configQueryListenerId}
 
 # Update default CONFIG QUERY from localhost to PingAccess Engine Key Pair
