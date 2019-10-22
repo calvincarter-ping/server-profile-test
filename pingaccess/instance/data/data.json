@@ -14,7 +14,7 @@
             "cookieType": "Encrypted"
         },
         "adminConfig": {
-            "hostPort": "${PA_CONSOLE_HOST}:9090",
+            "hostPort": "pingaccess:9090",
             "httpProxyId": 0,
             "httpsProxyId": 0
         },
