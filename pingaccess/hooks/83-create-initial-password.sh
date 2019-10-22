@@ -48,9 +48,3 @@ make_api_request -X PUT -d "{
     \"useServerCipherSuiteOrder\": false,
     \"keyPairId\": ${paEngineKeyPairId}
 }" https://localhost:9000/pa-admin-api/v3/httpsListeners/${configQueryListenerId}
-
-ip link set eth0 down
-
-sleep 10
-
-ip link set eth0 up
