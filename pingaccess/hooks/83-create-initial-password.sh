@@ -18,7 +18,7 @@ curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" 
 # {\"name\":\"iPAddress\",\"value\":\"182.50.30.59\"},{\"name\":\"dNSName\",\"value\":\"${host}\"},{\"name\":\"dNSName\",\"value\":\"${PA_CONSOLE_HOST}\"},{\"name\":\"dNSName\",\"value\":\"ping-cloud-calvincarter\"}
 # Update admin config host
 make_api_request -X PUT -d "{
-    \"hostPort\": \"${PA_CONSOLE_HOST}:9000\"
+    \"hostPort\": \"${PA_CONSOLE_HOST}:443\"
 }" https://localhost:9000/pa-admin-api/v3/adminConfig > /dev/null
 
 # Generate New Key Pair for PingAccess Engine"
@@ -45,6 +45,6 @@ echo "ConfigQueryListenerId:${configQueryListenerId}"
 # Update default CONFIG QUERY from localhost to PingAccess Engine Key Pair
 make_api_request -X PUT -d "{
     \"name\": \"CONFIG QUERY\",
-    \"useServerCipherSuiteOrder\": true,
+    \"useServerCipherSuiteOrder\": false,
     \"keyPairId\": ${paEngineKeyPairId}
 }" https://localhost:9000/pa-admin-api/v3/httpsListeners/${configQueryListenerId}
