@@ -17,14 +17,13 @@
 #      echo "INFO: skipping config import"
 #    fi
 #  else 
-#    if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE" ]]; then
-#      run_hook "81-import-initial-configuration.sh"
-#    fi   
+    if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE" ]]; then
+      run_hook "81-import-initial-configuration.sh"
+    fi   
 #  fi
 #fi
 
 if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE" ]]; then
   echo "Bringing eth0 back up..."
-  run_hook "81-import-initial-configuration.sh"
   ip link set eth0 up
 fi 
