@@ -40,6 +40,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         \"selectedCertificateId\": 2,
         \"configReplicationEnabled\": true
     }" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/engines )
+    echo ${OUT}
     engineId=$( jq -n "$OUT" | jq '.id' )
 
     # Download Engine Configuration
