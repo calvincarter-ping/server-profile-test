@@ -73,11 +73,11 @@ configQueryListenerId=$( jq -n "$OUT" | jq '.items[] | select(.name=="CONFIG QUE
 echo "ConfigQueryListenerId:${configQueryListenerId}"
 
 # Update default CONFIG QUERY from localhost to PingAccess Engine Key Pair
-make_api_request -X PUT -d "{
-    \"name\": \"CONFIG QUERY\",
-    \"useServerCipherSuiteOrder\": false,
-    \"keyPairId\": ${paEngineKeyPairId}
-}" https://localhost:9000/pa-admin-api/v3/httpsListeners/${configQueryListenerId}
+#make_api_request -X PUT -d "{
+#    \"name\": \"CONFIG QUERY\",
+#    \"useServerCipherSuiteOrder\": false,
+#    \"keyPairId\": ${paEngineKeyPairId}
+#}" https://localhost:9000/pa-admin-api/v3/httpsListeners/${configQueryListenerId}
 
 
 
