@@ -15,7 +15,7 @@ function make_api_request
         elif [ $retryAttempts -eq 0 ]; then
             return 1
         else
-            break
+            return 0
         fi
     done
 }
