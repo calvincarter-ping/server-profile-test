@@ -14,6 +14,7 @@
 
 # shellcheck source=pingcommon.lib.sh
 . "${HOOKS_DIR}/pingcommon.lib.sh"
+. "${HOOKS_DIR}/utils.lib.sh"
 
 while true; do
   curl -ss --silent -o /dev/null -k https://localhost:9000/pa/heartbeat.ping 
