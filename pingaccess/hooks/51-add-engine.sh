@@ -29,15 +29,15 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     done
 
     # Retrieve Engine Cert ID
-    #OUT=$( make_api_request https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/engines/certificates )
-    #paEngineCertId=$( jq -n "$OUT" | jq --arg PA_CONSOLE_HOST "${PA_CONSOLE_HOST}" '.items[] | select(.alias==$PA_CONSOLE_HOST and .keyPair==true) | .id' )
-    #echo "Engine Cert ID:"${paEngineCertId}
+    OUT=$( make_api_request https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/engines/certificates )
+    paEngineCertId=$( jq -n "$OUT" | jq --arg PA_CONSOLE_HOST "${PA_CONSOLE_HOST}" '.items[] | select(.alias==$PA_CONSOLE_HOST and .keyPair==true) | .id' )
+    echo "Engine Cert ID:"${paEngineCertId}
 
     # Create Engine
     host=`hostname`
     OUT=$( make_api_request -X POST -d "{
         \"name\":\"${host}\",
-        \"selectedCertificateId\": 2,
+        \"selectedCertificateId\": ${paEngineCertId},
         \"configReplicationEnabled\": true
     }" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/engines )
     engineId=$( jq -n "$OUT" | jq '.id' )
