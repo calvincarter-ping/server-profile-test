@@ -8,7 +8,7 @@ function make_api_request
 {
     local retryAttempts=${APIATTEMPTS}
     while true; do
-    curl -k --silent -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess " "$@"
+    curl -k -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess " "$@"
     if [[ ! $? -eq 0 && $retryAttempts -gt 0 ]]; then
         retryAttempts=$((retryAttempts-1))
         sleep 3
