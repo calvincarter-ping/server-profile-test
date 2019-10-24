@@ -1,5 +1,0 @@
-
-Server Profile baseline/pingaccess
-  - Creates an iniial PingAccess instance
-  - Authentictes admin console to PingDirectory
-
