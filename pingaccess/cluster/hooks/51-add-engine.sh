@@ -37,12 +37,12 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
 
     echo "Retrieving the Key Pair alias..."
     OUT=$( make_api_request https://${pahost}:9000/pa-admin-api/v3/keyPairs  )
-    kpalias=$( jq -n "$OUT" | jq '.items[] | select(.id=='${configQueryListenerKeyPairId}') | .alias' )
+    kpalias=$( jq -n "$OUT" | jq -r '.items[] | select(.id=='${configQueryListenerKeyPairId}') | .alias' )
     echo "Key Pair Alias:"${kpalias}
 
     # Retrieve Engine Cert ID
     OUT=$( make_api_request https://${pahost}:9000/pa-admin-api/v3/engines/certificates )
-    paEngineCertId=$( jq -n "$OUT" | jq '.items[] | select(.alias=='${kpalias}' and .keyPair==true) | .id' )
+    paEngineCertId=$( jq -n "$OUT" | jq --arg kpalias "${kpalias}" '.items[] | select(.alias==$kpalias and .keyPair==true) | .id' )
     echo "Engine Cert ID:${paEngineCertId}"
 
     # Create Engine
