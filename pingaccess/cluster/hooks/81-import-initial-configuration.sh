@@ -51,6 +51,10 @@ if ! test -f ${STAGING_DIR}/instance/data/data.json ; then
 
 else
 
+  make_api_request -X PUT -d "{
+      \"hostPort\": \"${PA_CONSOLE_HOST}:9090\"
+  }" https://localhost:9000/pa-admin-api/v3/adminConfig > /dev/null
+
   # Generate New Key Pair for PingAccess Engine"
   OUT=$( make_api_request -X POST -d "{
       \"keySize\": 2048,
