@@ -31,18 +31,18 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     done
 
     # Retrieving CONFIG QUERY id
-    OUT=$( make_api_request https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners )
+    OUT=$( make_api_request https://${pahost}:9000/pa-admin-api/v3/httpsListeners )
     configQueryListenerKeyPairId=$( jq -n "$OUT" | jq '.items[] | select(.name=="CONFIG QUERY") | .keyPairId' )
     echo "ConfigQueryListenerKeyPairId:${configQueryListenerKeyPairId}"
 
     echo "Retrieving the Key Pair alias..."
-    OUT=$( make_api_request https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/keyPairs  )
-    kpalias=$( jq -n "$OUT" | jq -r '.items[] | select(.id=='${configQueryListenerKeyPairId}') | .alias' )
+    OUT=$( make_api_request https://${pahost}:9000/pa-admin-api/v3/keyPairs  )
+    kpalias=$( jq -n "$OUT" | jq '.items[] | select(.id=='${configQueryListenerKeyPairId}') | .alias' )
     echo "Key Pair Alias:"${kpalias}
 
     # Retrieve Engine Cert ID
-    OUT=$( make_api_request https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/engines/certificates )
-    paEngineCertId=$( jq -n "$OUT" | jq --arg kpalias "${kpalias}" '.items[] | select(.alias==$kpalias and .keyPair==true) | .id' )
+    OUT=$( make_api_request https://${pahost}:9000/pa-admin-api/v3/engines/certificates )
+    paEngineCertId=$( jq -n "$OUT" | jq '.items[] | select(.alias==$kpalias and .keyPair==true) | .id' )
     echo "Engine Cert ID:${paEngineCertId}"
 
     # Create Engine
@@ -51,18 +51,17 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
         \"name\":\"${host}\",
         \"selectedCertificateId\": ${paEngineCertId},
         \"configReplicationEnabled\": true
-    }" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/engines )
+    }" https://${pahost}:9000/pa-admin-api/v3/engines )
     engineId=$( jq -n "$OUT" | jq '.id' )
 
     # Download Engine Configuration
     echo "EngineId:"${engineId}
     echo "Retrieving the engine config"
-    make_api_request -X POST https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/engines/${engineId}/config -o engine-config.zip
+    make_api_request -X POST https://${pahost}:9000/pa-admin-api/v3/engines/${engineId}/config -o engine-config.zip
 
     echo "Extracting config files to conf folder..."
-
     unzip -o engine-config.zip -d ${OUT_DIR}/instance
-    ls -la ${OUT_DIR}instance/conf
+    ls -la ${OUT_DIR}/instance/conf
     cat ${OUT_DIR}/instance/conf/bootstrap.properties
     chmod 400 ${OUT_DIR}/instance/conf/pa.jwk
 
