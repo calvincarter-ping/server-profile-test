@@ -42,7 +42,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
 
     # Retrieve Engine Cert ID
     OUT=$( make_api_request https://${pahost}:9000/pa-admin-api/v3/engines/certificates )
-    paEngineCertId=$( jq -n "$OUT" | jq '.items[] | select(.alias==$kpalias and .keyPair==true) | .id' )
+    paEngineCertId=$( jq -n "$OUT" | jq '.items[] | select(.alias=='${kpalias}' and .keyPair==true) | .id' )
     echo "Engine Cert ID:${paEngineCertId}"
 
     # Create Engine
