@@ -44,29 +44,7 @@
             "port": 3000,
             "secure": true
         }],
-        "engines": [{
-            "id": 1,
-            "name": "pingaccess-engine-7fc97d9bbf-tmlnp",
-            "description": null,
-            "configReplicationEnabled": true,
-            "keys": [{
-                "jwk": {
-                    "kty": "EC",
-                    "kid": "357256b9-908d-4e2b-90f4-7cc5bc539238",
-                    "x": "d-IthS7gZIybI4GF6rX8VYrCzWw_v19-v-SN8YmsHlE",
-                    "y": "9nRyvDDxHOKgpN9LogkSVdZd82UB6DWGCeCrVhlnJrg",
-                    "crv": "P-256"
-                },
-                "created": 1571944716645
-            }],
-            "httpProxyId": 0,
-            "httpsProxyId": 0,
-            "selectedCertificateId": 5,
-            "certificateHash": {
-                "algorithm": "SHA1",
-                "hexValue": "e4a0a31122183cfa32e461c7a61f35f73d994992"
-            }
-        }],
+        "engines": [],
         "httpHostSource": {
             "headerNameList": ["X-Forwarded-Host", "Host"],
             "listValueLocation": "LAST"
