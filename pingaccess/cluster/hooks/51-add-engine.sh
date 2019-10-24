@@ -15,32 +15,43 @@
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 . "${HOOKS_DIR}/utils.lib.sh"
 
+ pahost=${PA_CONSOLE_HOST}
+INITIAL_ADMIN_PASSWORD=${INITIAL_ADMIN_PASSWORD:=2FederateM0re}
 if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]]; then
     echo "This node is an engine..."
     while true; do
-        curl -s -o /dev/null -k https://${PA_CONSOLE_HOST}:9000/pa/heartbeat.ping 
-        if ! test $? -eq 0 ; then
-            echo "Adding Engine: Server not started, waiting.."
-            sleep 3
-        else
-            echo "PA started, begin adding engine"
-            break
-        fi
+    curl -ss --silent -o /dev/null -k https://${pahost}:9000/pa/heartbeat.ping 
+    if ! test $? -eq 0 ; then
+        echo "Adding Engine: Server not started, waiting.."
+        sleep 3
+    else
+        echo "PA started, begin adding engine"
+        break
+    fi
     done
 
+    # Retrieving CONFIG QUERY id
+    OUT=$( make_api_request https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/httpsListeners )
+    configQueryListenerKeyPairId=$( jq -n "$OUT" | jq '.items[] | select(.name=="CONFIG QUERY") | .keyPairId' )
+    echo "ConfigQueryListenerKeyPairId:${configQueryListenerKeyPairId}"
+
+    echo "Retrieving the Key Pair alias..."
+    OUT=$( make_api_request https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/keyPairs  )
+    kpalias=$( jq -n "$OUT" | jq '.items[] | select(.id=='${configQueryListenerKeyPairId}') | .alias' )
+    echo "Key Pair Alias:"${kpalias}
+
     # Retrieve Engine Cert ID
-    #OUT=$( make_api_request https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/engines/certificates )
-    #paEngineCertId=$( jq -n "$OUT" | jq --arg PA_CONSOLE_HOST "${PA_CONSOLE_HOST}" '.items[] | select(.alias==$PA_CONSOLE_HOST and .keyPair==true) | .id' )
-    #echo "Engine Cert ID:"${paEngineCertId}
+    OUT=$( make_api_request https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/engines/certificates )
+    paEngineCertId=$( jq -n "$OUT" | jq --arg kpalias "${kpalias}" '.items[] | select(.alias==$kpalias and .keyPair==true) | .id' )
+    echo "Engine Cert ID:${paEngineCertId}"
 
     # Create Engine
     host=`hostname`
     OUT=$( make_api_request -X POST -d "{
         \"name\":\"${host}\",
-        \"selectedCertificateId\": 2,
+        \"selectedCertificateId\": ${paEngineCertId},
         \"configReplicationEnabled\": true
     }" https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/engines )
-    echo ${OUT}
     engineId=$( jq -n "$OUT" | jq '.id' )
 
     # Download Engine Configuration
@@ -49,11 +60,11 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     make_api_request -X POST https://${PA_CONSOLE_HOST}:9000/pa-admin-api/v3/engines/${engineId}/config -o engine-config.zip
 
     echo "Extracting config files to conf folder..."
-    unzip -o engine-config.zip -d ${OUT_DIR}/instance
 
+    unzip -o engine-config.zip -d ${OUT_DIR}/instance
+    ls -la ${OUT_DIR}instance/conf
+    cat ${OUT_DIR}/instance/conf/bootstrap.properties
     chmod 400 ${OUT_DIR}/instance/conf/pa.jwk
-    #cat ${OUT_DIR}/instance/conf/bootstrap.properties
-    #ls -la ${OUT_DIR}/instance/conf
 
     echo "Cleanup zip.."
     rm engine-config.zip
