@@ -39,47 +39,11 @@ curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" 
   "newPassword": "'"${INITIAL_ADMIN_PASSWORD}"'"
 }' https://localhost:9000/pa-admin-api/v3/users/1/password > /dev/null
 
-if test -f ${STAGING_DIR}/instance/data/data.json ; then
 
-  echo "importing data"
-  curl -k -v -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "Content-Type: application/json" -H "X-Xsrf-Header: PingAccess" \
-    -d @${STAGING_DIR}/instance/data/data.json \
-    https://localhost:9000/pa-admin-api/v3/config/import
+echo "importing data"
+curl -k -v -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "Content-Type: application/json" -H "X-Xsrf-Header: PingAccess" \
+  -d @${STAGING_DIR}/instance/data/data.json \
+  https://localhost:9000/pa-admin-api/v3/config/import
 
-  echo "apps after import"
-  curl -k -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" https://localhost:9000/pa-admin-api/v3/applications
-
-else
-
-  make_api_request -X PUT -d "{
-      \"hostPort\": \"pingaccess:9090\"
-  }" https://localhost:9000/pa-admin-api/v3/adminConfig > /dev/null
-
-  # Generate New Key Pair for PingAccess Engine"
-  OUT=$( make_api_request -X POST -d "{
-      \"keySize\": 2048,
-      \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"pingaccess\"}],
-      \"keyAlgorithm\":\"RSA\",
-      \"alias\":\"pingaccess-console\",
-      \"organization\":\"Ping Identity\",
-      \"validDays\":1000,
-      \"commonName\":\"pingaccess\",
-      \"country\":\"US\",
-      \"signatureAlgorithm\":\"SHA256withRSA\"
-  }" https://localhost:9000/pa-admin-api/v3/keyPairs/generate )
-  paEngineKeyPairId=$( jq -n "$OUT" | jq '.id' )
-  echo "EngineKeyPairId:${paEngineKeyPairId}"
-
-  # Retrieving CONFIG QUERY id
-  OUT=$( make_api_request https://localhost:9000/pa-admin-api/v3/httpsListeners )
-  configQueryListenerId=$( jq -n "$OUT" | jq '.items[] | select(.name=="CONFIG QUERY") | .id' )
-  echo "ConfigQueryListenerId:${configQueryListenerId}"
-
-  # Update default CONFIG QUERY from localhost to PingAccess Engine Key Pair
-  make_api_request -X PUT -d "{
-      \"name\": \"CONFIG QUERY\",
-      \"useServerCipherSuiteOrder\": false,
-      \"keyPairId\": ${paEngineKeyPairId}
-  }" https://localhost:9000/pa-admin-api/v3/httpsListeners/${configQueryListenerId}
-
-fi
+echo "apps after import"
+curl -k -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" https://localhost:9000/pa-admin-api/v3/applications
