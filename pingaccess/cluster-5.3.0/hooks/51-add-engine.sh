@@ -68,5 +68,3 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     echo "Cleanup zip.."
     rm engine-config.zip
 fi
-
-

@@ -1,7 +1,5 @@
 #!/usr/bin/env sh
 
-. "${HOOKS_DIR}/pingcommon.lib.sh"
-
 ########################################################################################################################
 # Makes curl request to PingAccess API to configure.
 #
