@@ -2,12 +2,6 @@
 
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 
-#APIATTEMPTS=10
-# --max-time 10     (how long each retry will wait)
-# --retry 5         (it will retry 5 times)
-# --retry-delay 0   (an exponential backoff algorithm)
-# --retry-max-time  (total time before it's considered failed)
-
 function make_api_request
 {
     local retryAttempts=10
