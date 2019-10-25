@@ -2,6 +2,12 @@
 
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 
+########################################################################################################################
+# Makes curl request to PingAccess API to configure.
+#
+# Arguments
+#   $@ -> The URL and additional needed data to make request
+########################################################################################################################
 function make_api_request
 {
     local retryAttempts=10

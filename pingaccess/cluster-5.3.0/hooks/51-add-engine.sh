@@ -15,12 +15,12 @@
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 . "${HOOKS_DIR}/utils.lib.sh"
 
- pahost=${PA_CONSOLE_HOST}
+pahost=${PA_CONSOLE_HOST}
 INITIAL_ADMIN_PASSWORD=${INITIAL_ADMIN_PASSWORD:=2FederateM0re}
 if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]]; then
     echo "This node is an engine..."
     while true; do
-    curl -ss --silent -o /dev/null -k https://${pahost}:9000/pa/heartbeat.ping 
+    curl -ss --silent -o /dev/null -k https://${pahost}:9090/pa/heartbeat.ping
     if ! test $? -eq 0 ; then
         echo "Adding Engine: Server not started, waiting.."
         sleep 3
