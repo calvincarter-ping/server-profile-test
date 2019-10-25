@@ -8,8 +8,8 @@
 # --retry-delay 0   (an exponential backoff algorithm)
 # --retry-max-time  (total time before it's considered failed)
 
-#function make_api_request
-#{
+function make_api_request
+{
 #    local retryAttempts=10
 #    while true; do
         curl -k --max-time 3 --retry 10 -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess " "$@"
@@ -22,4 +22,4 @@
 #            break
 #        fi
 #    done
-#}
+}
