@@ -13,7 +13,6 @@
 
 # shellcheck source=pingcommon.lib.sh
 . "${HOOKS_DIR}/pingcommon.lib.sh"
-. "${HOOKS_DIR}/utils.lib.sh"
 
 while true; do
   curl -ss --silent -o /dev/null -k https://localhost:9000/pa/heartbeat.ping 
@@ -38,7 +37,6 @@ curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" 
   "currentPassword": "2Access",
   "newPassword": "'"${INITIAL_ADMIN_PASSWORD}"'"
 }' https://localhost:9000/pa-admin-api/v3/users/1/password > /dev/null
-
 
 echo "importing data"
 curl -k -v -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "Content-Type: application/json" -H "X-Xsrf-Header: PingAccess" \
