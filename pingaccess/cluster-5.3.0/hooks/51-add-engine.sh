@@ -53,8 +53,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     echo "engineId value " ${engineId}
 
     # If engine doesnt exist, then create new engine
-    if test -z "${engineId}" || test "${engineId}" = null ; then 
-        # Create Engine
+    if test -z "${engineId}" || test "${engineId}" = null ; then
         OUT=$( make_api_request -X POST -d "{
             \"name\":\"${host}\",
             \"selectedCertificateId\": ${paEngineCertId},
