@@ -46,6 +46,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     paEngineCertId=$( jq -n "$OUT" | jq --arg kpalias "${kpalias}" '.items[] | select(.alias==$kpalias and .keyPair==true) | .id' )
     echo "Engine Cert ID:${paEngineCertId}"
 
+    # Retrieve Engine ID
     OUT=$( make_api_request https://pingaccess:9000/pa-admin-api/v3/engines )
     engineId=$( jq -n "$OUT" | jq --arg host "${host}" '.items[] | select(.name==$host) | .id' )
 
