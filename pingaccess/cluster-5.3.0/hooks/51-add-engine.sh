@@ -58,7 +58,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
 
     echo "test " ${engineTEST}
 
-    engineTEST=$( curl -k -X GET -u Administrator:2FederateM0re --silent -H "X-Xsrf-Header: PingAccess" https://pingaccess:9000/pa-admin-api/v3/engines | jq -r '.items[] | select(.name=='${host}') | .id' )
+    engineTEST=$( curl -k -X GET -u Administrator:2FederateM0re --silent -H "X-Xsrf-Header: PingAccess" https://pingaccess:9000/pa-admin-api/v3/engines | jq -r '.items[] | select(.name==${host}) | .id' )
 
     echo "test2 " ${engineTEST}
 
