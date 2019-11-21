@@ -49,6 +49,8 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     OUT=$( make_api_request https://pingaccess:9000/pa-admin-api/v3/engines )
     engineId=$( jq -n "$OUT" | jq --arg host "${host}" '.items[] | select(.name==$host) | .id' )
 
+    echo "engineId value " ${engineId}
+
     # If engine doesnt exist, then create new engine
     if test -z "${engineId}" || test "${engineId}" = null ; then 
         # Create Engine
