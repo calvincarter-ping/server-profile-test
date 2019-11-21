@@ -54,6 +54,10 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     }" https://${pahost}:9000/pa-admin-api/v3/engines )
     engineId=$( jq -n "$OUT" | jq '.id' )
 
+
+    engineTEST=$( curl -k -X GET -u Administrator:2FederateM0re --silent -H "X-Xsrf-Header: PingAccess" 
+    https://pingaccess:9000/pa-admin-api/v3/engines | jq --arg host "${host}" '.items[] | select(.name==$host | .id' )
+
     # Download Engine Configuration
     echo "EngineId:"${engineId}
     echo "Retrieving the engine config"
