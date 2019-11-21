@@ -15,6 +15,7 @@
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 . "${HOOKS_DIR}/utils.lib.sh"
 
+host=`hostname`
 pahost=${PA_CONSOLE_HOST}
 INITIAL_ADMIN_PASSWORD=${INITIAL_ADMIN_PASSWORD:=2FederateM0re}
 if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]]; then
@@ -45,14 +46,19 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     paEngineCertId=$( jq -n "$OUT" | jq --arg kpalias "${kpalias}" '.items[] | select(.alias==$kpalias and .keyPair==true) | .id' )
     echo "Engine Cert ID:${paEngineCertId}"
 
-    # Create Engine
-    host=`hostname`
-    OUT=$( make_api_request -X POST -d "{
-        \"name\":\"${host}\",
-        \"selectedCertificateId\": ${paEngineCertId},
-        \"configReplicationEnabled\": true
-    }" https://${pahost}:9000/pa-admin-api/v3/engines )
-    engineId=$( jq -n "$OUT" | jq '.id' )
+    OUT=$( make_api_request https://pingaccess:9000/pa-admin-api/v3/engines )
+    engineId=$( jq -n "$OUT" | jq --arg host "${host}" '.items[] | select(.name==$host) | .id' )
+
+    # If engine doesnt exist, then create new engine
+    if test -z "${engineId}" || test "${engineId}" = null ; then 
+        # Create Engine
+        OUT=$( make_api_request -X POST -d "{
+            \"name\":\"${host}\",
+            \"selectedCertificateId\": ${paEngineCertId},
+            \"configReplicationEnabled\": true
+        }" https://${pahost}:9000/pa-admin-api/v3/engines )
+        engineId=$( jq -n "$OUT" | jq '.id' )
+    fi
 
     # Download Engine Configuration
     echo "EngineId:"${engineId}
