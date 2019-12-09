@@ -25,6 +25,7 @@ while true; do
   fi
 done
 set -x
+INITIAL_ADMIN_PASSWORD=${INITIAL_ADMIN_PASSWORD:=2FederateM0re}
 curl -k -v -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" -d '{ "email": null,
     "slaAccepted": true,
     "firstLogin": false,
