@@ -27,10 +27,18 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE" 
     if ! test -f ${OUT_DIR}/instance/conf/initial_start_complete ; then
       run_hook "81-import-initial-configuration.sh"
     else
-      "echo initial_start_complete detected will restart with backup configuration"
+      echo "echo initial_start_complete detected will restart with backup configuration"
     fi
   elif test ${RUN_PLAN} = "RESTART" ; then
     echo "echo running restart calvin"
+    
+    echo "importing data"
+    curl -k -v -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "Content-Type: application/json" -H "X-Xsrf-Header: PingAccess" \
+      -d @${OUT_DIR}/instance/data/data.json \
+      https://localhost:9000/pa-admin-api/v3/config/import
+
+    echo "apps after import"
+    curl -k -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" https://localhost:9000/pa-admin-api/v3/applications
   fi
 fi
 
