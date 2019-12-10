@@ -9,8 +9,8 @@
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 
 INITIAL_ADMIN_PASSWORD=${INITIAL_ADMIN_PASSWORD:=2FederateM0re}
+echo "START Calvin " ${RUN_PLAN}
 if test ${RUN_PLAN} = "START" ; then
-  echo "START Calvin " ${RUN_PLAN}
   if ! test -f ${OUT_DIR}/instance/conf/pa.jwk ; then
     echo "INFO: No 'pa.jwk' found in /instance/conf"
     if ! test -f ${OUT_DIR}/instance/data/data.json ; then
