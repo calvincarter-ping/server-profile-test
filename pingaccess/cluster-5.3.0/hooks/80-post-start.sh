@@ -30,7 +30,7 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE" 
       "echo initial_start_complete detected will restart with backup configuration"
     fi
   elif test ${RUN_PLAN} = "RESTART" ; then
-    "echo running restart calvin"
+    echo "echo running restart calvin"
   fi
 fi
 
