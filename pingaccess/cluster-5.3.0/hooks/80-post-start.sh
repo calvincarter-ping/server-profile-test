@@ -17,18 +17,21 @@ INITIAL_ADMIN_PASSWORD=${INITIAL_ADMIN_PASSWORD:=2FederateM0re}
 
 if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE" ]]; then
   if test ${RUN_PLAN} = "START" ; then
-  #if ! test -f ${OUT_DIR}/instance/conf/pa.jwk ; then
-  #  echo "INFO: No 'pa.jwk' found in /instance/conf"
-  #  if ! test -f ${OUT_DIR}/instance/data/data.json ; then
-  #    echo "INFO: No file named 'data.json' found in /instance/data"
-  #    echo "INFO: skipping config import"
-  #  fi
-  #else 
+
+    #if ! test -f ${OUT_DIR}/instance/conf/pa.jwk ; then
+    #  echo "INFO: No 'pa.jwk' found in /instance/conf"
+    #  if ! test -f ${OUT_DIR}/instance/data/data.json ; then
+    #    echo "INFO: No file named 'data.json' found in /instance/data"
+    #    echo "INFO: skipping config import"
+    #  fi
+    #else
+
     if ! test -f ${OUT_DIR}/instance/conf/initial_start_complete ; then
       run_hook "81-import-initial-configuration.sh"
     else
       echo "echo initial_start_complete detected will restart with backup configuration"
     fi
+    
   elif test ${RUN_PLAN} = "RESTART" ; then
     echo "echo running restart calvin"
     
