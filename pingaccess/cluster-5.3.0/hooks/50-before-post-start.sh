@@ -20,6 +20,5 @@ INITIAL_ADMIN_PASSWORD=${INITIAL_ADMIN_PASSWORD:=2FederateM0re}
 #fi
 
 if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]]; then
-  echo "Adding engine..."
   run_hook "51-add-engine.sh"
 fi
