@@ -8,7 +8,7 @@
 # shellcheck source=pingcommon.lib.sh
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 INITIAL_ADMIN_PASSWORD=${INITIAL_ADMIN_PASSWORD:=2FederateM0re}
-if test ${RUN_PLAN} = "START" ; then
+#if test ${RUN_PLAN} = "START" ; then
   echo "Check for configuration to import.."
   if ! test -f ${OUT_DIR}/instance/conf/pa.jwk ; then
     echo "INFO: No 'pa.jwk' found in /instance/conf"
@@ -21,7 +21,7 @@ if test ${RUN_PLAN} = "START" ; then
       run_hook "81-import-initial-configuration.sh"
     fi   
   fi
-fi
+#fi
 
 if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE" ]]; then
   echo "Bringing eth0 back up..."
