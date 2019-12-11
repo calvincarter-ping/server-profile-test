@@ -40,7 +40,7 @@ curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" 
 
 curl -v -k -X POST -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess" -d "{
         \"keySize\": 2048,
-        \"subjectAlternativeNames\":[],
+        \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"pingaccess\"}],
         \"keyAlgorithm\":\"RSA\",
         \"alias\":\"pingaccess-console\",
         \"organization\":\"Ping Identity\",
