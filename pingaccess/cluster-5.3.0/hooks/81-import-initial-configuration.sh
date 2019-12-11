@@ -39,7 +39,7 @@ curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" 
 }' https://localhost:9000/pa-admin-api/v3/users/1/password > /dev/null
 
 # {\"name\":\"dNSName\",\"value\":\"pingaccess\"}
-curl -v -k -X POST -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess" -d "{
+curl -v -k -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
         \"keySize\": 2048,
         \"subjectAlternativeNames\":[],
         \"keyAlgorithm\":\"RSA\",
@@ -51,14 +51,14 @@ curl -v -k -X POST -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess"
         \"signatureAlgorithm\":\"SHA256withRSA\"
 }" https://localhost:9000/pa-admin-api/v3/keyPairs/generate
 
-curl -v -k -X PUT -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess" -d "{
+curl -v -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
     \"name\": \"CONFIG QUERY\",
     \"useServerCipherSuiteOrder\": false,
     \"keyPairId\": 5
 }" https://localhost:9000/pa-admin-api/v3/httpsListeners/2
 
 # Update admin config host
-curl -v -k -X PUT -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess" -d "{
+curl -v -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
         \"hostPort\": \"pingaccess:9090\",
         \"httpProxyId\": 0,
         \"httpsProxyId\": 0
