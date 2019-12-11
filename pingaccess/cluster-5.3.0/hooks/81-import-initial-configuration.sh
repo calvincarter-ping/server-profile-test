@@ -38,9 +38,10 @@ curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" 
   "newPassword": "'"${INITIAL_ADMIN_PASSWORD}"'"
 }' https://localhost:9000/pa-admin-api/v3/users/1/password > /dev/null
 
+# {\"name\":\"dNSName\",\"value\":\"pingaccess\"}
 curl -v -k -X POST -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess" -d "{
         \"keySize\": 2048,
-        \"subjectAlternativeNames\":[{\"name\":\"dNSName\",\"value\":\"pingaccess\"}],
+        \"subjectAlternativeNames\":[],
         \"keyAlgorithm\":\"RSA\",
         \"alias\":\"pingaccess-console\",
         \"organization\":\"Ping Identity\",
