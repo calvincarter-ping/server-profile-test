@@ -38,12 +38,37 @@ curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" 
   "newPassword": "'"${INITIAL_ADMIN_PASSWORD}"'"
 }' https://localhost:9000/pa-admin-api/v3/users/1/password > /dev/null
 
-echo "importing data"
-curl -k -v -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "Content-Type: application/json" -H "X-Xsrf-Header: PingAccess" \
-  -d @${STAGING_DIR}/instance/data/data.json \
-  https://localhost:9000/pa-admin-api/v3/config/import
+curl -v -k -X POST -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess" -d "{
+        \"keySize\": 2048,
+        \"subjectAlternativeNames\":[],
+        \"keyAlgorithm\":\"RSA\",
+        \"alias\":\"pingaccess-console\",
+        \"organization\":\"Ping Identity\",
+        \"validDays\":365,
+        \"commonName\":\"pingaccess\",
+        \"country\":\"US\",
+        \"signatureAlgorithm\":\"SHA256withRSA\"
+}" https://localhost:9000/pa-admin-api/v3/keyPairs/generate
 
-echo "apps after import"
-curl -k -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" https://localhost:9000/pa-admin-api/v3/applications
+curl -v -k -X PUT -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess" -d "{
+    \"name\": \"CONFIG QUERY\",
+    \"useServerCipherSuiteOrder\": false,
+    \"keyPairId\": 5
+}" https://localhost:9000/pa-admin-api/v3/httpsListeners/2
+
+# Update admin config host
+curl -v -k -X PUT -u Administrator:2FederateM0re -H "X-Xsrf-Header: PingAccess" -d "{
+        \"hostPort\": \"pingaccess:9090\",
+        \"httpProxyId\": 0,
+        \"httpsProxyId\": 0
+}" https://localhost:9000/pa-admin-api/v3/adminConfig
+
+#echo "importing data"
+#curl -k -v -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "Content-Type: application/json" -H "X-Xsrf-Header: PingAccess" \
+#  -d @${STAGING_DIR}/instance/data/data.json \
+#  https://localhost:9000/pa-admin-api/v3/config/import
+
+#echo "apps after import"
+#curl -k -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" https://localhost:9000/pa-admin-api/v3/applications
 
 touch ${OUT_DIR}/instance/initial_start_complete
