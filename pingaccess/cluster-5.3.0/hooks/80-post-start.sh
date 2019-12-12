@@ -15,12 +15,16 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE" 
       run_hook "81-import-initial-configuration.sh"
     else
       echo "echo initial_start_complete detected will restart with backup configuration"
+
+      echo "Bringing eth0 back up..."
+      ip link set eth0 up
+
     fi
 
   elif test ${RUN_PLAN} = "RESTART" ; then
 
     echo "Bringing eth0 back up..."
     ip link set eth0 up
-    
+
   fi
 fi
