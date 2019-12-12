@@ -76,4 +76,4 @@ touch ${OUT_DIR}/instance/initial_start_complete
 
 sleep 10
 
-kill -9 8
+kill -9 9
