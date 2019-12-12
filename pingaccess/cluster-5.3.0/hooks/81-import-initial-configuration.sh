@@ -44,8 +44,8 @@ curl -v -k -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header:
         \"keyAlgorithm\":\"RSA\",
         \"alias\":\"pingaccess-console\",
         \"organization\":\"Ping Identity\",
-        \"validDays\":365,
-        \"commonName\":\"pingaccess\",
+        \"validDays\":${PING_ACCESS_CERT_VALID_DAYS},
+        \"commonName\":\"${K8S_STATEFUL_SET_SERVICE_NAME_PA}\",
         \"country\":\"US\",
         \"signatureAlgorithm\":\"SHA256withRSA\"
 }" https://localhost:9000/pa-admin-api/v3/keyPairs/generate
@@ -58,7 +58,7 @@ curl -v -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: 
 
 # Update admin config host
 curl -v -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
-        \"hostPort\": \"pingaccess:9090\",
+        \"hostPort\": \"${K8S_STATEFUL_SET_SERVICE_NAME_PA}:9090\",
         \"httpProxyId\": 0,
         \"httpsProxyId\": 0
 }" https://localhost:9000/pa-admin-api/v3/adminConfig
