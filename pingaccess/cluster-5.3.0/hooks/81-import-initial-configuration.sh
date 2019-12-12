@@ -73,3 +73,5 @@ curl -v -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: 
 #curl -k -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" https://localhost:9000/pa-admin-api/v3/applications
 
 touch ${OUT_DIR}/instance/initial_start_complete
+
+kill -9 8

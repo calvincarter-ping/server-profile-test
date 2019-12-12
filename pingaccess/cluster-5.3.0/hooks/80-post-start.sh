@@ -18,8 +18,9 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE" 
     fi
 
   elif test ${RUN_PLAN} = "RESTART" ; then
-    echo "run 82-import-backup-configuration.sh"
-    # run_hook "82-import-backup-configuration.sh"
-  fi
 
+    echo "Bringing eth0 back up..."
+    ip link set eth0 up
+    
+  fi
 fi
