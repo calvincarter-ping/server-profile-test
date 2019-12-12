@@ -11,20 +11,18 @@
 if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE" ]]; then
   if test ${RUN_PLAN} = "START" ; then
 
-    if ! test -f ${OUT_DIR}/instance/initial_start_complete ; then
-      run_hook "81-import-initial-configuration.sh"
-    else
-      echo "echo initial_start_complete detected will restart with backup configuration"
-
-      echo "Bringing eth0 back up..."
-      ip link set eth0 up
-
-    fi
+    run_hook "81-import-initial-configuration.sh"
 
   elif test ${RUN_PLAN} = "RESTART" ; then
 
-    echo "Bringing eth0 back up..."
-    ip link set eth0 up
+    if test -f ${OUT_DIR}/instance/pingaccess_cert_complete ; then
+      echo "echo pingaccess_cert_complete will start server"
+      echo "Bringing eth0 back up..."
+      ip link set eth0 up
+    else
+      # TODO: fill in appropriate action if admin node configuration was unsuccessful
+      echo "Error Occured"
+    fi
 
   fi
 fi
