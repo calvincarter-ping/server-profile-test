@@ -74,4 +74,6 @@ curl -v -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: 
 
 touch ${OUT_DIR}/instance/initial_start_complete
 
+sleep 10
+
 kill -9 8
