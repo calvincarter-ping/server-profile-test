@@ -13,6 +13,7 @@
 
 # shellcheck source=pingcommon.lib.sh
 . "${HOOKS_DIR}/pingcommon.lib.sh"
+. "${HOOKS_DIR}/utils.lib.sh"
 
 while true; do
   curl -ss --silent -o /dev/null -k https://localhost:9000/pa/heartbeat.ping 
@@ -25,44 +26,52 @@ while true; do
   fi
 done
 set -x
+
 INITIAL_ADMIN_PASSWORD=${INITIAL_ADMIN_PASSWORD:=2FederateM0re}
-curl -k -v -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" -d '{ "email": null,
+
+make_initial_api_request -X PUT -d '{ "email": null,
     "slaAccepted": true,
     "firstLogin": false,
     "showTutorial": false,
     "username": "Administrator"
 }' https://localhost:9000/pa-admin-api/v3/users/1 > /dev/null
 
-curl -k -X PUT -u Administrator:2Access --silent -H "X-Xsrf-Header: PingAccess" -d '{
+make_initial_api_request -X PUT -d '{
   "currentPassword": "2Access",
   "newPassword": "'"${INITIAL_ADMIN_PASSWORD}"'"
 }' https://localhost:9000/pa-admin-api/v3/users/1/password > /dev/null
 
-curl -v -k -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
-        \"keySize\": 2048,
-        \"subjectAlternativeNames\":[],
-        \"keyAlgorithm\":\"RSA\",
-        \"alias\":\"pingaccess-console\",
-        \"organization\":\"Ping Identity\",
-        \"validDays\":${PING_ACCESS_CERT_VALID_DAYS},
-        \"commonName\":\"${K8S_STATEFUL_SET_SERVICE_NAME_PA}\",
-        \"country\":\"US\",
-        \"signatureAlgorithm\":\"SHA256withRSA\"
-}" https://localhost:9000/pa-admin-api/v3/keyPairs/generate
+OUT=$( make_api_request -X POST -d "{
+          \"keySize\": 2048,
+          \"subjectAlternativeNames\":[],
+          \"keyAlgorithm\":\"RSA\",
+          \"alias\":\"pingaccess-console\",
+          \"organization\":\"Ping Identity\",
+          \"validDays\":${PING_ACCESS_CERT_VALID_DAYS},
+          \"commonName\":\"${K8S_STATEFUL_SET_SERVICE_NAME_PA}\",
+          \"country\":\"US\",
+          \"signatureAlgorithm\":\"SHA256withRSA\"
+        }" https://localhost:9000/pa-admin-api/v3/keyPairs/generate )
 
-curl -v -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
+PINGACESS_KEY_PAIR_ID=$( jq -n "$OUT" | jq '.id' )
+
+# Retrieving CONFIG QUERY id
+OUT=$( make_api_request https://localhost:9000/pa-admin-api/v3/httpsListeners )
+CONFIG_QUERY_LISTENER_KEYPAIR_ID=$( jq -n "$OUT" | jq '.items[] | select(.name=="CONFIG QUERY") | .keyPairId' )
+echo "CONFIG_QUERY_LISTENER_KEYPAIR_ID:${CONFIG_QUERY_LISTENER_KEYPAIR_ID}"
+
+make_api_request -X PUT -d "{
     \"name\": \"CONFIG QUERY\",
     \"useServerCipherSuiteOrder\": false,
-    \"keyPairId\": 5
-}" https://localhost:9000/pa-admin-api/v3/httpsListeners/2
+    \"keyPairId\": ${PINGACESS_KEY_PAIR_ID}
+}" https://localhost:9000/pa-admin-api/v3/httpsListeners/${CONFIG_QUERY_LISTENER_KEYPAIR_ID}
 
 # Update admin config host
-curl -v -k -X PUT -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" -d "{
-        \"hostPort\": \"${K8S_STATEFUL_SET_SERVICE_NAME_PA}:9090\",
-        \"httpProxyId\": 0,
-        \"httpsProxyId\": 0
-}" https://localhost:9000/pa-admin-api/v3/adminConfig
+make_api_request -X PUT -d "{
+                            \"hostPort\":\"${K8S_STATEFUL_SET_SERVICE_NAME_PA}:9090\",
+                            \"httpProxyId\": 0,
+                            \"httpsProxyId\": 0
+                        }" https://localhost:9000/pa-admin-api/v3/adminConfig
 
 touch ${OUT_DIR}/instance/pingaccess_cert_complete
-
 kill $(ps | grep "${OUT_DIR}/instance/bin/run.sh" | awk '{print $1}')
