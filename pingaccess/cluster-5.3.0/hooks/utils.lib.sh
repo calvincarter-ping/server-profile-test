@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin sh
 
 ########################################################################################################################
 # Makes curl request to PingAccess API to configure.
@@ -46,7 +46,7 @@ function pingaccess_admin_localhost_wait()
             sleep 3
         else
             echo "PA started, begin import"
-            break
+            exit 0
         fi
     done
 }
@@ -67,7 +67,7 @@ function pingaccess_external_engine_wait()
             sleep 3
         else
             echo "PA started, begin adding engine"
-            break
+            exit 0
         fi
     done
 }
