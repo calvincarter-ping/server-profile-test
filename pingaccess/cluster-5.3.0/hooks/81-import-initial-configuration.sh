@@ -16,7 +16,7 @@
 . "${HOOKS_DIR}/utils.lib.sh"
 
 # Wait until pingaccess admin localhost is available
-pingaccess_admin_localhost_wait()
+pingaccess_admin_localhost_wait
 
 set -x
 
