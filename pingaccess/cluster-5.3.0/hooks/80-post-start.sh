@@ -9,12 +9,10 @@
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 
 if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE" ]]; then
+  echo "run plan ${RUN_PLAN}"
   if test ${RUN_PLAN} = "START" ; then
-
     run_hook "81-import-initial-configuration.sh"
-
   elif test ${RUN_PLAN} = "RESTART" ; then
     echo "restart logic"
   fi
-  
 fi
