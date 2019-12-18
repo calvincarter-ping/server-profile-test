@@ -71,4 +71,4 @@ make_api_request -X PUT -d "{
 touch ${OUT_DIR}/instance/pingaccess_cert_complete
 
 # Terminate admin to signal a k8s restart
-kill $(ps | grep "${OUT_DIR}/instance/bin/run.sh" | awk '{print $1}')
+# kill $(ps | grep "${OUT_DIR}/instance/bin/run.sh" | awk '{print $1}')
