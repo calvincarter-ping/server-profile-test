@@ -36,16 +36,17 @@ make_initial_api_request -X PUT -d '{
 
 # Generate new KeyPair for cluster
 OUT=$( make_api_request -X POST -d "{
-        \"keySize\": 2048,
-        \"subjectAlternativeNames\":[],
-        \"keyAlgorithm\":\"RSA\",
-        \"alias\":\"pingaccess-console\",
-        \"organization\":\"Ping Identity\",
-        \"validDays\":${PING_ACCESS_CERT_VALID_DAYS},
-        \"commonName\":\"${K8S_STATEFUL_SET_SERVICE_NAME_PA}\",
-        \"country\":\"US\",
-        \"signatureAlgorithm\":\"SHA256withRSA\"
-      }" https://localhost:9000/pa-admin-api/v3/keyPairs/generate )
+          \"keySize\": 2048,
+          \"subjectAlternativeNames\":[],
+          \"keyAlgorithm\":\"RSA\",
+          \"alias\":\"pingaccess-console\",
+          \"organization\":\"Ping Identity\",
+          \"validDays\":${PING_ACCESS_CERT_VALID_DAYS},
+          \"commonName\":\"${K8S_STATEFUL_SET_SERVICE_NAME_PA}\",
+          \"country\":\"US\",
+          \"signatureAlgorithm\":\"SHA256withRSA\"
+        }" https://localhost:9000/pa-admin-api/v3/keyPairs/generate )
+
 PINGACESS_KEY_PAIR_ID=$( jq -n "$OUT" | jq '.id' )
 
 # Retrieving CONFIG QUERY id
@@ -62,10 +63,10 @@ make_api_request -X PUT -d "{
 
 # Update admin config host
 make_api_request -X PUT -d "{
-    \"hostPort\":\"${K8S_STATEFUL_SET_SERVICE_NAME_PA}:9090\",
-    \"httpProxyId\": 0,
-    \"httpsProxyId\": 0
-}" https://localhost:9000/pa-admin-api/v3/adminConfig
+                            \"hostPort\":\"${K8S_STATEFUL_SET_SERVICE_NAME_PA}:9090\",
+                            \"httpProxyId\": 0,
+                            \"httpsProxyId\": 0
+                        }" https://localhost:9000/pa-admin-api/v3/adminConfig
 
 # Mark file to indicate that pingaccess cluster certificate is complete
 touch ${OUT_DIR}/instance/pingaccess_cert_complete
