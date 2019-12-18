@@ -46,7 +46,7 @@ function pingaccess_admin_localhost_wait
             sleep 3
         else
             echo "PA started, begin import"
-            exit 0
+            break
         fi
     done
 }
@@ -67,7 +67,7 @@ function pingaccess_external_engine_wait
             sleep 3
         else
             echo "PA started, begin adding engine"
-            exit 0
+            break
         fi
     done
 }
