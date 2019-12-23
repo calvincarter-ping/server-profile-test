@@ -24,12 +24,13 @@ FORMAT="+%d/%b/%Y:%H:%M:%S %z"
 NOW=$(date "${FORMAT}")
 AN_HOUR_AGO=$(date --date="@$(($(date +%s) - 3600))" "${FORMAT}")
 
-cd "${OUT_DIR}"
+# cd into archive directory
+cd "${OUT_DIR}/server/default/data/archive"
 
-touch calvin.txt
+CSD_OUT=$(find . -name data\*zip -type f | sort | tail -1)
 
 # aws s3 cp calvin.txt "${PF_ARCHIVE_URL}/${DST_FILE}"
-aws s3 cp calvin.txt "${PF_ARCHIVE_URL}"
+aws s3 cp ${CSD_OUT} "${PF_ARCHIVE_URL}"
 
 
 echo "Upload return code: ${?}"
