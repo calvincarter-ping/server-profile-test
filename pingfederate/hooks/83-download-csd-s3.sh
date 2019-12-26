@@ -34,3 +34,5 @@ if ! test -z "${PF_DATA_BACKUP}"; then
 else
   echo "No archive data found"
 fi
+
+exit 0
