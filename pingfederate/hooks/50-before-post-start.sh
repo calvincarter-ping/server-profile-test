@@ -13,5 +13,6 @@ ${VERBOSE} && set -x
 
 echo_green "Before-post-start script running plan ${RUN_PLAN}"
 if test ${RUN_PLAN} = "START" ; then
+  echo "TODO run download csd s3"
   #run_hook "83-download-csd-s3.sh"
 fi
