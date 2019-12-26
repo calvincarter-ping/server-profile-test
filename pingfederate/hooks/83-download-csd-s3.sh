@@ -32,5 +32,5 @@ if ! test -z "${PF_DATA_BACKUP}"; then
   ls ${OUT_DIR}/instance/server/default/data/drop-in-deployer
 
 else
-  echo "No archive file wasn't found"
+  echo "No archive data found"
 fi

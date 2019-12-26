@@ -12,6 +12,6 @@
 ${VERBOSE} && set -x
 
 echo_green "Before-post-start script running"
-if test ${RUN_PLAN} = "START" ; then
+#if test ${RUN_PLAN} = "START" ; then
   run_hook "83-download-csd-s3.sh"
-fi
+#fi

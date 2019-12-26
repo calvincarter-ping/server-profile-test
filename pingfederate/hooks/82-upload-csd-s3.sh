@@ -39,7 +39,7 @@ if test -d "${OUT_DIR}/instance/server/default/data/archive"; then
   #rm -f "${PF_BACKUP_OUT}"
 
   # Print the filename so callers can figure out the name of the CSD file that was uploaded.
-  #echo "${PF_BACKUP_OUT#./}"
+  echo "${PF_BACKUP_OUT#./}"
 
 else
   echo "Nothing to archive at the moment"
