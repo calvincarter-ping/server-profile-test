@@ -44,5 +44,3 @@ if test -d "${OUT_DIR}/instance/server/default/data/archive"; then
 else
   echo "Nothing to archive at the moment"
 fi
-
-exit 0
