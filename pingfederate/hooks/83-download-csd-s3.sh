@@ -23,13 +23,16 @@ PF_DATA_BACKUP=$(aws s3 ls ${PF_ARCHIVE_URL} | sort | tail -1 | awk '{print $4}'
 # Download latest backup file from s3 if it exist
 if ! test -z "${PF_DATA_BACKUP}"; then
 
+  # Rename s3 backup filename when copying onto pingfederate admin
+  DST_FILE = "data.zip"
+
   # Download latest backup file from s3 bucket
-  aws s3 cp "${PF_ARCHIVE_URL}/${PF_DATA_BACKUP}" "${OUT_DIR}/instance/server/default/data/drop-in-deployer/data.zip"
+  aws s3 cp "${PF_ARCHIVE_URL}/${PF_DATA_BACKUP}" "${STAGING_DIR}/instance/server/default/data/drop-in-deployer/${DST_FILE}"
 
   echo "Download return code: ${?}"
 
   # Print the filename of the downloaded file from s3.
-  ls ${OUT_DIR}/instance/server/default/data/drop-in-deployer
+  ls ${STAGING_DIR}/instance/server/default/data/drop-in-deployer
 
 else
   echo "No archive data found"

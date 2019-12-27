@@ -24,17 +24,17 @@ fi
 # Check for archive folder on server
 if test -d "${OUT_DIR}/instance/server/default/data/archive"; then
   
-  # cd into archive directory
+  # cd into pingfederate admin archive directory
   cd "${OUT_DIR}/instance/server/default/data/archive"
 
-  #TODO - look into s3 sync. s3 sync will give you the ability to sync and upload all new files
+  # TODO remove the following line, this was replaced by s3 sync
   #PF_BACKUP_OUT=$(find . -name data\*zip -type f | sort | tail -1)
 
   PF_BACKUP_OUT=$(find . -name data\*zip -type f )
 
   if ! test -z "${PF_BACKUP_OUT}"; then
 
-    # aws s3 cp calvin.txt "${PF_ARCHIVE_URL}/${DST_FILE}"
+    # TODO remove the following line, this was replaced by s3 sync
     #aws s3 cp ${PF_BACKUP_OUT} "${PF_ARCHIVE_URL}"
 
     aws s3 sync "${OUT_DIR}/instance/server/default/data/archive" "${PF_ARCHIVE_URL}"
