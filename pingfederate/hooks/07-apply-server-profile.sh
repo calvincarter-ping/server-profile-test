@@ -13,9 +13,11 @@ ${VERBOSE} && set -x
 
 if test -d "${STAGING_DIR}/instance" && find "${STAGING_DIR}/instance" -type f | read; then
 
-    # Apply backup data before server profile
-    echo_green "Before applying server profile apply backup data"
-    run_hook "83-download-csd-s3.sh"
+    # Apply backup data in admin before server profile
+    if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE" ]]; then
+        echo_green "Before applying server profile apply backup data"
+        run_hook "83-download-csd-s3.sh"
+    fi
 
     echo "merging ${STAGING_DIR}/instance to ${SERVER_ROOT_DIR}"
     copy_files "${STAGING_DIR}/instance" "${SERVER_ROOT_DIR}"
