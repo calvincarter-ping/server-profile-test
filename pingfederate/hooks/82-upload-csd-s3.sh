@@ -27,10 +27,12 @@ if test -d "${OUT_DIR}/instance/server/default/data/archive"; then
   # cd into archive directory
   cd "${OUT_DIR}/instance/server/default/data/archive"
 
-  #TODO - look into s3 sync. s3 sync will give you the ability to upload new files
+  #TODO - look into s3 sync. s3 sync will give you the ability to sync and upload all new files
   #PF_BACKUP_OUT=$(find . -name data\*zip -type f | sort | tail -1)
 
-  #if ! test -z "${PF_BACKUP_OUT}"; then
+  PF_BACKUP_OUT=$(find . -name data\*zip -type f )
+
+  if ! test -z "${PF_BACKUP_OUT}"; then
 
     # aws s3 cp calvin.txt "${PF_ARCHIVE_URL}/${DST_FILE}"
     #aws s3 cp ${PF_BACKUP_OUT} "${PF_ARCHIVE_URL}"
@@ -45,9 +47,9 @@ if test -d "${OUT_DIR}/instance/server/default/data/archive"; then
     # Print the filename so callers can figure out the name of the CSD file that was uploaded.
     echo "${PF_BACKUP_OUT#./}"
     
-  #else
-  #  echo "Nothing to archive at the moment"
-  #fi
+  else
+    echo "Nothing to archive at the moment"
+  fi
 
 else
   echo "Nothing to archive at the moment"
