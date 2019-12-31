@@ -27,22 +27,16 @@ if test -d "${OUT_DIR}/instance/server/default/data/archive"; then
   # cd into pingfederate admin archive directory
   cd "${OUT_DIR}/instance/server/default/data/archive"
 
-  # TODO remove the following line, this was replaced by s3 sync
-  #PF_BACKUP_OUT=$(find . -name data\*zip -type f | sort | tail -1)
-
+  # Find at least 1 data zip file
   PF_BACKUP_OUT=$(find . -name data\*zip -type f )
 
+  # At least 1 data zip file must exist before calling aws s3
   if ! test -z "${PF_BACKUP_OUT}"; then
 
-    # TODO remove the following line, this was replaced by s3 sync
-    #aws s3 cp ${PF_BACKUP_OUT} "${PF_ARCHIVE_URL}"
-
-    aws s3 sync "${OUT_DIR}/instance/server/default/data/archive" "${PF_ARCHIVE_URL}"
+    # Sycronize all data zip files to s3 bucket
+    aws s3 sync --exclude "*" --include "*.zip" "${OUT_DIR}/instance/server/default/data/archive" "${PF_ARCHIVE_URL}"
 
     echo "Upload return code: ${?}"
-
-    # Print the filename of the archive data zip.
-    echo "${PF_BACKUP_OUT#./}"
     
   else
     echo "Nothing to archive at the moment"
