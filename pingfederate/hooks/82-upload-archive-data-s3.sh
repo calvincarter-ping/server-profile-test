@@ -41,10 +41,7 @@ if test -d "${OUT_DIR}/instance/server/default/data/archive"; then
 
     echo "Upload return code: ${?}"
 
-    # Remove the CSD file so it is doesn't fill up the server's filesystem.
-    #rm -f "${PF_BACKUP_OUT}"
-
-    # Print the filename so callers can figure out the name of the CSD file that was uploaded.
+    # Print the filename of the archive data zip.
     echo "${PF_BACKUP_OUT#./}"
     
   else
