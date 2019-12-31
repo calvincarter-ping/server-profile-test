@@ -2,9 +2,8 @@
 
 ${VERBOSE} && set -x
 
-# TODO: may need to uncomment the following. Does PF need?
 # Set PATH - since this is executed from within the server process, it may not have all we need on the path
-#export PATH="${PATH}:${SERVER_ROOT_DIR}/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${JAVA_HOME}/bin"
+export PATH="${PATH}:${SERVER_ROOT_DIR}/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${JAVA_HOME}/bin"
 
 # Allow overriding the log archive URL with an arg
 test ! -z "${1}" && PF_ARCHIVE_URL="${1}"
