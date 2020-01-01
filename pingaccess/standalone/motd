@@ -1,5 +1,4 @@
 
-Server Profile baseline/pingaccess
-  - Creates an iniial PingAccess instance
-  - Authentictes admin console to PingDirectory
+Server Profile pa-cluster
+  - Creates an initial PingAccess admin and engine instances
 

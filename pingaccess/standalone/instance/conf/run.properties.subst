@@ -19,7 +19,7 @@
 #                       - Configuration is queried from Console at startup.
 #
 
-pa.operational.mode=CLUSTERED_CONSOLE
+pa.operational.mode=${OPERATIONAL_MODE}
 
 #-------------------------------------------------------------------------------
 # Admin Properties
@@ -258,7 +258,7 @@ pf.api.readTimeout=-1
 #-------------------------------------------------------------------------------
 
 pa.backup.filesToKeep=25
-pa.admin.user.password.regex=((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,64})
+pa.admin.user.password.regex=((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,20})
 pa.admin.user.password.error.message=Password must be 8 to 64 characters in length, and contain at least one upper-case letter, one lower-case letter and one digit.
 pa.admin.test.connections=true
 
