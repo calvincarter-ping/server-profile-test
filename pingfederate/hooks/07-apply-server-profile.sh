@@ -25,13 +25,13 @@ if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" != "CLUSTERED_E
     if test ${RUN_PLAN} = "RESTART" || test "${IS_MANUAL_RECOVER}" = "YES"; then
         run_hook "83-download-archive-data-s3.sh"
 
-        # if test "${?}" = -1; then
+        if test "${?}" = -1; then
             echo "apply profile"
-            # applyServerProfile
-        # fi
+            applyServerProfile
+        fi
     fi
 
 else
     echo "apply profile"
-    # applyServerProfile
+    applyServerProfile
 fi
