@@ -39,6 +39,15 @@ if ! test -z "${PF_DATA_BACKUP}"; then
   # Print the filename of the downloaded file from s3.
   ls ${OUT_DIR}/instance/server/default/data/drop-in-deployer
 
+  if test "${RETURN_CODE}" = 0; then
+    exit -1
+  else
+    exit ${RETURN_CODE}
+  fi
+
 else
+
   echo "No archive data found"
+  exit -1
+  
 fi

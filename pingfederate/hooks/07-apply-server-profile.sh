@@ -11,13 +11,23 @@ ${VERBOSE} && set -x
 # shellcheck source=pingcommon.lib.sh
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 
+function applyServerProfile() {
+    if test -d "${STAGING_DIR}/instance" && find "${STAGING_DIR}/instance" -type f | read; then
+     echo "merging ${STAGING_DIR}/instance to ${SERVER_ROOT_DIR}"
+     copy_files "${STAGING_DIR}/instance" "${SERVER_ROOT_DIR}"
+    fi
+}
+
 if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" != "CLUSTERED_ENGINE"; then
+
     if test ${RUN_PLAN} = "RESTART" || test "${IS_MANUAL_RECOVER}" = "YES"; then
         run_hook "83-download-archive-data-s3.sh"
-    fi
-fi
 
-# if test -d "${STAGING_DIR}/instance" && find "${STAGING_DIR}/instance" -type f | read; then
-#     echo "merging ${STAGING_DIR}/instance to ${SERVER_ROOT_DIR}"
-#     copy_files "${STAGING_DIR}/instance" "${SERVER_ROOT_DIR}"
-# fi
+        if test "${?}" = -1; then
+            applyServerProfile()
+        fi
+    fi
+
+else
+    applyServerProfile()
+fi
