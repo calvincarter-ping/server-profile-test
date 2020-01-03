@@ -24,7 +24,7 @@ ${VERBOSE} && set -x
 if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" != "CLUSTERED_ENGINE"; then
 
     # If pod is restarting due to error OR upon a manual data recover look to recover archive data
-    if test ${RUN_PLAN} = "RESTART" || test "${IS_MANUAL_RECOVER}" = "YES"; then
+    #if test ${RUN_PLAN} = "RESTART" || test "${IS_MANUAL_RECOVER}" = "YES"; then
 
         run_hook "83-download-archive-data-s3.sh"
 
@@ -34,9 +34,9 @@ if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" != "CLUSTERED_E
             applyServerProfile
         fi
 
-    else # apply server profile if its the 1st initial deployment
-        applyServerProfile
-    fi
+    #else # apply server profile if its the 1st initial deployment
+    #    applyServerProfile
+    #fi
 
 else
     applyServerProfile
