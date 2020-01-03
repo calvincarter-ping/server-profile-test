@@ -15,8 +15,7 @@ if test -d "${STAGING_DIR}/instance" && find "${STAGING_DIR}/instance" -type f |
 
     # Apply backup data in admin before server profile
     echo "Run plan calvin ${RUN_PLAN}"
-    if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE" ]]; then
-        echo_green "Before applying server profile apply backup data"
+    if ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" == "CLUSTERED_CONSOLE"; then
         run_hook "83-download-archive-data-s3.sh"
     fi
 
