@@ -28,6 +28,9 @@ if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" != "CLUSTERED_E
         if test "${?}" = 3; then
             applyServerProfile
         fi
+
+    else
+        applyServerProfile
     fi
 
 else
