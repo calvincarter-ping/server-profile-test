@@ -32,22 +32,18 @@ if ! test -z "${PF_DATA_BACKUP}"; then
   # Download latest backup file from s3 bucket
   aws s3 cp "${PF_ARCHIVE_URL}/${PF_DATA_BACKUP}" "${OUT_DIR}/instance/server/default/data/drop-in-deployer/${DST_FILE}"
 
-  #RETURN_CODE="${?}"
+  RETURN_CODE="${?}"
 
-  #echo "Download return code: ${RETURN_CODE}"
+  echo "Download return code: ${RETURN_CODE}"
 
   # Print the filename of the downloaded file from s3.
   ls ${OUT_DIR}/instance/server/default/data/drop-in-deployer
 
-  #if test "${RETURN_CODE}" = 0; then
-  #  exit -1
-  #else
-  #  exit "${RETURN_CODE}"
-  #fi
+  exit "${RETURN_CODE}"
 
 else
 
   echo "No archive data found"
-  #exit -1
+  exit 3
   
 fi
