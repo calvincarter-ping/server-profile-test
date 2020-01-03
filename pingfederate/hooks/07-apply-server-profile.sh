@@ -1,16 +1,11 @@
 #!/usr/bin/env sh
-#
-# Ping Identity DevOps - Docker Build Hooks
-#
-#- Once both the remote (i.e. git) and local server-profiles have been merged
-#- then we can push that out to the instance.  This will override any files found
-#- in the ${SERVER_ROOT_DIR} directory.
-#
-${VERBOSE} && set -x
 
-# shellcheck source=pingcommon.lib.sh
-. "${HOOKS_DIR}/pingcommon.lib.sh"
-
+########################################################################################################################
+# Copy server profile content into SERVER_ROOT_DIR.
+#
+# Arguments
+#   N/A
+########################################################################################################################
 applyServerProfile() {
     if test -d "${STAGING_DIR}/instance" && find "${STAGING_DIR}/instance" -type f | read; then
         echo "merging ${STAGING_DIR}/instance to ${SERVER_ROOT_DIR}"
@@ -18,18 +13,28 @@ applyServerProfile() {
     fi
 }
 
+# Start of script
+echo "Hello from the baseline server profile 07-apply-server-profile hook!"
 
+${VERBOSE} && set -x
+
+. "${HOOKS_DIR}/pingcommon.lib.sh"
+
+# Only download archive data on PingFederate Admin
 if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" != "CLUSTERED_ENGINE"; then
 
+    # If pod is restarting due to error OR upon a manual data recover look to recover archive data
     if test ${RUN_PLAN} = "RESTART" || test "${IS_MANUAL_RECOVER}" = "YES"; then
-    
+
         run_hook "83-download-archive-data-s3.sh"
 
+        # Script may exit with status code 3 if there was nothing to recover. If so proceed to
+        # apply server profile
         if test "${?}" = 3; then
             applyServerProfile
         fi
 
-    else
+    else # apply server profile if its the 1st initial deployment
         applyServerProfile
     fi
 
