@@ -4,6 +4,8 @@ ${VERBOSE} && set -x
 
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 
+echo "Hello from the baseline server profile 20-restart-sequence.sh.pre hook!"
+
 if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" != "CLUSTERED_ENGINE"; then
     run_hook "83-download-archive-data-s3.sh"
 fi
