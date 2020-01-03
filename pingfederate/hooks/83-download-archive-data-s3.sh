@@ -44,6 +44,8 @@ if ! test -z "${PF_DATA_BACKUP}"; then
 else
 
   echo "No archive data found"
+  # Exit with non-unsed exit code from aws s3 cli
+  # https://docs.aws.amazon.com/cli/latest/topic/return-codes.html
   exit 3
   
 fi
