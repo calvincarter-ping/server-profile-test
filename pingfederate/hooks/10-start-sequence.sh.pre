@@ -6,6 +6,9 @@ ${VERBOSE} && set -x
 
 echo "Hello from the baseline server profile 10-start-sequence.sh.pre hook!"
 
-if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" != "CLUSTERED_ENGINE" && test "${IS_MANUAL_RECOVER}" = "YES"; then
+if test ! -z "${OPERATIONAL_MODE}" && \
+   test "${OPERATIONAL_MODE}" != "CLUSTERED_ENGINE" && \
+   test "${IS_MANUAL_RECOVER}" = "YES"; then
+
     run_hook "83-download-archive-data-s3.sh"
 fi

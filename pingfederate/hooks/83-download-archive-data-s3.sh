@@ -30,22 +30,18 @@ if ! test -z "${PF_DATA_BACKUP}"; then
   DST_FILE="data.zip"
 
   # Download latest backup file from s3 bucket
-  aws s3 cp "${PF_ARCHIVE_URL}/${PF_DATA_BACKUP}" "${OUT_DIR}/instance/server/default/data/drop-in-deployer/${DST_FILE}"
+  aws s3 cp "${PF_ARCHIVE_URL}/${PF_DATA_BACKUP}" "${STAGING_DIR}/instance/server/default/data/drop-in-deployer/${DST_FILE}"
 
-  S3_RETURN_CODE="${?}"
-
-  echo "Download return code: ${S3_RETURN_CODE}"
+  echo "Download return code: ${?}"
 
   # Print the filename of the downloaded file from s3
-  ls ${OUT_DIR}/instance/server/default/data/drop-in-deployer
+  echo "Download file name: ${PF_DATA_BACKUP}"
 
-  exit "${S3_RETURN_CODE}"
+  # Print listed files from drop-in-deployer, should only be rename of PF_DATA_BACKUP to data.zip
+  ls ${STAGING_DIR}/instance/server/default/data/drop-in-deployer
 
 else
 
   echo "No archive data found"
-  # Exit with non-unsed exit code from aws s3 cli
-  # https://docs.aws.amazon.com/cli/latest/topic/return-codes.html
-  exit 3
   
 fi
