@@ -20,7 +20,7 @@ ${VERBOSE} && set -x
 
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 
-# Only download archive data on PingFederate Admin
+# Only recover archive data on PingFederate Admin
 if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" != "CLUSTERED_ENGINE"; then
 
     # If pod is restarting due to error OR upon a manual data recover look to recover archive data
