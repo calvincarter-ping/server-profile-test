@@ -32,7 +32,7 @@ if ! test -z "${PF_DATA_BACKUP}"; then
   # Download latest backup file from s3 bucket
   aws s3 cp "${PF_ARCHIVE_URL}/${PF_DATA_BACKUP}" "${OUT_DIR}/instance/server/default/data/drop-in-deployer/${DST_FILE}"
 
-  #RETURN_CODE=${?}
+  #RETURN_CODE="${?}"
 
   #echo "Download return code: ${RETURN_CODE}"
 
