@@ -30,7 +30,7 @@ if ! test -z "${PF_DATA_BACKUP}"; then
   DST_FILE="data.zip"
 
   # Download latest backup file from s3 bucket
-  aws s3 cp "${PF_ARCHIVE_URL}/${PF_DATA_BACKUP}" "${STAGING_DIR}/instance/server/default/data/drop-in-deployer/${DST_FILE}"
+  aws s3 cp "${PF_ARCHIVE_URL}/${PF_DATA_BACKUP}" "${OUT_DIR}/instance/server/default/data/drop-in-deployer/${DST_FILE}"
 
   echo "Download return code: ${?}"
 
@@ -38,7 +38,7 @@ if ! test -z "${PF_DATA_BACKUP}"; then
   echo "Download file name: ${PF_DATA_BACKUP}"
 
   # Print listed files from drop-in-deployer, should only be rename of PF_DATA_BACKUP to data.zip
-  ls ${STAGING_DIR}/instance/server/default/data/drop-in-deployer
+  ls ${OUT_DIR}/instance/server/default/data/drop-in-deployer
 
 else
 

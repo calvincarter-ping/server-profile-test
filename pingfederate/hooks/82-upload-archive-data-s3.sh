@@ -33,7 +33,6 @@ if test -d "${OUT_DIR}/instance/server/default/data/archive"; then
   if ! test -z "${PF_BACKUP_OUT}"; then
 
     # Sycronize all data zip files to s3 bucket
-    # aws s3 sync --exclude "*" --include "*.zip" "${OUT_DIR}/instance/server/default/data/archive" "${PF_ARCHIVE_URL}"
     aws s3 sync "${OUT_DIR}/instance/server/default/data/archive" "${PF_ARCHIVE_URL}"
 
     echo "Upload return code: ${?}"
