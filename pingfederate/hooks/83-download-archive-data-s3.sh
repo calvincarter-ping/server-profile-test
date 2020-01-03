@@ -42,7 +42,7 @@ if ! test -z "${PF_DATA_BACKUP}"; then
   if test "${RETURN_CODE}" = 0; then
     exit -1
   else
-    exit ${RETURN_CODE}
+    exit "${RETURN_CODE}"
   fi
 
 else
