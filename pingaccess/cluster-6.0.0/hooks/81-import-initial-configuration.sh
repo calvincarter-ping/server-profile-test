@@ -42,7 +42,7 @@ OUT=$( make_api_request -X POST -d "{
           \"alias\":\"pingaccess-console\",
           \"organization\":\"Ping Identity\",
           \"validDays\":${PING_ACCESS_CERT_VALID_DAYS},
-          \"commonName\":\"${K8S_STATEFUL_SET_SERVICE_NAME_PA}\",
+          \"commonName\":\"pingaccess\",
           \"country\":\"US\",
           \"signatureAlgorithm\":\"SHA256withRSA\"
         }" https://localhost:9000/pa-admin-api/v3/keyPairs/generate )
