@@ -61,7 +61,7 @@ function pingaccess_admin_localhost_wait
 function pingaccess_external_engine_wait
 {
     while true; do
-        curl -ss --silent -o /dev/null -k https://${K8S_STATEFUL_SET_SERVICE_NAME_PA}:9090/pa/heartbeat.ping
+        curl -ss --silent -o /dev/null -k https://${K8S_STATEFUL_SET_SERVICE_NAME_PINGACCESS_ADMIN}:9090/pa/heartbeat.ping
         if ! test $? -eq 0 ; then
             echo "Adding Engine: Server not started, waiting.."
             sleep 3
