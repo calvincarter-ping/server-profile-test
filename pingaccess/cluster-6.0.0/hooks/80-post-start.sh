@@ -7,23 +7,13 @@
 
 # shellcheck source=pingcommon.lib.sh
 . "${HOOKS_DIR}/pingcommon.lib.sh"
-INITIAL_ADMIN_PASSWORD=${INITIAL_ADMIN_PASSWORD:=2FederateM0re}
-if test ${RUN_PLAN} = "START" ; then
-  echo "Check for configuration to import.."
-  if ! test -f ${STAGING_DIR}/instance/conf/pa.jwk ; then
-    echo "INFO: No 'pa.jwk' found in /instance/conf"
-    if ! test -f ${STAGING_DIR}/instance/data/data.json ; then
-      echo "INFO: No file named 'data.json' found in /instance/data"
-      echo "INFO: skipping config import"
-    fi
-  else 
-    if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE" ]]; then
-      run_hook "81-import-initial-configuration.sh"
-    fi   
-  fi
-fi
 
 if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE" ]]; then
-  echo "Bringing eth0 back up..."
-  ip link set eth0 up
-fi 
+  echo "run plan ${RUN_PLAN}"
+  #if test ${RUN_PLAN} = "START" ; then
+  #if ! test -f ${OUT_DIR}/instance/pingaccess_cert_complete ; then
+  run_hook "81-import-initial-configuration.sh"
+  #elif test ${RUN_PLAN} = "RESTART" ; then
+  #  echo "restart logic"
+  #fi
+fi
