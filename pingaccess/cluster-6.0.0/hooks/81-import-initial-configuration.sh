@@ -41,7 +41,7 @@ OUT=$( make_api_request -X POST -d "{
           \"keyAlgorithm\":\"RSA\",
           \"alias\":\"pingaccess-console\",
           \"organization\":\"Ping Identity\",
-          \"validDays\":${PING_ACCESS_CERT_VALID_DAYS},
+          \"validDays\":365,
           \"commonName\":\"pingaccess\",
           \"country\":\"US\",
           \"signatureAlgorithm\":\"SHA256withRSA\"
@@ -63,19 +63,19 @@ make_api_request -X PUT -d "{
 
 # Update admin config host
 make_api_request -X PUT -d "{
-                            \"hostPort\":\"${K8S_STATEFUL_SET_SERVICE_NAME_PA}:9090\",
+                            \"hostPort\":\"${K8S_STATEFUL_SET_SERVICE_NAME_PINGACCESS_ADMIN}:9090\",
                             \"httpProxyId\": 0,
                             \"httpsProxyId\": 0
                         }" https://localhost:9000/pa-admin-api/v3/adminConfig
 
 
 echo "importing data"
-curl -k -v -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "Content-Type: application/json" -H "X-Xsrf-Header: PingAccess" \
-  -d @${STAGING_DIR}/instance/data/data.json \
-  https://localhost:9000/pa-admin-api/v3/config/import
+#curl -k -v -X POST -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "Content-Type: application/json" -H "X-Xsrf-Header: PingAccess" \
+#  -d @${STAGING_DIR}/instance/data/data.json \
+#  https://localhost:9000/pa-admin-api/v3/config/import
 
-echo "apps after import"
-curl -k -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" https://localhost:9000/pa-admin-api/v3/applications
+#echo "apps after import"
+#curl -k -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess" https://localhost:9000/pa-admin-api/v3/applications
 
 # Mark file to indicate that pingaccess cluster certificate is complete
 #touch ${OUT_DIR}/instance/pingaccess_cert_complete
