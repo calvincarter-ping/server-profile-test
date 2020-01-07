@@ -3,6 +3,9 @@
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 . "${HOOKS_DIR}/utils.lib.sh"
 
+# Wait until pingaccess admin localhost is available
+pingaccess_admin_localhost_wait
+
 set -x
 
 make_api_request -X POST -d "{
