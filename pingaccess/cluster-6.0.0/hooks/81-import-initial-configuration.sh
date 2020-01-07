@@ -63,7 +63,7 @@ make_api_request -X PUT -d "{
 
 # Update admin config host
 make_api_request -X PUT -d "{
-                            \"hostPort\":\"${K8S_STATEFUL_SET_SERVICE_NAME_PINGACCESS_ADMIN}:9090\",
+                            \"hostPort\":\"${K8S_STATEFUL_SET_SERVICE_NAME_PINGACCESS}:9090\",
                             \"httpProxyId\": 0,
                             \"httpsProxyId\": 0
                         }" https://localhost:9000/pa-admin-api/v3/adminConfig
