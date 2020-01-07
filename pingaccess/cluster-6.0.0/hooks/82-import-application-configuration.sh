@@ -12,8 +12,7 @@ make_api_request -X POST -d "{
   \"secure\":true,
   \"trustedCertificateGroupId\":0,
   \"name\":\"PF Runtime Port\",
-  \"port\":\"9031\"
-}" https://localhost:9000/pa-admin-api/v3/engineListeners
+  \"port\":\"9031\"}" https://localhost:9000/pa-admin-api/v3/engineListeners
 
 
 make_api_request -X PUT -d "{
@@ -22,8 +21,7 @@ make_api_request -X PUT -d "{
   \"trustedCertificateGroupId\":2,
   \"useProxy\":false,
   \"useSlo\":false,
-  \"skipHostnameVerification\":true
-}" https://localhost:9000/pa-admin-api/v3/pingfederate/runtime
+  \"skipHostnameVerification\":true}" https://localhost:9000/pa-admin-api/v3/pingfederate/runtime
 
 
 make_api_request -X PUT -d "{
@@ -35,8 +33,7 @@ make_api_request -X PUT -d "{
   \"adminPassword\":{\"value\":\"2FederateM0re\"},
   \"basePath\":null,
   \"secure\":true,
-  \"trustedCertificateGroupId\":2
-}" https://localhost:9000/pa-admin-api/v3/pingfederate/admin
+  \"trustedCertificateGroupId\":2}" https://localhost:9000/pa-admin-api/v3/pingfederate/admin
 
 
 
@@ -49,22 +46,19 @@ make_api_request -X PUT -d "{
   \"tokenTimeToLiveSeconds\":-1,
   \"subjectAttributeName\":\"Username\",
   \"clientSecret\":{},
-  \"cacheTokens\":false
-}" https://localhost:9000/pa-admin-api/v3/pingfederate/accessTokens
+  \"cacheTokens\":false}" https://localhost:9000/pa-admin-api/v3/pingfederate/accessTokens
 
 
 OUT=$( make_api_request -X POST -d "{
   \"port\":\"443\",
   \"agentResourceCacheTTL\":900,
-  \"host\":\"*\"
-}" https://localhost:9000/pa-admin-api/v3/virtualhosts )
+  \"host\":\"*\"}" https://localhost:9000/pa-admin-api/v3/virtualhosts )
 V_HOST_443_ID=$( jq -n "$OUT" | jq '.id' )
 
 OUT=$( make_api_request -X POST -d "{
   \"port\":\"9031\",
   \"agentResourceCacheTTL\":900,
-  \"host\":\"localhost\"
-}" https://localhost:9000/pa-admin-api/v3/virtualhosts )
+  \"host\":\"localhost\"}" https://localhost:9000/pa-admin-api/v3/virtualhosts )
 V_HOST_9031_ID=$( jq -n "$OUT" | jq '.id' )
 
 
@@ -80,8 +74,7 @@ OUT=$( make_api_request -X POST -d "{
   \"secure\":true,
   \"keepAliveTimeout\":0,
   \"trustedCertificateGroupId\":2,
-  \"sendPaCookie\":true
-}" https://localhost:9000/pa-admin-api/v3/sites )
+  \"sendPaCookie\":true}" https://localhost:9000/pa-admin-api/v3/sites )
 SITE_PINGFED_ID=$( jq -n "$OUT" | jq '.id' )
 
 
@@ -96,8 +89,7 @@ OUT=$( make_api_request -X POST -d "{
   \"secure\":false,
   \"keepAliveTimeout\":0,
   \"trustedCertificateGroupId\":0,
-  \"sendPaCookie\":true
-}" https://localhost:9000/pa-admin-api/v3/sites )
+  \"sendPaCookie\":true}" https://localhost:9000/pa-admin-api/v3/sites )
 SITE_HTTPBIN_ID=$( jq -n "$OUT" | jq '.id' )
 
 
@@ -120,8 +112,7 @@ make_api_request -X POST -d "{
   \"spaSupportEnabled\":true,
   \"id\":0,
   \"description\":\"\",
-  \"webSessionId\":0
-}" https://localhost:9000/pa-admin-api/v3/applications
+  \"webSessionId\":0}" https://localhost:9000/pa-admin-api/v3/applications
 
 
 
@@ -143,5 +134,4 @@ make_api_request -X POST -d "{
   \"spaSupportEnabled\":true,
   \"id\":0,
   \"description\":\"\",
-  \"webSessionId\":0
-}" https://localhost:9000/pa-admin-api/v3/applications
+  \"webSessionId\":0}" https://localhost:9000/pa-admin-api/v3/applications
