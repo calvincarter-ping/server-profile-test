@@ -53,10 +53,10 @@ mkdir -p ${DST_DIRECTORY}
 make_api_request -X GET https://localhost:9999/pf-admin-api/v1/configArchive/export \
     -o ${DST_DIRECTORY}/${DST_FILE}
 
-# Validate api call was successful and that zip isn't empty
+# Validate API call was successful and that zip isn't empty
 if test ! $? -eq 0 || test ! -s ${DST_DIRECTORY}/${DST_FILE}; then
   echo "Failed to export archive"
-  exit "${API_RETURN_CODE}"
+  exit 1
 fi
 
 aws s3 cp "${DST_DIRECTORY}/${DST_FILE}" "${TARGET_URL}/"
