@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+
+${VERBOSE} && set -x
+
+. "${HOOKS_DIR}/pingcommon.lib.sh"
+
+echo "Hello from the baseline server profile 10-start-sequence.sh.pre hook!"
+
+if test ! -z "${OPERATIONAL_MODE}" && \
+   test "${OPERATIONAL_MODE}" != "CLUSTERED_ENGINE"; then
+    run_hook "83-download-archive-data-s3.sh"
+fi
