@@ -18,7 +18,6 @@ function make_api_request
 
 ########################################################################################################################
 # Makes curl request to localhost PingFederate admin Console heartbeat page.
-# If request fails, wait for 3 seconds and try again.
 #
 # Arguments
 #   N/A

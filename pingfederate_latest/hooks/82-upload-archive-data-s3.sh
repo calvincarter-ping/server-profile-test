@@ -68,3 +68,6 @@ echo "Uploaded file name: ${DST_FILE}"
 
 # Print listed files from k8s-archive
 ls ${DST_DIRECTORY}
+
+# Clean up
+rm ${DST_DIRECTORY}/${DST_FILE}
