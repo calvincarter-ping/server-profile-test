@@ -50,10 +50,10 @@ DST_DIRECTORY="/tmp/k8s-archive"
 mkdir -p ${DST_DIRECTORY}
 
 # Make request to admin API and export latest data
-make_api_request -X GET https://localhost:9999/pf-admin-api/v1/configArchive/export \
+make_api_request -X GET https://localhost:${PINGFEDERATE_ADMIN_PORT}/pf-admin-api/v1/configArchive/export \
     -o ${DST_DIRECTORY}/${DST_FILE}
 
-# Validate API call was successful and that zip isn't empty
+# Validate admin API call was successful and that zip isn't empty
 if test ! $? -eq 0 || test ! -s ${DST_DIRECTORY}/${DST_FILE}; then
   echo "Failed to export archive"
   exit 1
@@ -69,5 +69,5 @@ echo "Uploaded file name: ${DST_FILE}"
 # Print listed files from k8s-archive
 ls ${DST_DIRECTORY}
 
-# Clean up
-rm ${DST_DIRECTORY}/${DST_FILE}
+# Cleanup
+rm -r ${DST_DIRECTORY}
