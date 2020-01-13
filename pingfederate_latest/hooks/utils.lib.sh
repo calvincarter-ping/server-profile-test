@@ -25,5 +25,5 @@ function make_api_request
 function pingfederate_admin_localhost_wait
 {
     curl -k --retry ${API_RETRY_LIMIT} --max-time ${API_TIMEOUT_WAIT} --retry-delay 1 --retry-connrefuse \
-        -o /dev/null -k https://localhost:${PINGFEDERATE_ADMIN_PORT}/pf/heartbeat.ping
+        -o /dev/null -k https://localhost:9999/pf/heartbeat.ping
 }
