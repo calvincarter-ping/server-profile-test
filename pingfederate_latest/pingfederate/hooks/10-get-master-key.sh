@@ -176,9 +176,9 @@ if ! [ -f ../server/default/data/pf.jwk ]; then
 
          echo "Pre-existing master key found - using it"
 
-         unzip "${DST_DIRECTORY}/${DST_FILE}"
+         unzip ${DST_DIRECTORY}/${DST_FILE}
          
-         cp "${DST_DIRECTORY}/pf.jwk" "${OUT_DIR}/instance/server/default/data"
+         cp ${DST_DIRECTORY}/pf.jwk ${OUT_DIR}/instance/server/default/data
 
          # Print the filename of the downloaded file from s3
          echo "Download file name: ${DATA_BACKUP_FILE}"
