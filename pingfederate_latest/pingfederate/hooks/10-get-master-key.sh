@@ -189,7 +189,7 @@ if ! [ -f ../server/default/data/pf.jwk ]; then
          ls ${OUT_DIR}/instance/server/default/data/drop-in-deployer
 
          # cleanup
-         rm -r ${DST_DIRECTORY}
+         #rm -r ${DST_DIRECTORY}
       fi
    else
       echo "No pre-existing master key found in s3 - obfuscate will create one which we will upload"

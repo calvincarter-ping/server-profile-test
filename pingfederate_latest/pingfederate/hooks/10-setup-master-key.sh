@@ -162,7 +162,7 @@ if ! [ -f ../server/default/data/pf.jwk ]; then
          echo "Pre-existing master key found - using it"
 
          # copy to drop-in-deployer
-         cp "${DST_DIRECTORY}/${DST_FILE}" "${OUT_DIR}/instance/server/default/data/drop-in-deployer/${DST_FILE}"
+         cp "${DST_DIRECTORY}/${DST_FILE}" "${OUT_DIR}/instance/server/default/data/drop-in-deployer"
 
          unzip "${DST_DIRECTORY}/${DST_FILE}"
          
@@ -177,7 +177,7 @@ if ! [ -f ../server/default/data/pf.jwk ]; then
          ls ${OUT_DIR}/instance/server/default/data/drop-in-deployer
 
          # cleanup
-         rm -r ${DST_DIRECTORY}
+         #rm -r ${DST_DIRECTORY}
       fi
    else
       echo "No pre-existing master key found in s3 - obfuscate will create one which we will upload"
