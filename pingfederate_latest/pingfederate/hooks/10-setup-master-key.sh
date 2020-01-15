@@ -11,6 +11,8 @@ ${VERBOSE} && set -x
 
 function obfuscatePassword()
 {
+   cd ${OUT_DIR}/instance/bin
+   
    #
    # The master key may not exist, this means no key was passed in as a secret and this is the first run of PF 
    # for this environment, we can use the obfuscate utility to generate a master key as a byproduct of obfuscating 
@@ -65,7 +67,6 @@ function installTools()
 # Run script from known location 
 #
 currentDir="$(pwd)"
-cd /opt/out/instance/bin
 
 #
 # Install AWS tools
@@ -113,7 +114,7 @@ DATA_BACKUP_FILE=$( aws s3api list-objects \
 # volume. If that is the case we will use that key during obfuscation. If one does not 
 # exist we check to see if one was previously uploaded to s3
 #
-if ! [ -f ../server/default/data/pf.jwk ]; then
+if ! [ -f ${OUT_DIR}/instance/server/default/data/pf.jwk ]; then
    # echo "No local master key found check s3 for a pre-existing key"
    # result="$(aws s3 ls ${masterKey} > /dev/null 2>&1;echo $?)"
    # if [ "${result}" = "0" ]; then
@@ -161,16 +162,14 @@ if ! [ -f ../server/default/data/pf.jwk ]; then
 
          echo "Pre-existing master key found - using it"
 
-         # copy to drop-in-deployer
-         # cp ${DST_DIRECTORY}/${DST_FILE} ${OUT_DIR}/instance/server/default/data/drop-in-deployer
-
          cd ${DST_DIRECTORY}
+
+         # copy to drop-in-deployer
+         cp ${DST_FILE} ${OUT_DIR}/instance/server/default/data/drop-in-deployer
 
          unzip ${DST_FILE}
          
          cp pf.jwk ${OUT_DIR}/instance/server/default/data
-
-         ls ${DST_DIRECTORY}
 
          # Print the filename of the downloaded file from s3
          echo "Download file name: ${DATA_BACKUP_FILE}"
@@ -181,7 +180,7 @@ if ! [ -f ../server/default/data/pf.jwk ]; then
          # cleanup
          #rm -r ${DST_DIRECTORY}
 
-         #obfuscatePassword
+         obfuscatePassword
       fi
    else
       echo "No pre-existing master key found in s3 - obfuscate will create one which we will upload"
