@@ -24,7 +24,7 @@ fi
 
 # Create and export archive data into file data.mm-dd-YYYY.HH.MM.SS.zip
 DST_FILE="data-`date +%m-%d-%Y.%H.%M.%S`.zip"
-DST_DIRECTORY="/tmp/k8s-archive"
+DST_DIRECTORY="/tmp/k8s-s3-upload-archive"
 mkdir -p ${DST_DIRECTORY}
 
 # Make request to admin API and export latest data
@@ -34,7 +34,7 @@ make_api_request -X GET https://localhost:9999/pf-admin-api/v1/configArchive/exp
 # Validate admin API call was successful and that zip isn't empty
 if test ! $? -eq 0 || test ! -s ${DST_DIRECTORY}/${DST_FILE}; then
   echo "Failed to export archive"
-  # Cleanup k8s-archive temp directory
+  # Cleanup k8s-s3-upload-archive temp directory
   rm -r ${DST_DIRECTORY}
   exit 1
 fi
@@ -60,8 +60,8 @@ echo "Upload return code: ${?}"
 # Print the filename of the uploaded file to s3
 echo "Uploaded file name: ${DST_FILE}"
 
-# Print listed files from k8s-archive
+# Print listed files from k8s-s3-upload-archive
 ls ${DST_DIRECTORY}
 
-# Cleanup k8s-archive temp directory
+# Cleanup k8s-s3-upload-archive temp directory
 rm -r ${DST_DIRECTORY}

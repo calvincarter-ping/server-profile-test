@@ -144,7 +144,7 @@ if ! [ -f ../server/default/data/pf.jwk ]; then
       # Rename s3 backup filename when copying onto pingfederate admin
       DST_FILE="data.zip"
 
-      DST_DIRECTORY="/tmp/k8s-s3-archive"
+      DST_DIRECTORY="/tmp/k8s-s3-download-archive"
 
       mkdir -p ${DST_DIRECTORY}
 
@@ -162,13 +162,17 @@ if ! [ -f ../server/default/data/pf.jwk ]; then
          echo "Pre-existing master key found - using it"
 
          # copy to drop-in-deployer
-         cp ${DST_DIRECTORY}/${DST_FILE} ${OUT_DIR}/instance/server/default/data/drop-in-deployer
+         # cp ${DST_DIRECTORY}/${DST_FILE} ${OUT_DIR}/instance/server/default/data/drop-in-deployer
 
-         unzip ${DST_DIRECTORY}/${DST_FILE}
+         #unzip ${DST_DIRECTORY}/${DST_FILE}
+
+         cd ${DST_DIRECTORY}/${DST_FILE}
+
+         unzip "data.zip"
          
-         #cp ${DST_DIRECTORY}/pf.jwk ${OUT_DIR}/instance/server/default/data
+         cp pf.jwk ${OUT_DIR}/instance/server/default/data
 
-         ls ${DST_DIRECTORY}
+         ls ${DST_DIRECTORY
 
          # Print the filename of the downloaded file from s3
          echo "Download file name: ${DATA_BACKUP_FILE}"
