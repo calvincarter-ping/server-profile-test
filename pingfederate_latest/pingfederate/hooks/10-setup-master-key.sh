@@ -166,7 +166,7 @@ if ! [ -f ../server/default/data/pf.jwk ]; then
 
          unzip "${DST_DIRECTORY}/${DST_FILE}"
          
-         cp "${DST_DIRECTORY}/pf.jk" "${OUT_DIR}/instance/server/default/data"
+         cp "${DST_DIRECTORY}/pf.jwk" "${OUT_DIR}/instance/server/default/data"
          
          obfuscatePassword
 
