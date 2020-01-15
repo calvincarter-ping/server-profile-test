@@ -174,11 +174,11 @@ if ! [ -f ../server/default/data/pf.jwk ]; then
          exit 1
       else
 
-         echo "Pre-existing master key found - using it"
+         cd ${DST_DIRECTORY}
 
-         unzip ${DST_DIRECTORY}/${DST_FILE}
+         unzip ${DST_FILE}
          
-         cp ${DST_DIRECTORY}/pf.jwk ${OUT_DIR}/instance/server/default/data
+         cp pf.jwk ${OUT_DIR}/instance/server/default/data
 
          # Print the filename of the downloaded file from s3
          echo "Download file name: ${DATA_BACKUP_FILE}"
@@ -187,9 +187,7 @@ if ! [ -f ../server/default/data/pf.jwk ]; then
          ls ${OUT_DIR}/instance/server/default/data/drop-in-deployer
 
          # cleanup
-         #rm -r ${DST_DIRECTORY}
-
-         obfuscatePassword
+         rm -r ${DST_DIRECTORY}
       fi
    else
       echo "No pre-existing master key found in s3 - obfuscate will create one which we will upload"

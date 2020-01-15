@@ -91,11 +91,6 @@ else
   TARGET_URL="${BACKUP_URL}/${DIRECTORY_NAME}"
 fi
 
-# directory="$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')"
-# target="${BACKUP_URL}/${directory}"
-# bucket="${BACKUP_URL#s3://}"
-# masterKey="${BACKUP_URL}/${directory}/pf.jwk"
-
 #
 # If the Pingfederate folder does not exist in the s3 bucket, create it
 # 
@@ -164,7 +159,7 @@ if ! [ -f ${OUT_DIR}/instance/server/default/data/pf.jwk ]; then
 
          cd ${DST_DIRECTORY}
 
-         # copy to drop-in-deployer
+         # copy data.zip to drop-in-deployer
          cp ${DST_FILE} ${OUT_DIR}/instance/server/default/data/drop-in-deployer
 
          unzip ${DST_FILE}
@@ -178,7 +173,7 @@ if ! [ -f ${OUT_DIR}/instance/server/default/data/pf.jwk ]; then
          ls ${OUT_DIR}/instance/server/default/data/drop-in-deployer
 
          # cleanup
-         #rm -r ${DST_DIRECTORY}
+         rm -r ${DST_DIRECTORY}
 
          obfuscatePassword
       fi
@@ -191,5 +186,6 @@ else
    echo "A pre-existing master key was found on disk - using it"
    obfuscatePassword
 fi
+
 cd "${currentDir}"
 
