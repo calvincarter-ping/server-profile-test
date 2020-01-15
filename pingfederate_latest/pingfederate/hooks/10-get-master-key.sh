@@ -179,8 +179,6 @@ if ! [ -f ../server/default/data/pf.jwk ]; then
          unzip "${DST_DIRECTORY}/${DST_FILE}"
          
          cp "${DST_DIRECTORY}/pf.jk" "${OUT_DIR}/instance/server/default/data"
-         
-         obfuscatePassword
 
          # Print the filename of the downloaded file from s3
          echo "Download file name: ${DATA_BACKUP_FILE}"
@@ -190,6 +188,8 @@ if ! [ -f ../server/default/data/pf.jwk ]; then
 
          # cleanup
          #rm -r ${DST_DIRECTORY}
+
+         obfuscatePassword
       fi
    else
       echo "No pre-existing master key found in s3 - obfuscate will create one which we will upload"
