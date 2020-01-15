@@ -164,13 +164,13 @@ if ! [ -f ../server/default/data/pf.jwk ]; then
          # copy to drop-in-deployer
          # cp ${DST_DIRECTORY}/${DST_FILE} ${OUT_DIR}/instance/server/default/data/drop-in-deployer
 
-         #unzip ${DST_DIRECTORY}/${DST_FILE}
+         unzip ${DST_DIRECTORY}/${DST_FILE}
 
-         cd ${DST_DIRECTORY}
+         #cd ${DST_DIRECTORY}
 
-         unzip "data.zip"
+         #unzip "data.zip"
          
-         cp pf.jwk ${OUT_DIR}/instance/server/default/data
+         cp ${DST_DIRECTORY}/pf.jwk ${OUT_DIR}/instance/server/default/data
 
          ls ${DST_DIRECTORY}
 
