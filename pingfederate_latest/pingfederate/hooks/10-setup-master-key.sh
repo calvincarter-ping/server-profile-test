@@ -168,6 +168,8 @@ if ! [ -f ../server/default/data/pf.jwk ]; then
          
          cp ${DST_DIRECTORY}/pf.jwk ${OUT_DIR}/instance/server/default/data
 
+         ls ${DST_DIRECTORY}
+
          # Print the filename of the downloaded file from s3
          echo "Download file name: ${DATA_BACKUP_FILE}"
 
