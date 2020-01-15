@@ -166,7 +166,7 @@ if ! [ -f ../server/default/data/pf.jwk ]; then
 
          #unzip ${DST_DIRECTORY}/${DST_FILE}
 
-         cd ${DST_DIRECTORY}/${DST_FILE}
+         cd ${DST_DIRECTORY}
 
          unzip "data.zip"
          
