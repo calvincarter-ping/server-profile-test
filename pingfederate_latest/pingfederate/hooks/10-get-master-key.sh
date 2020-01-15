@@ -127,7 +127,7 @@ DATA_BACKUP_FILE=$( aws s3api list-objects \
 # volume. If that is the case we will use that key during obfuscation. If one does not 
 # exist we check to see if one was previously uploaded to s3
 #
-if ! [ -f ../server/default/data/pf.jwk ]; then
+if ! [ -f ${OUT_DIR}/instance/server/default/data/pf.jwk ]; then
    # echo "No local master key found check s3 for a pre-existing key"
    # result="$(aws s3 ls ${masterKey} > /dev/null 2>&1;echo $?)"
    # if [ "${result}" = "0" ]; then
@@ -174,6 +174,8 @@ if ! [ -f ../server/default/data/pf.jwk ]; then
          exit 1
       else
 
+         echo "Pre-existing master key found - using it"
+         
          cd ${DST_DIRECTORY}
 
          unzip ${DST_FILE}
@@ -188,9 +190,13 @@ if ! [ -f ../server/default/data/pf.jwk ]; then
 
          # cleanup
          rm -r ${DST_DIRECTORY}
+
+         obfuscatePassword
       fi
+
    else
       echo "No pre-existing master key found in s3 - obfuscate will create one which we will upload"
+      # Do we need to upload to s3?
       obfuscatePassword
    fi
 
@@ -198,4 +204,5 @@ else
    echo "A pre-existing master key was found on disk - using it"
    obfuscatePassword
 fi
+
 cd "${currentDir}"

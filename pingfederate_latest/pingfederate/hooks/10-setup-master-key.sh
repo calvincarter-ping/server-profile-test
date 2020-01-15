@@ -179,6 +179,7 @@ if ! [ -f ${OUT_DIR}/instance/server/default/data/pf.jwk ]; then
       fi
    else
       echo "No pre-existing master key found in s3 - obfuscate will create one which we will upload"
+      # Do we need to upload to s3?
       obfuscatePassword
    fi
 
