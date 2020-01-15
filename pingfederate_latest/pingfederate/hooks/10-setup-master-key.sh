@@ -113,8 +113,7 @@ DATA_BACKUP_FILE=$( aws s3api list-objects \
 # volume. If that is the case we will use that key during obfuscation. If one does not 
 # exist we check to see if one was previously uploaded to s3
 #
-# if ! [ -f ../server/default/data/pf.jwk ]; then
-if ! [ -z "${DATA_BACKUP_FILE}" ]; then
+if ! [ -f ../server/default/data/pf.jwk ]; then
    # echo "No local master key found check s3 for a pre-existing key"
    # result="$(aws s3 ls ${masterKey} > /dev/null 2>&1;echo $?)"
    # if [ "${result}" = "0" ]; then
@@ -135,27 +134,56 @@ if ! [ -z "${DATA_BACKUP_FILE}" ]; then
    #    aws s3 cp ../server/default/data/pf.jwk ${target}/pf.jwk
    # fi
 
-   DATA_BACKUP_FILE=${DATA_BACKUP_FILE#${DIRECTORY_NAME}/}
+   echo "No local master key found check s3 for a pre-existing key"
+   if ! [ -z "${DATA_BACKUP_FILE}" ]; then
 
-   # Rename s3 backup filename when copying onto pingfederate admin
-   DST_FILE="data.zip"
+      echo "A master key does exist on S3 attempt to retrieve it"
 
-   # Download latest backup file from s3 bucket
-   aws s3 cp "${TARGET_URL}/${DATA_BACKUP_FILE}" "${OUT_DIR}/instance/server/default/data/drop-in-deployer/${DST_FILE}"
-   AWS_API_RESULT="${?}"
+      DATA_BACKUP_FILE=${DATA_BACKUP_FILE#${DIRECTORY_NAME}/}
 
-   echo "Download return code: ${AWS_API_RESULT}"
+      # Rename s3 backup filename when copying onto pingfederate admin
+      DST_FILE="data.zip"
 
-   if [ "${AWS_API_RESULT}" != "0" ]; then
-      echo_red "Retrieval was unsuccessful - crash the container to prevent spurious key creation"
-      exit 1
+      DST_DIRECTORY="/tmp/k8s-s3-archive"
+
+      mkdir -p ${DST_DIRECTORY}
+
+      # Download latest backup file from s3 bucket
+      aws s3 cp "${TARGET_URL}/${DATA_BACKUP_FILE}" "${DST_DIRECTORY}/${DST_FILE}"
+      AWS_API_RESULT="${?}"
+
+      echo "Download return code: ${AWS_API_RESULT}"
+
+      if [ "${AWS_API_RESULT}" != "0" ]; then
+         echo_red "Retrieval was unsuccessful - crash the container to prevent spurious key creation"
+         exit 1
+      else
+
+         echo "Pre-existing master key found - using it"
+
+         # copy to drop-in-deployer
+         cp "${DST_DIRECTORY}/${DST_FILE}" "${OUT_DIR}/instance/server/default/data/drop-in-deployer/${DST_FILE}"
+
+         unzip "${DST_DIRECTORY}/${DST_FILE}"
+         
+         cp "${DST_DIRECTORY}/pf.jk" "${OUT_DIR}/instance/server/default/data"
+         
+         obfuscatePassword
+
+         # Print the filename of the downloaded file from s3
+         echo "Download file name: ${DATA_BACKUP_FILE}"
+
+         # Print listed files from drop-in-deployer
+         ls ${OUT_DIR}/instance/server/default/data/drop-in-deployer
+
+         # cleanup
+         rm -r ${DST_DIRECTORY}
+      fi
    else
-      # Print the filename of the downloaded file from s3
-      echo "Download file name: ${DATA_BACKUP_FILE}"
-
-      # Print listed files from drop-in-deployer
-      ls ${OUT_DIR}/instance/server/default/data/drop-in-deployer
+      echo "No pre-existing master key found in s3 - obfuscate will create one which we will upload"
+      obfuscatePassword
    fi
+
 else
    echo "A pre-existing master key was found on disk - using it"
    obfuscatePassword
