@@ -165,6 +165,11 @@ if ! [ -f ../server/default/data/pf.jwk ]; then
          cp "${DST_DIRECTORY}/${DST_FILE}" "${OUT_DIR}/instance/server/default/data/drop-in-deployer"
 
          unzip "${DST_DIRECTORY}/${DST_FILE}"
+
+         echo "location"
+         ls "${OUT_DIR}/instance/server"
+         ls "${OUT_DIR}/instance/server/default"
+         ls "${OUT_DIR}/instance/server/default/data"
          
          cp "${DST_DIRECTORY}/pf.jwk" "${OUT_DIR}/instance/server/default/data"
 
