@@ -31,7 +31,7 @@ fi
 # Filter data.zip to last modified 3 days ago. AWS has a 1000 list-object
 # limit per request.
 FORMAT="+%d/%b/%Y:%H:%M:%S %z"
-DAYS=3
+DAYS=2
 DAYS_AGO=$(date --date="@$(($(date +%s) - (${DAYS} * 24 * 3600)))" "${FORMAT}")
 
 # Get the name of the latest backup zip file from s3
