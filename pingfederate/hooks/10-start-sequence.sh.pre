@@ -2,13 +2,16 @@
 
 ${VERBOSE} && set -x
 
+# shellcheck source=pingcommon.lib.sh
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 
-echo "Hello from the baseline server profile 10-start-sequence.sh.pre hook!"
+run_hook "10-download-artifact.sh"
 
-if test ! -z "${OPERATIONAL_MODE}" && \
-   test "${OPERATIONAL_MODE}" != "CLUSTERED_ENGINE" && \
-   test "${IS_MANUAL_RECOVER}" = "YES"; then
+if ! [ -z "${OPERATIONAL_MODE}" ] &&  [ "${OPERATIONAL_MODE}" != "CLUSTERED_ENGINE" ]; then
+	run_hook "83-download-archive-data-s3.sh"
+	run_hook "10-setup-master-key.sh"
+fi
 
-    run_hook "83-download-archive-data-s3.sh"
+if ! [ -z "${OPERATIONAL_MODE}" ] &&  [ "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]; then
+	run_hook "10-get-master-key.sh"
 fi

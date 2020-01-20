@@ -1,22 +1,39 @@
 #!/usr/bin/env sh
 
 ########################################################################################################################
-# Makes curl request to PingFederate Admin cluster heartbeat page.
-# If request fails, wait for 3 seconds and try again.
+# Makes curl request to PingFederate Admin API to configure.
+#
+# Arguments
+#   $@ -> The URL and additional needed data to make request
+########################################################################################################################
+function make_api_request()
+{
+    curl -k --retry ${API_RETRY_LIMIT} --max-time ${API_TIMEOUT_WAIT} --retry-delay 1 --retry-connrefuse \
+        -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingFederate " "$@"
+    if test ! $? -eq 0; then
+        echo "Admin API connection refused"
+        exit 1
+    fi
+}
+
+########################################################################################################################
+# Function to install AWS command line tools
 #
 # Arguments
 #   N/A
 ########################################################################################################################
-function pingfederate_external_engine_wait
+function installTools()
 {
-    while true; do
-        curl -ss --silent -o /dev/null -k https://${K8S_STATEFUL_SET_SERVICE_NAME_PINGFEDERATE_ADMIN}:9999/pingfederate/app
-        if ! test $? -eq 0 ; then
-            echo "Adding Engine: Server not started, waiting.."
-            sleep 3
-        else
-            echo "PF started, begin adding engine"
-            break
-        fi
-    done
+   if [ -z "$(which aws)" ]; then
+      #   
+      #  Install AWS platform specific tools
+      #
+      echo "Installing AWS CLI tools for S3 support"
+      #
+      # TODO: apk needs to move to the Docker file as the package manager is plaform specific
+      #
+      apk --update add python3
+      pip3 install --no-cache-dir --upgrade pip
+      pip3 install --no-cache-dir --upgrade awscli
+   fi
 }
