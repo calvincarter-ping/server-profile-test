@@ -34,11 +34,13 @@ FORMAT="+%d/%b/%Y:%H:%M:%S %z"
 DAYS=2
 DAYS_AGO=$(date --date="@$(($(date +%s) - (${DAYS} * 24 * 3600)))" "${FORMAT}")
 
+DATA_BACKUP_FILE=
+
 # Get the name of the latest backup zip file from s3
-DATA_BACKUP_FILE=$( aws s3api list-objects \
-      --bucket "${BUCKET_NAME}" \
-      --prefix "${DIRECTORY_NAME}/data" \
-      --query 'reverse(sort_by(Contents[?LastModified>=`${DAYS_AGO}`], &LastModified))[:1].Key' --output=text )
+# DATA_BACKUP_FILE=$( aws s3api list-objects \
+#       --bucket "${BUCKET_NAME}" \
+#       --prefix "${DIRECTORY_NAME}/data" \
+#       --query 'reverse(sort_by(Contents[?LastModified>=`${DAYS_AGO}`], &LastModified))[:1].Key' --output=text )
 
 # If a backup file in s3 exist
 if ! test -z "${DATA_BACKUP_FILE}"; then
