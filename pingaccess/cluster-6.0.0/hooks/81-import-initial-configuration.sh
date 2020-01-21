@@ -3,6 +3,8 @@
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 . "${HOOKS_DIR}/utils.lib.sh"
 
+# test
+
 # Wait until pingaccess admin localhost is available
 pingaccess_admin_localhost_wait
 
