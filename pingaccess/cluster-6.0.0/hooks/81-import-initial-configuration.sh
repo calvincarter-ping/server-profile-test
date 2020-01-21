@@ -30,7 +30,7 @@ OUT=$( make_api_request -X POST -d "{
           \"alias\":\"pingaccess-console\",
           \"organization\":\"Ping Identity\",
           \"validDays\":365,
-          \"commonName\":\"${K8S_STATEFUL_SET_SERVICE_NAME_PINGACCESS}\",
+          \"commonName\":\"${K8S_STATEFUL_SET_SERVICE_NAME_PINGACCESS_ADMIN}\",
           \"country\":\"US\",
           \"signatureAlgorithm\":\"SHA256withRSA\"
         }" https://localhost:9000/pa-admin-api/v3/keyPairs/generate )
@@ -43,15 +43,15 @@ CONFIG_QUERY_LISTENER_KEYPAIR_ID=$( jq -n "$OUT" | jq '.items[] | select(.name==
 echo "CONFIG_QUERY_LISTENER_KEYPAIR_ID:${CONFIG_QUERY_LISTENER_KEYPAIR_ID}"
 
 # Update CONFIG QUERY with cluster KeyPair
-# make_api_request -X PUT -d "{
-#     \"name\": \"CONFIG QUERY\",
-#     \"useServerCipherSuiteOrder\": false,
-#     \"keyPairId\": ${PINGACESS_KEY_PAIR_ID}
-# }" https://localhost:9000/pa-admin-api/v3/httpsListeners/${CONFIG_QUERY_LISTENER_KEYPAIR_ID}
+make_api_request -X PUT -d "{
+    \"name\": \"CONFIG QUERY\",
+    \"useServerCipherSuiteOrder\": false,
+    \"keyPairId\": ${PINGACESS_KEY_PAIR_ID}
+}" https://localhost:9000/pa-admin-api/v3/httpsListeners/${CONFIG_QUERY_LISTENER_KEYPAIR_ID}
 
 # Update admin config host
-# make_api_request -X PUT -d "{
-#                             \"hostPort\":\"${K8S_STATEFUL_SET_SERVICE_NAME_PINGACCESS_ADMIN}:9090\",
-#                             \"httpProxyId\": 0,
-#                             \"httpsProxyId\": 0
-#                         }" https://localhost:9000/pa-admin-api/v3/adminConfig
+make_api_request -X PUT -d "{
+      \"hostPort\":\"${K8S_STATEFUL_SET_SERVICE_NAME_PINGACCESS_ADMIN}:9090\",
+      \"httpProxyId\": 0,
+      \"httpsProxyId\": 0
+  }" https://localhost:9000/pa-admin-api/v3/adminConfig
