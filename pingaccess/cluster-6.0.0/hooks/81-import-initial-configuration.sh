@@ -55,9 +55,3 @@ make_api_request -X PUT -d "{
     \"httpProxyId\": 0,
     \"httpsProxyId\": 0
 }" https://localhost:9000/pa-admin-api/v3/adminConfig
-
-# Mark file to indicate that pingaccess cluster certificate is complete
-#touch ${OUT_DIR}/instance/pingaccess_cert_complete_flag
-
-# Terminate admin to signal a k8s restart
-#kill -1 $(ps | grep "${OUT_DIR}/instance/bin/run.sh" | awk '{print $1}')

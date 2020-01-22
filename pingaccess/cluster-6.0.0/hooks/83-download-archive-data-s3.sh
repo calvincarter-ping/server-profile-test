@@ -22,7 +22,7 @@ BUCKET_NAME=$(echo ${BUCKET_URL_NO_PROTOCOL} | cut -d/ -f1)
 
 DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
 
-if test "${BACKUP_URL}" == */pingfederate; then
+if test "${BACKUP_URL}" == */pingaccess; then
   TARGET_URL="${BACKUP_URL}"
 else
   TARGET_URL="${BACKUP_URL}/${DIRECTORY_NAME}"
@@ -51,7 +51,7 @@ if ! test -z "${DATA_BACKUP_FILE}"; then
   DST_FILE="data.zip"
 
   # Download latest backup file from s3 bucket
-  aws s3 cp "${TARGET_URL}/${DATA_BACKUP_FILE}" "${OUT_DIR}/instance/server/default/data/drop-in-deployer/${DST_FILE}"
+  aws s3 cp "${TARGET_URL}/${DATA_BACKUP_FILE}" "${OUT_DIR}/instance/deploy/${DST_FILE}"
   AWS_API_RESULT="${?}"
 
   echo "Download return code: ${AWS_API_RESULT}"
@@ -60,11 +60,6 @@ if ! test -z "${DATA_BACKUP_FILE}"; then
     echo_red "Download was unsuccessful - crash the container"
     exit 1
   fi
-
-  unzip "${OUT_DIR}/instance/server/default/data/drop-in-deployer/${DST_FILE}" \
-      pf.jwk \
-      -d "${OUT_DIR}/instance/server/default/data"
-  echo "ray ------------------>\n$(ls ${OUT_DIR}/instance/server/default/data/)\n<----------------ray"
 
   # Print the filename of the downloaded file from s3
   echo "Download file name: ${DATA_BACKUP_FILE}"

@@ -3,7 +3,7 @@
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 
 if test ! -z "${OPERATIONAL_MODE}" && \
-   test "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE" && \
-   test ! -f ${OUT_DIR}/instance/pingaccess_cert_complete_flag; then
+   test "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE"; then
     echo "restart logic"
+    run_hook "83-download-archive-data-s3"
 fi

@@ -23,7 +23,7 @@ DST_DIRECTORY="/tmp/k8s-s3-upload-archive"
 mkdir -p ${DST_DIRECTORY}
 
 # Make request to admin API and export latest data
-make_api_request -X GET https://localhost:9999/pf-admin-api/v1/configArchive/export \
+make_api_request -X GET https://localhost:9000/pa-admin-api/v3/config/export/workflows \
     -o ${DST_DIRECTORY}/${DST_FILE}
 
 # Validate admin API call was successful and that zip isn't corrupted
@@ -41,7 +41,7 @@ DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
 echo "Creating directory ${DIRECTORY_NAME} under bucket ${BUCKET_NAME}"
 aws s3api put-object --bucket "${BUCKET_NAME}" --key "${DIRECTORY_NAME}"/
 
-if test "${BACKUP_URL}" == */pingfederate; then
+if test "${BACKUP_URL}" == */pingaccess; then
   TARGET_URL="${BACKUP_URL}"
 else
   TARGET_URL="${BACKUP_URL}/${DIRECTORY_NAME}"
