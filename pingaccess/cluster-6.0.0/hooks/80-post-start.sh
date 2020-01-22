@@ -26,7 +26,7 @@ if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CO
   RESULT="$(aws s3 ls ${CERTFLAG} > /dev/null 2>&1;echo $?)"
   echo "result calvin ${RESULT}"
   if test "${RESULT}" = "0"; then
-    run_hook "83-download-archive-data-s3"
+    run_hook "83-download-archive-data-s3.sh"
   elif test "${RESULT}" != "1"; then
     echo "error occured"
   else
