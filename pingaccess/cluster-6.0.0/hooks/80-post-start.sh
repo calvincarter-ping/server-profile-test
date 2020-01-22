@@ -22,6 +22,7 @@ if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CO
     TARGET_URL="${BACKUP_URL}/${DIRECTORY_NAME}"
   fi
   CERTFLAG="${TARGET_URL}/pingaccess_cert_complete_flag"
+  MASTER_KEY="${TARGET_URL}/pa.jwk"
 
   RESULT="$(aws s3 ls ${CERTFLAG} > /dev/null 2>&1;echo $?)"
   echo "result calvin ${RESULT}"
@@ -35,9 +36,14 @@ if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CO
     SCRIPT=$(ps | grep "${OUT_DIR}/instance/bin/run.sh" | awk '{print $1; exit}')
 
     touch /tmp/pingaccess_cert_complete_flag
-    echo "${CERTFLAG}"
+
     if test "$(aws s3 cp /tmp/pingaccess_cert_complete_flag ${CERTFLAG} > /dev/null 2>&1;echo $?)" != "0"; then
       echo_red "Setting cert flag error"
+      exit 1
+    fi
+
+    if test "$(aws s3 cp ${OUT_DIR}/instance/conf/pa.jwk ${MASTER_KEY} > /dev/null 2>&1;echo $?)" != "0"; then
+      echo_red "Setting master key error"
       exit 1
     fi
 
