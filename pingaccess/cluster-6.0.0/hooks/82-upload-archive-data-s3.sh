@@ -18,12 +18,12 @@ else
 fi
 
 # Create and export archive data into file data.mm-dd-YYYY.HH.MM.SS.zip
-DST_FILE="data-`date +%m-%d-%Y.%H.%M.%S`.zip"
+DST_FILE="data-`date +%m-%d-%Y.%H.%M.%S`.json"
 DST_DIRECTORY="/tmp/k8s-s3-upload-archive"
 mkdir -p ${DST_DIRECTORY}
 
 # Make request to admin API and export latest data
-make_api_request -X GET https://localhost:9000/pa-admin-api/v3/config/export/workflows \
+make_api_request -X POST https://localhost:9000/pa-admin-api/v3/config/export/workflows \
     -o ${DST_DIRECTORY}/${DST_FILE}
 
 # Validate admin API call was successful and that zip isn't corrupted

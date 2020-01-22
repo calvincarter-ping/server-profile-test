@@ -48,10 +48,12 @@ if ! test -z "${DATA_BACKUP_FILE}"; then
   DATA_BACKUP_FILE=${DATA_BACKUP_FILE#${DIRECTORY_NAME}/}
 
   # Rename s3 backup filename when copying onto pingfederate admin
-  DST_FILE="data.zip"
+  DST_FILE="data.json"
+  DST_DIRECTORY="/tmp/k8s-s3-download-archive"
+  mkdir -p ${DST_DIRECTORY}
 
   # Download latest backup file from s3 bucket
-  aws s3 cp "${TARGET_URL}/${DATA_BACKUP_FILE}" "${OUT_DIR}/instance/deploy/${DST_FILE}"
+  aws s3 cp "${TARGET_URL}/${DATA_BACKUP_FILE}" "${DST_DIRECTORY}/${DST_FILE}"
   AWS_API_RESULT="${?}"
 
   echo "Download return code: ${AWS_API_RESULT}"
@@ -59,6 +61,19 @@ if ! test -z "${DATA_BACKUP_FILE}"; then
   if [ "${AWS_API_RESULT}" != "0" ]; then
     echo_red "Download was unsuccessful - crash the container"
     exit 1
+  fi
+
+  echo "importing data"
+  make_api_request -X POST -H "Content-Type: application/json" \
+    -d @${DST_DIRECTORY}/${DST_FILE} \
+    https://localhost:9000/pa-admin-api/v3/config/import
+
+  # Validate admin API call was successful and that zip isn't corrupted
+  if test ! $? -eq 0; then
+    echo "Failed to export archive"
+    # Cleanup k8s-s3-upload-archive temp directory
+    #rm -rf ${DST_DIRECTORY}
+    exit 0
   fi
 
   # Print the filename of the downloaded file from s3
