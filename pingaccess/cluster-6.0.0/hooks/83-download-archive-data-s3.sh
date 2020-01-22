@@ -17,6 +17,9 @@ else
    installTools
 fi
 
+# Wait until pingaccess admin localhost is available
+pingaccess_admin_localhost_wait
+
 BUCKET_URL_NO_PROTOCOL=${BACKUP_URL#s3://}
 BUCKET_NAME=$(echo ${BUCKET_URL_NO_PROTOCOL} | cut -d/ -f1)
 

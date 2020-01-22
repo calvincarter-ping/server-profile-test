@@ -17,6 +17,9 @@ else
    installTools
 fi
 
+# Wait until pingaccess admin localhost is available
+pingaccess_admin_localhost_wait
+
 # Create and export archive data into file data.mm-dd-YYYY.HH.MM.SS.zip
 DST_FILE="data-`date +%m-%d-%Y.%H.%M.%S`.json"
 DST_DIRECTORY="/tmp/k8s-s3-upload-archive"
