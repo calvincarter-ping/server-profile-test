@@ -23,14 +23,10 @@ DST_DIRECTORY="/tmp/k8s-s3-upload-archive"
 mkdir -p ${DST_DIRECTORY}
 
 # Make request to admin API and export latest data
-#make_api_request -X POST -H "Accept: application/json" -H "X-Requested-With: XMLHttpRequest" \
-#-H "Connection: keep-alive" https://localhost:9000/pa-admin-api/v3/config/export/workflows \
-#-o ${DST_DIRECTORY}/${DST_FILE}
-#WORKFLOW_ID=$( cat ${DST_DIRECTORY}/${DST_FILE} | jq 'select(.status=="In Progress") | .id' )
-
-make_api_request -X GET -H "Accept: application/json" -H "X-Requested-With: XMLHttpRequest" \
--H "Connection: keep-alive" https://localhost:9000/pa-admin-api/v3/config/export/workflows/1/data \
+make_api_request -X POST -H "Accept: application/json" -H "X-Requested-With: XMLHttpRequest" \
+-H "Connection: keep-alive" https://localhost:9000/pa-admin-api/v3/config/export/workflows \
 -o ${DST_DIRECTORY}/${DST_FILE}
+WORKFLOW_ID=$( cat ${DST_DIRECTORY}/${DST_FILE} | jq 'select(.status=="In Progress") | .id' )
 
 # Validate admin API call was successful and that zip isn't corrupted
 if test ! $? -eq 0; then
@@ -39,6 +35,17 @@ if test ! $? -eq 0; then
   #rm -rf ${DST_DIRECTORY}
   exit 0
 fi
+
+echo ${WORKFLOW_ID}
+
+if test ! -z "${WORKFLOW_ID}"; then
+  sleep 10
+  make_api_request -X GET -H "Accept: application/json" \
+  -H "Connection: keep-alive" https://localhost:9000/pa-admin-api/v3/config/export/workflows/${WORKFLOW_ID}/data \
+  -o ${DST_DIRECTORY}/${DST_FILE}
+fi
+
+cat ${DST_DIRECTORY}/${DST_FILE}
 
 BUCKET_URL_NO_PROTOCOL=${BACKUP_URL#s3://}
 BUCKET_NAME=$(echo ${BUCKET_URL_NO_PROTOCOL} | cut -d/ -f1)
