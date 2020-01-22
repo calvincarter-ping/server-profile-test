@@ -28,11 +28,15 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
     H2_DATABASE="${TARGET_URL}/PingAccess.mv.db"
     CERTFLAG="${TARGET_URL}/pingaccess_cert_complete_flag"
 
-    RESULT_MASTER_KEY="$(aws s3 ls ${MASTER_KEY} > /dev/null 2>&1;echo $?)"
-    RESULT_H2_DATABASE="$(aws s3 ls ${H2_DATABASE} > /dev/null 2>&1;echo $?)"
-    RESULT_CERTFLAG="$(aws s3 ls ${CERTFLAG} > /dev/null 2>&1;echo $?)"
-
     while true; do
+        RESULT_MASTER_KEY="$(aws s3 ls ${MASTER_KEY} > /dev/null 2>&1;echo $?)"
+        RESULT_H2_DATABASE="$(aws s3 ls ${H2_DATABASE} > /dev/null 2>&1;echo $?)"
+        RESULT_CERTFLAG="$(aws s3 ls ${CERTFLAG} > /dev/null 2>&1;echo $?)"
+
+        echo "Masterkey: ${RESULT_MASTER_KEY}"
+        echo "H2Database: ${RESULT_H2_DATABASE}"
+        echo "CERTFLAG: ${RESULT_CERTFLAG}"
+        
         if test "${RESULT_MASTER_KEY}" = "0" && test "${RESULT_H2_DATABASE}" = "0" && test "${RESULT_CERTFLAG}" = "0"; then
             echo "PingAccess admin configuration is complete, begin adding engine"
             break
