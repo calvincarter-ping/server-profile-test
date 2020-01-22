@@ -8,7 +8,6 @@ if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CO
   installTools
 
   BUCKET_URL_NO_PROTOCOL=${BACKUP_URL#s3://}
-  BUCKET_NAME=$(echo ${BUCKET_URL_NO_PROTOCOL} | cut -d/ -f1)
   DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
 
   if test "${BACKUP_URL}" == */pingaccess; then
@@ -19,6 +18,7 @@ if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CO
   CERTFLAG="${TARGET_URL}/pingaccess_cert_complete_flag"
 
   RESULT="$(aws s3 ls ${CERTFLAG} > /dev/null 2>&1;echo $?)"
+  echo "result calvin ${RESULT}"
   if test "${RESULT}" = "0"; then
     run_hook "83-download-archive-data-s3"
   elif test "${RESULT}" = "1" || test "${RESULT}" = "2"; then
@@ -31,5 +31,4 @@ if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CO
     # Terminate admin to signal a k8s restart
     kill -1 "${SCRIPT}"
   fi
-
 fi
