@@ -34,11 +34,11 @@ if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]
 
     while true; do
         if test "${RESULT_MASTER_KEY}" = "0" && test "${RESULT_H2_DATABASE}" = "0" && test "${RESULT_CERTFLAG}" = "0"; then
-            echo "Adding Engine: Server not started, waiting for admin initial configuration"
-            sleep 10
-        else
-            echo "PA started, begin adding engine"
+            echo "PingAccess admin configuration is complete, begin adding engine"
             break
+        else
+            echo "Adding Engine: Waiting for admin initial configuration"
+            sleep 10
         fi
     done
 
