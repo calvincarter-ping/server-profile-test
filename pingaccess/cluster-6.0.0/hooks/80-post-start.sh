@@ -15,6 +15,6 @@ if test ! -z "${OPERATIONAL_MODE}" && \
       run_hook "82-upload-archive-data-s3.sh"
       SCRIPT=$(ps | grep "${OUT_DIR}/instance/bin/run.sh" | awk '{print $1; exit}')
       # Terminate admin to signal a k8s restart
-      kill -1 "${SCRIPT}"
+      #kill -1 "${SCRIPT}"
     fi
 fi
