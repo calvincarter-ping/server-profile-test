@@ -35,8 +35,8 @@ if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CO
     SCRIPT=$(ps | grep "${OUT_DIR}/instance/bin/run.sh" | awk '{print $1; exit}')
 
     touch /tmp/pingaccess_cert_complete_flag
-
-    if test "$(aws s3 cp ${CERTFLAG} /tmp/pingaccess_cert_complete_flag > /dev/null 2>&1;echo $?)" != "0"; then
+    echo "${CERTFLAG}"
+    if test "$(aws s3 cp /tmp/pingaccess_cert_complete_flag ${CERTFLAG} > /dev/null 2>&1;echo $?)" != "0"; then
       echo_red "Setting cert flag error"
       exit 1
     fi
