@@ -66,7 +66,7 @@ if ! test -z "${DATA_BACKUP_FILE}"; then
   echo "importing data"
   make_api_request -X POST -H "Content-Type: application/json" \
     -d @${DST_DIRECTORY}/${DST_FILE} \
-    https://localhost:9000/pa-admin-api/v3/config/import
+    https://localhost:9000/pa-admin-api/v3/config/import/workflows
 
   # Validate admin API call was successful and that zip isn't corrupted
   if test ! $? -eq 0; then
@@ -81,7 +81,7 @@ if ! test -z "${DATA_BACKUP_FILE}"; then
 
   # Print listed files from drop-in-deployer
   DST_DIR_CONTENTS=$(mktemp)
-  ls ${OUT_DIR}/instance/server/default/data/drop-in-deployer > ${DST_DIR_CONTENTS}
+  ls ${DST_DIRECTORY} > ${DST_DIR_CONTENTS}
   cat ${DST_DIR_CONTENTS}
 
 else

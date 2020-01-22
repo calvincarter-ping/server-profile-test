@@ -23,11 +23,17 @@ DST_DIRECTORY="/tmp/k8s-s3-upload-archive"
 mkdir -p ${DST_DIRECTORY}
 
 # Make request to admin API and export latest data
-make_api_request -X POST https://localhost:9000/pa-admin-api/v3/config/export/workflows \
-    -o ${DST_DIRECTORY}/${DST_FILE}
+#make_api_request -X POST -H "Accept: application/json" -H "X-Requested-With: XMLHttpRequest" \
+#-H "Connection: keep-alive" https://localhost:9000/pa-admin-api/v3/config/export/workflows \
+#-o ${DST_DIRECTORY}/${DST_FILE}
+#WORKFLOW_ID=$( cat ${DST_DIRECTORY}/${DST_FILE} | jq 'select(.status=="In Progress") | .id' )
+
+make_api_request -X GET -H "Accept: application/json" -H "X-Requested-With: XMLHttpRequest" \
+-H "Connection: keep-alive" https://localhost:9000/pa-admin-api/v3/config/export/workflows/1/data \
+-o ${DST_DIRECTORY}/${DST_FILE}
 
 # Validate admin API call was successful and that zip isn't corrupted
-if test ! $? -eq 0 || test "$( unzip -t ${DST_DIRECTORY}/${DST_FILE} > /dev/null 2>&1;echo $?)" != "0" ; then
+if test ! $? -eq 0; then
   echo "Failed to export archive"
   # Cleanup k8s-s3-upload-archive temp directory
   #rm -rf ${DST_DIRECTORY}
