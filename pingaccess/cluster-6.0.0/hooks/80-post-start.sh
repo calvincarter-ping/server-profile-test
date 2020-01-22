@@ -5,7 +5,13 @@
 
 if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE"; then
 
-  installTools
+  # Install AWS CLI if the upload location is S3
+  if test "${BACKUP_URL#s3}" == "${BACKUP_URL}"; then
+    echo_red "Upload location is not S3"
+    exit 1
+  else
+    installTools
+  fi
 
   BUCKET_URL_NO_PROTOCOL=${BACKUP_URL#s3://}
   DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
@@ -21,12 +27,19 @@ if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CO
   echo "result calvin ${RESULT}"
   if test "${RESULT}" = "0"; then
     run_hook "83-download-archive-data-s3"
-  elif test "${RESULT}" = "1" || test "${RESULT}" = "2"; then
+  elif test "${RESULT}" != "1"; then
     echo "error occured"
   else
     run_hook "81-import-initial-configuration.sh"
     run_hook "82-upload-archive-data-s3.sh"
     SCRIPT=$(ps | grep "${OUT_DIR}/instance/bin/run.sh" | awk '{print $1; exit}')
+
+    touch /tmp/pingaccess_cert_complete_flag
+
+    if test "$(aws s3 cp ${CERTFLAG} /tmp/pingaccess_cert_complete_flag > /dev/null 2>&1;echo $?)" != "0"; then
+      echo_red "Setting cert flag error"
+      exit 1
+    fi
 
     # Terminate admin to signal a k8s restart
     kill -1 "${SCRIPT}"
