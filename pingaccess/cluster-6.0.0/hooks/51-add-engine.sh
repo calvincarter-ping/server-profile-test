@@ -4,7 +4,43 @@
 . "${HOOKS_DIR}/utils.lib.sh"
 
 if [[ ! -z "${OPERATIONAL_MODE}" && "${OPERATIONAL_MODE}" = "CLUSTERED_ENGINE" ]]; then
+
     echo "This node is an engine..."
+
+    # Install AWS CLI if the upload location is S3
+    if test "${BACKUP_URL#s3}" == "${BACKUP_URL}"; then
+        echo_red "Upload location is not S3"
+        exit 1
+    else
+        installTools
+    fi
+
+    BUCKET_URL_NO_PROTOCOL=${BACKUP_URL#s3://}
+    DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
+
+    if test "${BACKUP_URL}" == */pingaccess; then
+        TARGET_URL="${BACKUP_URL}"
+    else
+        TARGET_URL="${BACKUP_URL}/${DIRECTORY_NAME}"
+    fi
+
+    MASTER_KEY="${TARGET_URL}/pa.jwk"
+    H2_DATABASE="${TARGET_URL}/PingAccess.mv.db"
+    CERTFLAG="${TARGET_URL}/pingaccess_cert_complete_flag"
+
+    RESULT_MASTER_KEY="$(aws s3 ls ${MASTER_KEY} > /dev/null 2>&1;echo $?)"
+    RESULT_H2_DATABASE="$(aws s3 ls ${H2_DATABASE} > /dev/null 2>&1;echo $?)"
+    RESULT_CERTFLAG="$(aws s3 ls ${CERTFLAG} > /dev/null 2>&1;echo $?)"
+
+    while true; do
+        if test "${RESULT_MASTER_KEY}" = "0" && test "${RESULT_H2_DATABASE}" = "0" && test "${RESULT_CERTFLAG}" = "0"; then
+            echo "Adding Engine: Server not started, waiting for admin initial configuration"
+            sleep 10
+        else
+            echo "PA started, begin adding engine"
+            break
+        fi
+    done
 
     # Wait until pingaccess admin is available
     pingaccess_external_engine_wait
