@@ -30,7 +30,7 @@ make_api_request -X GET https://localhost:9000/pa-admin-api/v3/config/export/wor
 if test ! $? -eq 0 || test "$( unzip -t ${DST_DIRECTORY}/${DST_FILE} > /dev/null 2>&1;echo $?)" != "0" ; then
   echo "Failed to export archive"
   # Cleanup k8s-s3-upload-archive temp directory
-  rm -rf ${DST_DIRECTORY}
+  #rm -rf ${DST_DIRECTORY}
   exit 0
 fi
 
