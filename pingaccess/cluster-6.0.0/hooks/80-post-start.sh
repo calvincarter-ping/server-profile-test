@@ -23,6 +23,7 @@ if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CO
   fi
   CERTFLAG="${TARGET_URL}/pingaccess_cert_complete_flag"
   MASTER_KEY="${TARGET_URL}/pa.jwk"
+  H2_DATABASE="${TARGET_URL}/PingAccess.mv.db"
 
   RESULT="$(aws s3 ls ${CERTFLAG} > /dev/null 2>&1;echo $?)"
   echo "result calvin ${RESULT}"
@@ -43,6 +44,11 @@ if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CO
     fi
 
     if test "$(aws s3 cp ${OUT_DIR}/instance/conf/pa.jwk ${MASTER_KEY} > /dev/null 2>&1;echo $?)" != "0"; then
+      echo_red "Setting master key error"
+      exit 1
+    fi
+
+    if test "$(aws s3 cp ${OUT_DIR}/instance/data/PingAccess.mv.db ${H2_DATABASE} > /dev/null 2>&1;echo $?)" != "0"; then
       echo_red "Setting master key error"
       exit 1
     fi
