@@ -37,7 +37,7 @@ function make_initial_api_request()
 # Arguments
 #   N/A
 ########################################################################################################################
-function pingaccess_admin_localhost_wait()
+function pingaccess_admin_wait()
 {
     while true; do
         curl -ss --silent -o /dev/null -k https://localhost:9000/pa/heartbeat.ping 
@@ -58,8 +58,47 @@ function pingaccess_admin_localhost_wait()
 # Arguments
 #   N/A
 ########################################################################################################################
-function pingaccess_external_engine_wait()
+function pingaccess_engine_wait()
 {
+    # Install AWS CLI if the upload location is S3
+    if test "${BACKUP_URL#s3}" == "${BACKUP_URL}"; then
+        echo "Upload location is not S3"
+        exit 1
+    else
+        installTools
+    fi
+
+    BUCKET_URL_NO_PROTOCOL=${BACKUP_URL#s3://}
+    DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
+
+    if test "${BACKUP_URL}" == */pingaccess; then
+        TARGET_URL="${BACKUP_URL}"
+    else
+        TARGET_URL="${BACKUP_URL}/${DIRECTORY_NAME}"
+    fi
+
+    MASTER_KEY="${TARGET_URL}/pa.jwk"
+    H2_DATABASE="${TARGET_URL}/PingAccess.mv.db"
+    CERTFLAG="${TARGET_URL}/pingaccess_cert_complete_flag"
+
+    while true; do
+        RESULT_MASTER_KEY="$(aws s3 ls ${MASTER_KEY} > /dev/null 2>&1;echo $?)"
+        RESULT_H2_DATABASE="$(aws s3 ls ${H2_DATABASE} > /dev/null 2>&1;echo $?)"
+        RESULT_CERTFLAG="$(aws s3 ls ${CERTFLAG} > /dev/null 2>&1;echo $?)"
+
+        echo "Masterkey: ${RESULT_MASTER_KEY}"
+        echo "H2Database: ${RESULT_H2_DATABASE}"
+        echo "CERTFLAG: ${RESULT_CERTFLAG}"
+        
+        if test "${RESULT_MASTER_KEY}" = "0" && test "${RESULT_H2_DATABASE}" = "0" && test "${RESULT_CERTFLAG}" = "0"; then
+            echo "PingAccess admin configuration is complete, begin adding engine"
+            break
+        else
+            echo "Adding Engine: Waiting for admin initial configuration"
+            sleep 10
+        fi
+    done
+
     while true; do
         curl -ss --silent -o /dev/null -k https://${K8S_SERVICE_NAME_PINGACCESS_ADMIN}:9090/pa/heartbeat.ping
         if ! test $? -eq 0 ; then
