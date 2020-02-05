@@ -36,24 +36,25 @@ if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CO
 
     # Copy Cert flag to S3 Bucket
     if test "$(aws s3 cp /tmp/pingaccess_cert_complete_flag ${S3_CERTFLAG_URL} > /dev/null 2>&1;echo $?)" != "0"; then
-      echo_red "Setting cert flag error"
+      echo "Setting cert flag error"
       exit 1
     fi
 
     # Copy Master Key to S3 Bucket
     if test "$(aws s3 cp ${OUT_DIR}/instance/conf/pa.jwk ${S3_MASTER_KEY_URL} > /dev/null 2>&1;echo $?)" != "0"; then
-      echo_red "Setting master key error"
+      echo "Setting master key error"
       exit 1
     fi
 
     # Copy H2 Database to S3 Bucket
     if test "$(aws s3 cp ${OUT_DIR}/instance/data/PingAccess.mv.db ${S3_H2_DATABASE_URL} > /dev/null 2>&1;echo $?)" != "0"; then
-      echo_red "Setting master key error"
+      echo "Setting master key error"
       exit 1
     fi
 
     # Terminate admin to signal a k8s restart
-    kill -1 "${SERVER}"
+    echo "Restarting PingAccess Admin"
+    kill -SIGHUP "${SERVER}"
   fi
 
 fi

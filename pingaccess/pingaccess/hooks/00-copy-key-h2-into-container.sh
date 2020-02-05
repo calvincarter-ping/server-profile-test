@@ -27,7 +27,7 @@ if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CO
       echo "Copy H2 Database error"
       exit 1
     fi
-
+    
   elif test "${S3_MASTER_KEY_FILE}" != "1" || test "${S3_H2_DATABASE_FILE}" != "1" ; then
     echo "error occured when viewing files in S3 bucket"
   fi
