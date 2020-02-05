@@ -5,31 +5,12 @@
 
 ${VERBOSE} && set -x
 
-# Allow overriding the backup URL with an arg
-test ! -z "${1}" && BACKUP_URL="${1}"
-echo "Downloading from location ${BACKUP_URL}"
-
-# Install AWS CLI if the upload location is S3
-if test "${BACKUP_URL#s3}" == "${BACKUP_URL}"; then
-   echo "Upload location is not S3"
-   exit 1
-else
-   installTools
-fi
+setupS3Configuration
 
 # Wait until pingaccess admin localhost is available
 pingaccess_admin_localhost_wait
 
-BUCKET_URL_NO_PROTOCOL=${BACKUP_URL#s3://}
-BUCKET_NAME=$(echo ${BUCKET_URL_NO_PROTOCOL} | cut -d/ -f1)
-
-DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
-
-if test "${BACKUP_URL}" == */pingaccess; then
-  TARGET_URL="${BACKUP_URL}"
-else
-  TARGET_URL="${BACKUP_URL}/${DIRECTORY_NAME}"
-fi
+echo "Downloading from location ${BACKUP_URL}"
 
 # Filter data.zip to most recent uploaded files that occured 3 days ago.
 # AWS has a 1000 list-object limit per request. This will help filter out older backup files.

@@ -7,10 +7,6 @@ if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CO
 
   setupS3Configuration
 
-  S3_CERTFLAG_URL="${TARGET_URL}/pingaccess_cert_complete_flag"
-  S3_MASTER_KEY_URL="${TARGET_URL}/pa.jwk"
-  S3_H2_DATABASE_URL="${TARGET_URL}/PingAccess.mv.db"
-
   CERTFLAG_FILE="$(aws s3 ls ${S3_CERTFLAG_URL} > /dev/null 2>&1;echo $?)"
   
   # If cert flag exist then attempt to download the latest data.json

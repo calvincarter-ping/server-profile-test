@@ -60,37 +60,18 @@ function pingaccess_admin_wait()
 ########################################################################################################################
 function pingaccess_engine_wait()
 {
-    # Install AWS CLI if the upload location is S3
-    if test "${BACKUP_URL#s3}" == "${BACKUP_URL}"; then
-        echo "Upload location is not S3"
-        exit 1
-    else
-        installTools
-    fi
-
-    BUCKET_URL_NO_PROTOCOL=${BACKUP_URL#s3://}
-    DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
-
-    if test "${BACKUP_URL}" == */pingaccess; then
-        TARGET_URL="${BACKUP_URL}"
-    else
-        TARGET_URL="${BACKUP_URL}/${DIRECTORY_NAME}"
-    fi
-
-    MASTER_KEY="${TARGET_URL}/pa.jwk"
-    H2_DATABASE="${TARGET_URL}/PingAccess.mv.db"
-    CERTFLAG="${TARGET_URL}/pingaccess_cert_complete_flag"
+    setupS3Configuration
 
     while true; do
-        RESULT_MASTER_KEY="$(aws s3 ls ${MASTER_KEY} > /dev/null 2>&1;echo $?)"
-        RESULT_H2_DATABASE="$(aws s3 ls ${H2_DATABASE} > /dev/null 2>&1;echo $?)"
-        RESULT_CERTFLAG="$(aws s3 ls ${CERTFLAG} > /dev/null 2>&1;echo $?)"
+        MASTER_KEY_FILE_NAME="$(aws s3 ls ${S3_MASTER_KEY_URL} > /dev/null 2>&1;echo $?)"
+        H2_DATABASE_FILENAME="$(aws s3 ls ${S3_H2_DATABASE_URL} > /dev/null 2>&1;echo $?)"
+        CERTFLAG_FILENAME="$(aws s3 ls ${S3_CERTFLAG_URL} > /dev/null 2>&1;echo $?)"
 
-        echo "Masterkey: ${RESULT_MASTER_KEY}"
-        echo "H2Database: ${RESULT_H2_DATABASE}"
-        echo "CERTFLAG: ${RESULT_CERTFLAG}"
+        echo "Masterkey: ${MASTER_KEY_FILE_NAME}"
+        echo "H2Database: ${H2_DATABASE_FILENAME}"
+        echo "CERTFLAG: ${CERTFLAG_FILENAME}"
         
-        if test "${RESULT_MASTER_KEY}" = "0" && test "${RESULT_H2_DATABASE}" = "0" && test "${RESULT_CERTFLAG}" = "0"; then
+        if test "${MASTER_KEY_FILE_NAME}" = "0" && test "${H2_DATABASE_FILENAME}" = "0" && test "${CERTFLAG_FILENAME}" = "0"; then
             echo "PingAccess admin configuration is complete, begin adding engine"
             break
         else
@@ -138,6 +119,9 @@ function setupS3Configuration()
     unset BUCKET_URL_NO_PROTOCOL
     unset DIRECTORY_NAME
     unset TARGET_URL
+    unset S3_MASTER_KEY_URL
+    unset S3_H2_DATABASE_URL
+    unset S3_CERTFLAG_URL
 
     # Install AWS CLI if the upload location is S3
     if test "${BACKUP_URL#s3}" == "${BACKUP_URL}"; then
@@ -158,4 +142,8 @@ function setupS3Configuration()
     else
         export TARGET_URL="${BACKUP_URL}/${DIRECTORY_NAME}"
     fi
+
+    export S3_MASTER_KEY_URL="${TARGET_URL}/pa.jwk"
+    export S3_H2_DATABASE_URL="${TARGET_URL}/PingAccess.mv.db"
+    export S3_CERTFLAG_URL="${TARGET_URL}/pingaccess_cert_complete_flag"
 }

@@ -5,20 +5,12 @@
 
 ${VERBOSE} && set -x
 
-# Allow overriding the backup URL with an arg
-test ! -z "${1}" && BACKUP_URL="${1}"
-echo "Uploading to location ${BACKUP_URL}"
-
-# Install AWS CLI if the upload location is S3
-if test "${BACKUP_URL#s3}" == "${BACKUP_URL}"; then
-   echo "Upload location is not S3"
-   exit 1
-else
-   installTools
-fi
+setupS3Configuration
 
 # Wait until pingaccess admin localhost is available
 pingaccess_admin_localhost_wait
+
+echo "Uploading to location ${BACKUP_URL}"
 
 # Create and export archive data into file data.mm-dd-YYYY.HH.MM.SS.zip
 DST_FILE="data-`date +%m-%d-%Y.%H.%M.%S`.json"
@@ -48,20 +40,8 @@ if test ! -z "${WORKFLOW_ID}"; then
   -o ${DST_DIRECTORY}/${DST_FILE}
 fi
 
-cat ${DST_DIRECTORY}/${DST_FILE}
-
-BUCKET_URL_NO_PROTOCOL=${BACKUP_URL#s3://}
-BUCKET_NAME=$(echo ${BUCKET_URL_NO_PROTOCOL} | cut -d/ -f1)
-DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
-
 echo "Creating directory ${DIRECTORY_NAME} under bucket ${BUCKET_NAME}"
 aws s3api put-object --bucket "${BUCKET_NAME}" --key "${DIRECTORY_NAME}"/
-
-if test "${BACKUP_URL}" == */pingaccess; then
-  TARGET_URL="${BACKUP_URL}"
-else
-  TARGET_URL="${BACKUP_URL}/${DIRECTORY_NAME}"
-fi
 
 aws s3 cp "${DST_DIRECTORY}/${DST_FILE}" "${TARGET_URL}/"
 AWS_API_RESULT="${?}"
