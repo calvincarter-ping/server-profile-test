@@ -5,29 +5,31 @@
 
 if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE"; then
 
+  setupS3Configuration  
 
-  setupS3Configuration
+  S3_MASTER_KEY_URL="${TARGET_URL}/pa.jwk"
+  S3_H2_DATABASE_URL="${TARGET_URL}/PingAccess.mv.db"
 
-  echo ${TARGET_URL}
-  
+  S3_MASTER_KEY_FILE="$(aws s3 ls ${S3_MASTER_KEY_URL} > /dev/null 2>&1;echo $?)"
+  S3_H2_DATABASE_FILE="$(aws s3 ls ${S3_H2_DATABASE_URL} > /dev/null 2>&1;echo $?)"
 
-  MASTER_KEY="${TARGET_URL}/pa.jwk"
-  H2_DATABASE="${TARGET_URL}/PingAccess.mv.db"
+  # If master key and H2 database is found. Attempt to copy into container
+  if test "${S3_MASTER_KEY_FILE}" = "0" && test "${S3_H2_DATABASE_FILE}" = "0"; then
 
-  RESULT_MASTER_KEY="$(aws s3 ls ${MASTER_KEY} > /dev/null 2>&1;echo $?)"
-  RESULT_H2_DATABASE="$(aws s3 ls ${H2_DATABASE} > /dev/null 2>&1;echo $?)"
-
-  if test "${RESULT_MASTER_KEY}" = "0" && test "${RESULT_H2_DATABASE}" = "0"; then
-    if test "$(aws s3 cp ${MASTER_KEY} ${OUT_DIR}/instance/conf/pa.jwk > /dev/null 2>&1;echo $?)" != "0"; then
+    # Copy Master Key
+    if test "$(aws s3 cp ${S3_MASTER_KEY_URL} ${OUT_DIR}/instance/conf/pa.jwk > /dev/null 2>&1;echo $?)" != "0"; then
       echo "Copy master key error"
       exit 1
     fi
 
-	if test "$(aws s3 cp ${H2_DATABASE} ${OUT_DIR}/instance/data/PingAccess.mv.db > /dev/null 2>&1;echo $?)" != "0"; then
-      echo "Copy master key error"
+    # Copy H2 Database
+	  if test "$(aws s3 cp ${S3_H2_DATABASE_URL} ${OUT_DIR}/instance/data/PingAccess.mv.db > /dev/null 2>&1;echo $?)" != "0"; then
+      echo "Copy H2 Database error"
       exit 1
     fi
-  elif test "${RESULT_MASTER_KEY}" != "1" || test "${RESULT_H2_DATABASE}" != "1" ; then
-    echo "error occured"
+
+  elif test "${S3_MASTER_KEY_FILE}" != "1" || test "${S3_H2_DATABASE_FILE}" != "1" ; then
+    echo "error occured when viewing files in S3 bucket"
   fi
+
 fi

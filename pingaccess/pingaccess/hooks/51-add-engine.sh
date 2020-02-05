@@ -50,7 +50,11 @@ if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_EN
     make_api_request -X POST https://${K8S_SERVICE_NAME_PINGACCESS_ADMIN}:9000/pa-admin-api/v3/engines/${ENGINE_ID}/config \
     -o engine-config.zip
 
-    #TODO - validate zip
+    # Validate zip
+    if test "$( unzip -t engine-config.zip > /dev/null 2>&1;echo $?)" != "0"; then
+        echo "Failure retrieving config admin zip for engine"
+        exit 1
+    fi
 
     echo "Extracting config files to conf folder..."
     unzip -o engine-config.zip -d ${OUT_DIR}/instance

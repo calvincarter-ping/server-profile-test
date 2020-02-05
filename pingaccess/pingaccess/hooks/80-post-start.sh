@@ -5,55 +5,55 @@
 
 if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE"; then
 
-  # Install AWS CLI if the upload location is S3
-  if test "${BACKUP_URL#s3}" == "${BACKUP_URL}"; then
-    echo_red "Upload location is not S3"
-    exit 1
-  else
-    installTools
-  fi
+  setupS3Configuration
 
-  BUCKET_URL_NO_PROTOCOL=${BACKUP_URL#s3://}
-  DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
+  S3_CERTFLAG_URL="${TARGET_URL}/pingaccess_cert_complete_flag"
+  S3_MASTER_KEY_URL="${TARGET_URL}/pa.jwk"
+  S3_H2_DATABASE_URL="${TARGET_URL}/PingAccess.mv.db"
 
-  if test "${BACKUP_URL}" == */pingaccess; then
-    TARGET_URL="${BACKUP_URL}"
-  else
-    TARGET_URL="${BACKUP_URL}/${DIRECTORY_NAME}"
-  fi
-  CERTFLAG="${TARGET_URL}/pingaccess_cert_complete_flag"
-  MASTER_KEY="${TARGET_URL}/pa.jwk"
-  H2_DATABASE="${TARGET_URL}/PingAccess.mv.db"
+  CERTFLAG_FILE="$(aws s3 ls ${S3_CERTFLAG_URL} > /dev/null 2>&1;echo $?)"
+  
+  # If cert flag exist then attempt to download the latest data.json
+  if test "${CERTFLAG_FILE}" = "0"; then
 
-  RESULT="$(aws s3 ls ${CERTFLAG} > /dev/null 2>&1;echo $?)"
-  echo "result calvin ${RESULT}"
-  if test "${RESULT}" = "0"; then
     run_hook "83-download-archive-data-s3.sh"
-  elif test "${RESULT}" != "1"; then
+
+  elif test "${CERTFLAG_FILE}" != "1"; then
+
     echo "error occured"
+
   else
+
+    # First time running import initial configuration and copy
+    # certflag, master key, and H2 database to S3
+    
     run_hook "81-import-initial-configuration.sh"
     run_hook "82-upload-archive-data-s3.sh"
-    SCRIPT=$(ps | grep "${OUT_DIR}/instance/bin/run.sh" | awk '{print $1; exit}')
+    
+    SERVER=$(ps | grep "${OUT_DIR}/instance/bin/run.sh" | awk '{print $1; exit}')
 
     touch /tmp/pingaccess_cert_complete_flag
 
-    if test "$(aws s3 cp /tmp/pingaccess_cert_complete_flag ${CERTFLAG} > /dev/null 2>&1;echo $?)" != "0"; then
+    # Copy Cert flag to S3 Bucket
+    if test "$(aws s3 cp /tmp/pingaccess_cert_complete_flag ${S3_CERTFLAG_URL} > /dev/null 2>&1;echo $?)" != "0"; then
       echo_red "Setting cert flag error"
       exit 1
     fi
 
-    if test "$(aws s3 cp ${OUT_DIR}/instance/conf/pa.jwk ${MASTER_KEY} > /dev/null 2>&1;echo $?)" != "0"; then
+    # Copy Master Key to S3 Bucket
+    if test "$(aws s3 cp ${OUT_DIR}/instance/conf/pa.jwk ${S3_MASTER_KEY_URL} > /dev/null 2>&1;echo $?)" != "0"; then
       echo_red "Setting master key error"
       exit 1
     fi
 
-    if test "$(aws s3 cp ${OUT_DIR}/instance/data/PingAccess.mv.db ${H2_DATABASE} > /dev/null 2>&1;echo $?)" != "0"; then
+    # Copy H2 Database to S3 Bucket
+    if test "$(aws s3 cp ${OUT_DIR}/instance/data/PingAccess.mv.db ${S3_H2_DATABASE} > /dev/null 2>&1;echo $?)" != "0"; then
       echo_red "Setting master key error"
       exit 1
     fi
 
     # Terminate admin to signal a k8s restart
-    kill -1 "${SCRIPT}"
+    kill -1 "${SERVER}"
   fi
+
 fi
