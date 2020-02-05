@@ -9,7 +9,7 @@
 function make_api_request()
 {
     curl -k --retry ${API_RETRY_LIMIT} --max-time ${API_TIMEOUT_WAIT} --retry-delay 1 --retry-connrefuse -u Administrator:${INITIAL_ADMIN_PASSWORD} -H "X-Xsrf-Header: PingAccess " "$@"
-    if [[ ! $? -eq 0 ]]; then
+    if test ! $? -eq 0; then
         echo "Admin API connection refused"
         exit 1
     fi
@@ -24,7 +24,7 @@ function make_api_request()
 function make_initial_api_request()
 {
     curl -k --retry ${API_RETRY_LIMIT} --max-time ${API_TIMEOUT_WAIT} --retry-delay 1 --retry-connrefuse -u Administrator:2Access -H "X-Xsrf-Header: PingAccess " "$@"
-    if [[ ! $? -eq 0 ]]; then
+    if test ! $? -eq 0; then
         echo "Admin API connection refused"
         exit 1
     fi
@@ -41,7 +41,7 @@ function pingaccess_admin_wait()
 {
     while true; do
         curl -ss --silent -o /dev/null -k https://localhost:9000/pa/heartbeat.ping 
-        if ! test $? -eq 0 ; then
+        if ! test $? -eq 0; then
             echo "Import Config: Server not started, waiting.."
             sleep 3
         else
@@ -60,15 +60,15 @@ function pingaccess_admin_wait()
 ########################################################################################################################
 function pingaccess_engine_wait()
 {
-    setupS3Configuration
+    initializeS3Configuration
 
     while true; do
         MASTER_KEY_FILE_NAME="$(aws s3 ls ${S3_MASTER_KEY_URL} > /dev/null 2>&1;echo $?)"
         H2_DATABASE_FILENAME="$(aws s3 ls ${S3_H2_DATABASE_URL} > /dev/null 2>&1;echo $?)"
         CERTFLAG_FILENAME="$(aws s3 ls ${S3_CERTFLAG_URL} > /dev/null 2>&1;echo $?)"
 
-        echo "Masterkey: ${MASTER_KEY_FILE_NAME}"
-        echo "H2Database: ${H2_DATABASE_FILENAME}"
+        echo "MASTERKEY: ${MASTER_KEY_FILE_NAME}"
+        echo "H2_DATABASE: ${H2_DATABASE_FILENAME}"
         echo "CERTFLAG: ${CERTFLAG_FILENAME}"
         
         if test "${MASTER_KEY_FILE_NAME}" = "0" && test "${H2_DATABASE_FILENAME}" = "0" && test "${CERTFLAG_FILENAME}" = "0"; then
@@ -100,7 +100,7 @@ function pingaccess_engine_wait()
 ########################################################################################################################
 function installTools()
 {
-   if [ -z "$(which aws)" ]; then
+   if test -z "$(which aws)"; then
       #   
       #  Install AWS platform specific tools
       #
@@ -114,7 +114,7 @@ function installTools()
    fi
 }
 
-function setupS3Configuration()
+function initializeS3Configuration()
 {
     unset BUCKET_URL_NO_PROTOCOL
     unset DIRECTORY_NAME

@@ -5,7 +5,7 @@
 
 ${VERBOSE} && set -x
 
-setupS3Configuration
+initializeS3Configuration
 
 # Wait until pingaccess admin localhost is available
 pingaccess_admin_localhost_wait
@@ -23,15 +23,13 @@ make_api_request -X POST -H "Accept: application/json" -H "X-Requested-With: XML
 -o ${DST_DIRECTORY}/${DST_FILE}
 WORKFLOW_ID=$( cat ${DST_DIRECTORY}/${DST_FILE} | jq 'select(.status=="In Progress") | .id' )
 
-# Validate admin API call was successful and that zip isn't corrupted
+# Validate admin API call was successful
 if test ! $? -eq 0; then
   echo "Failed to export archive"
   # Cleanup k8s-s3-upload-archive temp directory
-  #rm -rf ${DST_DIRECTORY}
+  rm -rf ${DST_DIRECTORY}
   exit 0
 fi
-
-echo ${WORKFLOW_ID}
 
 if test ! -z "${WORKFLOW_ID}"; then
   sleep 10

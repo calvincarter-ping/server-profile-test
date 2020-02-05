@@ -5,7 +5,7 @@
 
 ${VERBOSE} && set -x
 
-setupS3Configuration
+initializeS3Configuration
 
 # Wait until pingaccess admin localhost is available
 pingaccess_admin_localhost_wait
@@ -42,7 +42,7 @@ if ! test -z "${DATA_BACKUP_FILE}"; then
 
   echo "Download return code: ${AWS_API_RESULT}"
 
-  if [ "${AWS_API_RESULT}" != "0" ]; then
+  if test "${AWS_API_RESULT}" != "0"; then
     echo "Download was unsuccessful - crash the container"
     exit 1
   fi
@@ -56,7 +56,7 @@ if ! test -z "${DATA_BACKUP_FILE}"; then
   if test ! $? -eq 0; then
     echo "Failed to export archive"
     # Cleanup k8s-s3-upload-archive temp directory
-    #rm -rf ${DST_DIRECTORY}
+    rm -rf ${DST_DIRECTORY}
     exit 0
   fi
 

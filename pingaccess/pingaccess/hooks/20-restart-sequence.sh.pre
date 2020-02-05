@@ -3,4 +3,6 @@
 . "${HOOKS_DIR}/pingcommon.lib.sh"
 . "${HOOKS_DIR}/utils.lib.sh"
 
-run_hook "00-copy-key-h2-into-container.sh"
+if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE"; then
+    run_hook "00-copy-key-h2-into-container.sh"
+fi

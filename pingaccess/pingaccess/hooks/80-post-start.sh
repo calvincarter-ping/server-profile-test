@@ -5,7 +5,7 @@
 
 if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE"; then
 
-  setupS3Configuration
+  initializeS3Configuration
 
   CERTFLAG_FILE="$(aws s3 ls ${S3_CERTFLAG_URL} > /dev/null 2>&1;echo $?)"
   
@@ -20,8 +20,8 @@ if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CO
 
   else
 
-    # First time running import initial configuration and copy
-    # certflag, master key, and H2 database to S3
+    # First time running import initial configuration and upload its data.json to S3
+    # Copy certflag, master key, and H2 database to S3
 
     run_hook "81-import-initial-configuration.sh"
     run_hook "82-upload-archive-data-s3.sh"

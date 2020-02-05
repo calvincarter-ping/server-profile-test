@@ -5,7 +5,7 @@
 
 if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE"; then
 
-  setupS3Configuration
+  initializeS3Configuration
 
   S3_MASTER_KEY_FILE="$(aws s3 ls ${S3_MASTER_KEY_URL} > /dev/null 2>&1;echo $?)"
   S3_H2_DATABASE_FILE="$(aws s3 ls ${S3_H2_DATABASE_URL} > /dev/null 2>&1;echo $?)"
