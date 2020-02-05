@@ -135,6 +135,10 @@ function installTools()
 
 function setupS3Configuration()
 {
+    unset BUCKET_URL_NO_PROTOCOL
+    unset DIRECTORY_NAME
+    unset TARGET_URL
+
     # Install AWS CLI if the upload location is S3
     if test "${BACKUP_URL#s3}" == "${BACKUP_URL}"; then
         echo "Upload location is not S3"
@@ -142,6 +146,9 @@ function setupS3Configuration()
     else
         installTools
     fi
+
+    # Allow overriding the backup URL with an arg
+    test ! -z "${1}" && BACKUP_URL="${1}"
 
     export BUCKET_URL_NO_PROTOCOL=${BACKUP_URL#s3://}
     export DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')

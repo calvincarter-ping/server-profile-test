@@ -26,7 +26,7 @@ if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CO
 
     # First time running import initial configuration and copy
     # certflag, master key, and H2 database to S3
-    
+
     run_hook "81-import-initial-configuration.sh"
     run_hook "82-upload-archive-data-s3.sh"
     
@@ -47,7 +47,7 @@ if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CO
     fi
 
     # Copy H2 Database to S3 Bucket
-    if test "$(aws s3 cp ${OUT_DIR}/instance/data/PingAccess.mv.db ${S3_H2_DATABASE} > /dev/null 2>&1;echo $?)" != "0"; then
+    if test "$(aws s3 cp ${OUT_DIR}/instance/data/PingAccess.mv.db ${S3_H2_DATABASE_URL} > /dev/null 2>&1;echo $?)" != "0"; then
       echo_red "Setting master key error"
       exit 1
     fi
