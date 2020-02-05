@@ -5,22 +5,12 @@
 
 if test ! -z "${OPERATIONAL_MODE}" && test "${OPERATIONAL_MODE}" = "CLUSTERED_CONSOLE"; then
 
-  # Install AWS CLI if the upload location is S3
-  if test "${BACKUP_URL#s3}" == "${BACKUP_URL}"; then
-    echo "Upload location is not S3"
-    exit 1
-  else
-    installTools
-  fi
 
-  BUCKET_URL_NO_PROTOCOL=${BACKUP_URL#s3://}
-  DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
+  setupS3Configuration
 
-  if test "${BACKUP_URL}" == */pingaccess; then
-    TARGET_URL="${BACKUP_URL}"
-  else
-    TARGET_URL="${BACKUP_URL}/${DIRECTORY_NAME}"
-  fi
+  echo ${TARGET_URL}
+  
+
   MASTER_KEY="${TARGET_URL}/pa.jwk"
   H2_DATABASE="${TARGET_URL}/PingAccess.mv.db"
 

@@ -132,3 +132,23 @@ function installTools()
       pip3 install --no-cache-dir --upgrade awscli
    fi
 }
+
+function setupS3Configuration()
+{
+    # Install AWS CLI if the upload location is S3
+    if test "${BACKUP_URL#s3}" == "${BACKUP_URL}"; then
+        echo "Upload location is not S3"
+        exit 1
+    else
+        installTools
+    fi
+
+    export BUCKET_URL_NO_PROTOCOL=${BACKUP_URL#s3://}
+    export DIRECTORY_NAME=$(echo ${PING_PRODUCT} | tr '[:upper:]' '[:lower:]')
+
+    if test "${BACKUP_URL}" == */pingaccess; then
+        export TARGET_URL="${BACKUP_URL}"
+    else
+        export TARGET_URL="${BACKUP_URL}/${DIRECTORY_NAME}"
+    fi
+}
